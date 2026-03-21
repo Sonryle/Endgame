@@ -4,13 +4,14 @@ import { Grid } from "./grid.js";
 import { Inventory } from "./inventory.js"
 import "./style.css";
 
-const scale = 4;
+const scale = 3;
 
 const svg = select('#app').append('svg');
 
 const grid = new Grid(scale, svg);
 const inventory = new Inventory(scale, svg, grid);
-// grid.drawGrid();
+grid.drawGrid();
+inventory.drawGrid();
 
 const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", scale, svg, grid);
 const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", scale, svg, grid);

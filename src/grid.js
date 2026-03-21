@@ -37,14 +37,16 @@ export class Grid {
     nearestSlot(x, y) {
         const remainingXSpace = winWidth % this.cellScale;
         const remainingYSpace = winHeight % this.cellScale;
+        const gridOffsetX = this.cellScale / 2 - remainingXSpace / 2;
+        const gridOffsetY = this.cellScale / 2 - remainingYSpace / 2;
 
-        let tempX = x - remainingXSpace / 2 + this.cellScale / 2;
-        let tempY = y - remainingYSpace / 2 + this.cellScale / 2;
+        let tempX = x + gridOffsetX;
+        let tempY = y + gridOffsetY;
 
         // Solve X
-        let new_x = tempX - (tempX % this.cellScale) + remainingXSpace / 2 - this.cellScale / 2 + this.scale;
+        let new_x = tempX - (tempX % this.cellScale) + this.scale - gridOffsetX;
         // Solve Y
-        let new_y = tempY - (tempY % this.cellScale) + remainingYSpace / 2 - this.cellScale / 2 + this.scale;
+        let new_y = tempY - (tempY % this.cellScale) + this.scale - gridOffsetY;
         return [new_x, new_y];
     }
 }
