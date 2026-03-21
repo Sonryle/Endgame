@@ -10,35 +10,25 @@ export class ItemSlot {
         
         this.svgContainer = state.svg.append('svg').attr('class', 'ItemSlot');
         this.svgContainer.raise();
+        this.svgContainer.attr('overflow', 'hidden');
+        this.svgContainer.attr('width', 18 * state.scale);
+        this.svgContainer.attr('height', 18 * state.scale);
+        this.svgContainer.attr('x', x);
+        this.svgContainer.attr('y', y);
+
         this.layerBack = this.svgContainer.append('g').attr('class', 'layerBack');
         this.layerItem = this.svgContainer.append('g').attr('class', 'layerItem');
         this.layerFront = this.svgContainer.append('g').attr('class', 'layerFront');
 
-        this.svg_back = this.layerBack.append('svg');
-        this.svg_back.attr('overflow', 'hidden');
-        this.svg_back.attr('width', 18 * state.scale);
-        this.svg_back.attr('height', 18 * state.scale);
-        this.svg_back.attr('x', x);
-        this.svg_back.attr('y', y);
-        this.svg_back.attr('pointer-events', 'none');
-        
-        this.texture_back = this.svg_back.append('image');
+        this.texture_back = this.layerBack.append('image');
         this.texture_back.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_back.png");
         this.texture_back.attr('width', 24 * state.scale);
         this.texture_back.attr('height', 24 * state.scale);
         this.texture_back.attr('x', -3 * state.scale);
         this.texture_back.attr('y', -3 * state.scale);
         this.texture_back.attr('opacity', 0.0);
-        this.texture_back.attr('pointer-events', 'none');
 
-        this.svg_front = this.layerFront.append('svg');
-        this.svg_front.attr('overflow', 'hidden');
-        this.svg_front.attr('width', 18 * state.scale);
-        this.svg_front.attr('height', 18 * state.scale);
-        this.svg_front.attr('x', x);
-        this.svg_front.attr('y', y);
-
-        this.texture_front = this.svg_front.append('image');
+        this.texture_front = this.layerFront.append('image');
         this.texture_front.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_front.png");
         this.texture_front.attr('width', 24 * state.scale);
         this.texture_front.attr('height', 24 * state.scale);
@@ -46,12 +36,12 @@ export class ItemSlot {
         this.texture_front.attr('y', -3 * state.scale);
         this.texture_front.attr('opacity', 0.0);
 
-        this.svg_front.on('mouseover', (event) => {
+        this.svgContainer.on('mouseover', (event) => {
             this.texture_back.attr('opacity', 1.0);
             this.texture_front.attr('opacity', 1.0);
             // this.toolTip = new ToolTip("na");
         });
-        this.svg_front.on('mouseout', (event) => {
+        this.svgContainer.on('mouseout', (event) => {
             console.log("out");
             this.texture_front.attr('opacity', 0.0);
             this.texture_back.attr('opacity', 0.0);
@@ -62,7 +52,7 @@ export class ItemSlot {
             }
         })
         // Swap items
-        this.svg_front.on('click', (event) => {
+        this.svgContainer.on('click', (event) => {
             this.swapItems();
         });
     }
@@ -82,8 +72,8 @@ export class ItemSlot {
 
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
-            this.item.texture.attr('x', +this.svg_front.attr('x') + state.scale);
-            this.item.texture.attr('y', +this.svg_front.attr('y') + state.scale);
+            this.item.texture.attr('x', state.scale);
+            this.item.texture.attr('y', state.scale);
             this.layerItem.node().appendChild(this.item.texture.node());
         }
 
@@ -115,8 +105,8 @@ export class ItemSlot {
 
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
-            this.item.texture.attr('x', +this.svg_front.attr('x') + state.scale);
-            this.item.texture.attr('y', +this.svg_front.attr('y') + state.scale);
+            this.item.texture.attr('x', state.scale);
+            this.item.texture.attr('y', state.scale);
             this.layerItem.node().appendChild(this.item.texture.node());
         }
 
