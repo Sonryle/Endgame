@@ -39,21 +39,20 @@ export class ItemSlot {
         this.svgContainer.on('mouseover', (event) => {
             this.texture_back.attr('opacity', 1.0);
             this.texture_front.attr('opacity', 1.0);
-            // this.toolTip = new ToolTip("na");
+            this.showToolTip();
         });
         this.svgContainer.on('mouseout', (event) => {
-            console.log("out");
             this.texture_front.attr('opacity', 0.0);
             this.texture_back.attr('opacity', 0.0);
-
-            if (this.toolTip != null) {
-                this.toolTip.delete();
-                this.toolTip = null;
-            }
+            this.hideToolTip();
         })
-        // Swap items
         this.svgContainer.on('click', (event) => {
+            this.hideToolTip();
             this.swapItems();
+            if (this.item != null)
+                this.showToolTip();
+            else
+                this.hideToolTip();
         });
     }
 
@@ -95,7 +94,8 @@ export class ItemSlot {
                 state.mouseY = event.y;
             })
         }
-
+        
+        this.svgContainer.dispatch('mousemove');
     }
 
     // Replaces any item in this slot with a new item. returns old item
@@ -111,5 +111,18 @@ export class ItemSlot {
         }
 
         return oldItem;
+    }
+
+    showToolTip() {
+        if (this.item != null) {
+            this.toolTip = new ToolTip("na");
+        }
+    }
+
+    hideToolTip() {
+        if (this.toolTip != null) {
+            this.toolTip.delete();
+            this.toolTip = null;
+        }
     }
 }
