@@ -52,7 +52,7 @@ export class Inventory {
         for (let y = 0; y < 3; y++) {
             for (let x = 0; x < 9; x++) {
                 this.slots[9 + x * (y + 1)] = new ItemSlot(xOffset + x * this.cellScale, yOffset + y * this.cellScale, ItemType.DEFAULT);
-                console.log(9 + x + (y * 9));
+                // console.log(9 + x + (y * 9));
             }
         }
         
@@ -61,7 +61,7 @@ export class Inventory {
         yOffset = topLeftY + 148 * state.scale;
         for (let x = 0; x < 9; x++) {
             this.slots[36 + x] = new ItemSlot(xOffset + x * this.cellScale, yOffset, ItemType.DEFAULT);
-            console.log(36 + x);
+            // console.log(36 + x);
         }
 
         // Offhand Slot

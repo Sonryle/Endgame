@@ -11,11 +11,14 @@ import "./style.css";
 state.svg = select('#app').append('svg');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
+state.svg.on('mousemove', (event) => {
+    state.mouseX = event.x;
+    state.mouseY = event.y;
+})
 
 const grid = new Grid();
-
 const inventory = new Inventory(grid);
-grid.drawGrid();
+// grid.drawGrid();
 
 const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET);
 const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE);

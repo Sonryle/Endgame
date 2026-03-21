@@ -13,25 +13,25 @@ export const ItemType = {
 export class Item {
     constructor(href, itemType) {
         this.itemType = itemType;
-        this.image = state.svg.append('image');
-        this.image.attr('href', href);
-        this.image.attr('width', 16 * state.scale);
-        this.image.attr('height', 16 * state.scale);
-        this.image.attr('pointer-events', 'none');
+        this.texture = state.svg.append('image');
+        this.texture.attr('href', href);
+        this.texture.attr('width', 16 * state.scale);
+        this.texture.attr('height', 16 * state.scale);
+        this.texture.attr('pointer-events', 'none');
     }
 
     // Cause Item to snap to the grid
     snapToGrid(grid) {
-        let centerX = +this.image.attr('x') + +this.image.attr('width') / 2;
-        let centerY = +this.image.attr('y') + +this.image.attr('height') / 2;
+        let centerX = +this.texture.attr('x') + +this.texture.attr('width') / 2;
+        let centerY = +this.texture.attr('y') + +this.texture.attr('height') / 2;
         let [new_x, new_y] = grid.nearestCell(centerX, centerY);
         new_x += state.scale;    // Offset coordinates by 1 pixel to center item
         new_y += state.scale;
-        this.image.attr('x', new_x);
-        this.image.attr('y', new_y);
+        this.texture.attr('x', new_x);
+        this.texture.attr('y', new_y);
     }
     // Can be either "hidden" or "visible"
     setVisibility(visibility) {
-        this.image.attr('visibility', visibility);
+        this.texture.attr('visibility', visibility);
     }
 }
