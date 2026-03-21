@@ -4,14 +4,15 @@ const winHeight = window.innerHeight;
 export class Grid {
     constructor(scale, svg) {
         this.scale = scale;
+        this.cellScale = 18 * scale;
         this.svg = svg;
     }
 
     drawGrid() {
 
         // Horizontal Lines
-        const remainingYSpace = winHeight % (16 * this.scale);
-        for (let y = remainingYSpace / 2; y < winHeight; y+=16*this.scale) {
+        const remainingYSpace = winHeight % this.cellScale;
+        for (let y = remainingYSpace / 2 - this.cellScale / 2; y < winHeight; y += this.cellScale) {
             let line = this.svg.append('line');
             line.attr('stroke', "red");
             line.attr('stroke-width', 2);
@@ -21,8 +22,8 @@ export class Grid {
             line.attr('y2', y);
         }
         // Vertical Lines
-        const remainingXSpace = winWidth % (16 * this.scale);
-        for (let x = remainingXSpace / 2; x < winWidth; x+=16*this.scale) {
+        const remainingXSpace = winWidth % this.cellScale;
+        for (let x = remainingXSpace / 2 - this.cellScale / 2; x < winWidth; x += this.cellScale) {
             let line = this.svg.append('line');
             line.attr('stroke', "red");
             line.attr('stroke-width', 2);
@@ -34,16 +35,16 @@ export class Grid {
     }
 
     nearestSlot(x, y) {
-        const remainingXSpace = winWidth % (16 * this.scale);
-        const remainingYSpace = winHeight % (16 * this.scale);
+        const remainingXSpace = winWidth % this.cellScale;
+        const remainingYSpace = winHeight % this.cellScale;
 
-        let tempX = x - remainingXSpace / 2;
-        let tempY = y - remainingYSpace / 2;
+        let tempX = x - remainingXSpace / 2 + this.cellScale / 2;
+        let tempY = y - remainingYSpace / 2 + this.cellScale / 2;
 
         // Solve X
-        let new_x = tempX - (tempX % (16 * this.scale)) + remainingXSpace / 2;
+        let new_x = tempX - (tempX % this.cellScale) + remainingXSpace / 2 - this.cellScale / 2 + this.scale;
         // Solve Y
-        let new_y = tempY - (tempY % (16 * this.scale)) + remainingYSpace / 2;
+        let new_y = tempY - (tempY % this.cellScale) + remainingYSpace / 2 - this.cellScale / 2 + this.scale;
         return [new_x, new_y];
     }
 }
