@@ -1,3 +1,13 @@
+@font-face {
+  font-family: Mojang-Regular; /* set name */
+  src: url(./src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
+}
+
+.minecraftText, .minecraftTextShadow {
+    font-family: Mojang-Regular;
+    shape-rendering: geometricPrecision;
+}
+
 body {
     margin: 0;
     overflow: hidden;

@@ -20,10 +20,10 @@ const grid = new Grid();
 const inventory = new Inventory(grid);
 // grid.drawGrid();
 
-const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET);
-const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE);
-const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", ItemType.LEGGINGS);
-const boots = new Item("./src/assets/textures/item/diamond_boots.png", ItemType.BOOTS);
+const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET, "Diamond Helmet");
+const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE, "Diamond Chestplate");
+const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", ItemType.LEGGINGS, "Diamond Leggings");
+const boots = new Item("./src/assets/textures/item/diamond_boots.png", ItemType.BOOTS, "Diamond Boots");
 
 inventory.slots[5].setItem(helmet);
 inventory.slots[6].setItem(chestplate);

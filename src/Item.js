@@ -11,8 +11,9 @@ export const ItemType = {
 }
 
 export class Item {
-    constructor(href, itemType) {
+    constructor(href, itemType, name) {
         this.itemType = itemType;
+        this.name = name
         this.texture = state.svg.append('image');
         this.texture.attr('href', href);
         this.texture.attr('width', 16 * state.scale);

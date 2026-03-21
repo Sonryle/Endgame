@@ -115,7 +115,7 @@ export class ItemSlot {
 
     showToolTip() {
         if (this.item != null) {
-            this.toolTip = new ToolTip("na");
+            this.toolTip = new ToolTip(this.item.name);
         }
     }
 

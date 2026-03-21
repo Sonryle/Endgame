@@ -28,7 +28,7 @@ export class Inventory {
         this.image.attr('y', y - inventoryPaddingY);
 
         // Create item slots
-        let [topLeftX, topLeftY] = grid.nearestCell(this.image.attr('x') - state.scale, this.image.attr('y') - state.scale);
+        let [topLeftX, topLeftY] = grid.nearestCell(this.image.attr('x'), this.image.attr('y'));
 
         // Crafting Input
         let xOffset = topLeftX + this.cellScale + 90 * state.scale;
