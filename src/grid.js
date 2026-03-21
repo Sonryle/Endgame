@@ -20,6 +20,7 @@ export class Grid {
             line.attr('x2', winWidth);
             line.attr('y1', y);
             line.attr('y2', y);
+            line.attr('pointer-events', 'none');
         }
         // Vertical Lines
         const remainingXSpace = winWidth % this.cellScale;
@@ -31,6 +32,7 @@ export class Grid {
             line.attr('x2', x);
             line.attr('y1', 0);
             line.attr('y2', winHeight);
+            line.attr('pointer-events', 'none');
         }
     }
 
