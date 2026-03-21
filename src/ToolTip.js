@@ -15,13 +15,13 @@ export class ToolTip {
             .attr('class', 'tooltip')
             .style('width', '100%')
             .style('height', '100%')
-            .style('border-image-width', state.scale.toString() + "0px")
+            .style('border-image-width', (state.scale * 10).toString() + "px")
             .style('position', 'absolute')
         foreignObject.append('xhtml:div')
             .attr('class', 'tooltipFrame')
             .style('width', '100%')
             .style('height', '100%')
-            .style('border-image-width', state.scale.toString() + "0px")
+            .style('border-image-width', (state.scale * 10).toString() + "px")
             .style('position', 'absolute')
 
         this.svgContainer.attr('x', (Math.trunc(state.mouseX / state.scale) * state.scale) - (1 * state.scale));

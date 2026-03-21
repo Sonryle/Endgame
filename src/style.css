@@ -16,7 +16,7 @@ body {
 
 .tooltip {
     background-clip: border-box;
-    border-image: url("./src/assets/textures/gui/sprites/tooltip/background.png") 9 fill;
+    border-image: url("./src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
     border-image-width: 50px;
 }
 .tooltipFrame {
