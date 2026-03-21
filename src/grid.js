@@ -1,11 +1,11 @@
+import { state } from "./state.js"
+
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
 export class Grid {
-    constructor(scale, svg) {
-        this.scale = scale;
-        this.cellScale = 18 * scale;
-        this.svg = svg;
+    constructor() {
+        this.cellScale = 18 * state.scale;
     }
 
     drawGrid() {
@@ -13,7 +13,7 @@ export class Grid {
         // Horizontal Lines
         const remainingYSpace = winHeight % this.cellScale;
         for (let y = remainingYSpace / 2 - this.cellScale / 2; y < winHeight; y += this.cellScale) {
-            let line = this.svg.append('line');
+            let line = state.svg.append('line');
             line.attr('stroke', "red");
             line.attr('stroke-width', 2);
             line.attr('x1', 0);
@@ -24,7 +24,7 @@ export class Grid {
         // Vertical Lines
         const remainingXSpace = winWidth % this.cellScale;
         for (let x = remainingXSpace / 2 - this.cellScale / 2; x < winWidth; x += this.cellScale) {
-            let line = this.svg.append('line');
+            let line = state.svg.append('line');
             line.attr('stroke', "red");
             line.attr('stroke-width', 2);
             line.attr('x1', x);
@@ -34,20 +34,21 @@ export class Grid {
         }
     }
 
-    nearestSlot(x, y) {
+    // returns x y coordinate of top left of nearest cell on the grid
+    nearestCell(x, y) {
         const remainingXSpace = winWidth % this.cellScale;
         const remainingYSpace = winHeight % this.cellScale;
         const gridOffsetX = this.cellScale / 2 - remainingXSpace / 2;
         const gridOffsetY = this.cellScale / 2 - remainingYSpace / 2;
 
-        let tempX = x + gridOffsetX;
-        let tempY = y + gridOffsetY;
+        let newX = +x + gridOffsetX;
+        let newY = +y + gridOffsetY;
+        newX -= (newX % this.cellScale);
+        newY -= (newY % this.cellScale);
+        newX -= gridOffsetX;
+        newY -= gridOffsetY;
 
-        // Solve X
-        let new_x = tempX - (tempX % this.cellScale) + this.scale - gridOffsetX;
-        // Solve Y
-        let new_y = tempY - (tempY % this.cellScale) + this.scale - gridOffsetY;
-        return [new_x, new_y];
+        return [newX, newY];
     }
 }
 

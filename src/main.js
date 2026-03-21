@@ -1,22 +1,26 @@
 import { select } from 'd3';
-import { Item } from "./item.js";
+
+import { state } from "./state.js"
+
+import { Item } from "./Item.js";
+import { ItemSlot } from "./ItemSlot.js"
 import { Grid } from "./grid.js";
 import { Inventory } from "./inventory.js"
 import "./style.css";
 
-const scale = 3;
+state.svg = select('#app').append('svg');
+state.svg.attr('width', window.innerWidth);
+state.svg.attr('height', window.innerHeight);
 
-const svg = select('#app').append('svg');
+const grid = new Grid();
+// grid.drawGrid();
 
-const grid = new Grid(scale, svg);
-const inventory = new Inventory(scale, svg, grid);
-grid.drawGrid();
-inventory.drawGrid();
+const inventory = new Inventory(grid);
 
-const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", scale, svg, grid);
-const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", scale, svg, grid);
-const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", scale, svg, grid);
-const boots = new Item("./src/assets/textures/item/diamond_boots.png", scale, svg, grid);
+const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", grid, inventory);
+const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", grid, inventory);
+const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", grid, inventory);
+const boots = new Item("./src/assets/textures/item/diamond_boots.png", grid, inventory);
 
-svg.attr('width', window.innerWidth);
-svg.attr('height', window.innerHeight);
+state.selectedItem = chestplate;
+
