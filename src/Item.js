@@ -2,15 +2,22 @@ import { state } from "./state.js"
 import { Grid } from "./grid.js"
 import { Inventory } from "./inventory.js"
 
+export const ItemType = {
+    HELMET: "0",
+    CHESTPLATE: "1",
+    LEGGINGS: "2",
+    BOOTS: "3",
+    DEFAULT: "4",
+}
+
 export class Item {
-    constructor(href, grid, inventory) {
+    constructor(href, itemType) {
+        this.itemType = itemType;
         this.image = state.svg.append('image');
-        this.inventory = inventory;
         this.image.attr('href', href);
         this.image.attr('width', 16 * state.scale);
         this.image.attr('height', 16 * state.scale);
         this.image.attr('pointer-events', 'none');
-
     }
 
     // Cause Item to snap to the grid
