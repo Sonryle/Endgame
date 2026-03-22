@@ -32,3 +32,4 @@ inventory.slots[8].setItem(boots);
 
 // TESTING GROUNDS
 
+const slot1 = new ItemSlot(100, 100, ItemType.DEFAULT);

@@ -96,7 +96,6 @@ export class ToolTip {
     }
 
     delete() {
-        console.log("deleting");
         this.svgContainer.remove();
     }
 }

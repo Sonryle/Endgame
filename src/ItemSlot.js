@@ -16,11 +16,18 @@ export class ItemSlot {
         this.svgContainer.attr('x', x);
         this.svgContainer.attr('y', y);
 
-        this.layerBack = this.svgContainer.append('g').attr('class', 'layerBack');
-        this.layerItem = this.svgContainer.append('g').attr('class', 'layerItem');
-        this.layerFront = this.svgContainer.append('g').attr('class', 'layerFront');
+        this.layerSlotTexture = this.svgContainer.append('g').attr('class', 'layerSlotTexture');
+        this.layerHighlightBack = this.svgContainer.append('g').attr('class', 'layerHighlightBack');
+        this.layerItemTexture = this.svgContainer.append('g').attr('class', 'layerItemTexture');
+        this.layerHighlightFront = this.svgContainer.append('g').attr('class', 'layerHighlightFront');
 
-        this.texture_back = this.layerBack.append('image');
+        this.texture_slot = this.layerHighlightBack.append('image');
+        this.texture_slot.attr('href', "./src/assets/textures/gui/sprites/container/slot.png");
+        this.texture_slot.attr('width', 18 * state.scale);
+        this.texture_slot.attr('height', 18 * state.scale);
+        this.texture_slot.attr('opacity', 0.0);
+
+        this.texture_back = this.layerHighlightBack.append('image');
         this.texture_back.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_back.png");
         this.texture_back.attr('width', 24 * state.scale);
         this.texture_back.attr('height', 24 * state.scale);
@@ -28,7 +35,7 @@ export class ItemSlot {
         this.texture_back.attr('y', -3 * state.scale);
         this.texture_back.attr('opacity', 0.0);
 
-        this.texture_front = this.layerFront.append('image');
+        this.texture_front = this.layerHighlightFront.append('image');
         this.texture_front.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_front.png");
         this.texture_front.attr('width', 24 * state.scale);
         this.texture_front.attr('height', 24 * state.scale);
@@ -47,19 +54,20 @@ export class ItemSlot {
             this.hideToolTip();
         })
         this.svgContainer.on('click', (event) => {
+            // Hide tooltip because item under cursor is now held
             this.hideToolTip();
+            // Swap Items
             this.swapItems();
-            if (this.item != null)
+            // Show tooltip & blank item slot texture if item under cursor isnt null
+            if (this.item != null) {
                 this.showToolTip();
-            else
-                this.hideToolTip();
+            }
         });
     }
 
     // Swaps item in slot with state.selectedItem
     swapItems() {
         // Check if item can go in this itemSlot
-        console.log(this.itemType);
         if (state.selectedItem != null && this.itemType != ItemType.DEFAULT)
             if (state.selectedItem.itemType != this.itemType)
                 return;
@@ -73,7 +81,7 @@ export class ItemSlot {
         if (this.item != null) {
             this.item.texture.attr('x', state.scale);
             this.item.texture.attr('y', state.scale);
-            this.layerItem.node().appendChild(this.item.texture.node());
+            this.layerItemTexture.node().appendChild(this.item.texture.node());
         }
 
         // Make new selected item follow mouse cursor
@@ -94,6 +102,14 @@ export class ItemSlot {
                 state.mouseY = event.y;
             })
         }
+
+        // if new item isnt null, set item slot texture to be shown.
+        // this is done to hide any graphic symbols behind the item. (like in the armour slots)
+        if (this.item != null) {
+            this.texture_slot.attr('opacity', 1.0);
+        } else {
+            this.texture_slot.attr('opacity', 0.0);
+        }
         
         this.svgContainer.dispatch('mousemove');
     }
@@ -107,7 +123,15 @@ export class ItemSlot {
         if (this.item != null) {
             this.item.texture.attr('x', state.scale);
             this.item.texture.attr('y', state.scale);
-            this.layerItem.node().appendChild(this.item.texture.node());
+            this.layerItemTexture.node().appendChild(this.item.texture.node());
+        }
+
+        // if new item isnt null, set item slot texture to be shown.
+        // this is done to hide any graphic symbols behind the item. (like in the armour slots)
+        if (this.item != null) {
+            this.texture_slot.attr('opacity', 1.0);
+        } else {
+            this.texture_slot.attr('opacity', 0.0);
         }
 
         return oldItem;
