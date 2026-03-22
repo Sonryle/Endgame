@@ -29,13 +29,9 @@
     margin: 0;
     font-family: Mojang-Regular;
     color: white;
-    font-size: 35px;
+    font-size: 40px;
     text-shadow: 5px 5px #3e3e3e;
-    font-smooth: never;
-    -webkit-font-smoothing : none;
-    -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: none;
-    text-rendering: geometricPrecision;
+    word-spacing: 20px;
 }
 
 body {

@@ -85,9 +85,10 @@ export class ToolTip {
         }
 
         toolTip.selectAll('p')
-                .style('font-size', 8.0 * state.scale + "px")
-                .style('padding', state.scale + "px");
-
+                .style('font-size', 8 * state.scale + "px")
+                .style('padding', state.scale + "px")
+                .style('word-spacing', 4 * state.scale + "px")
+                .style('letter-spacing', "-1px")
     }
 
     delete() {

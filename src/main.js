@@ -18,7 +18,7 @@ state.svg.on('mousemove', (event) => {
 
 const grid = new Grid();
 const inventory = new Inventory(grid);
-// grid.drawGrid();
+grid.drawGrid();
 
 const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET, 2, 3,"Diamond Helmet");
 const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE, 2, 8, "Diamond Chestplate");
