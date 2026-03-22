@@ -30,34 +30,41 @@ export class Item {
 
         this.itemGlint = null;
         if (enchantments != null && typeof enchantments != "undefined") {
-            // Create a unique ID for this item's pattern
-            const patternId = `itemGlintPattern`;
+            const patternId = 'itemGlintPattern-' + href;
+            const maskId = 'maskId-' + href;
             
             // Append a <defs> block with an animated pattern
             const defs = this.svgContainer.append('defs');
             const pattern = defs.append('pattern')
                 .attr('id', patternId)
-                .attr('width', 1)   // 1 = 100% (pattern coords are 0–1 by default)
+                .attr('width', 1)
                 .attr('height', 1)
-            
             pattern.append('image')
                 .attr('href', './src/assets/textures/misc/enchanted_glint_item.png')
-
-            // Animate the pattern scrolling upward
             pattern.append('animateTransform')
                 .attr('attributeName', 'patternTransform')
                 .attr('to', `0 ${-16 * state.scale}`)  // move up by one tile height
                 .attr('dur', '2s')
                 .attr('repeatCount', 'indefinite');
+
+            const mask = defs.append('mask')
+                .attr('id', maskId)
+                .attr('mask-mode', 'alpha')
             
-            // Use a <rect> filled with the pattern instead of <image>
+            mask.append('image')
+                .attr('href', href)
+                .attr('width', 16 * state.scale)
+                .attr('height', 16 * state.scale)
+                .style('filter', 'brightness(0) invert(1)')
+            
             this.itemGlint = this.svgContainer.append('rect');
+            this.itemGlint.attr('mask', `url(#${maskId})`);
             this.itemGlint.attr('width', 16 * state.scale);
             this.itemGlint.attr('height', 16 * state.scale);
             this.itemGlint.attr('fill', `url(#${patternId})`);
             this.itemGlint.attr('pointer-events', 'none');
-            this.itemGlint.style('mix-blend-mode', 'lighten');
-            this.itemGlint.style('filter', 'saturate(1) blur(2px)');
+            this.itemGlint.style('mix-blend-mode', 'screen');
+            this.itemGlint.style('filter', 'saturate(1) blur(1px)');
         }
     }
 
