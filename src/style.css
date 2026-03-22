@@ -26,6 +26,7 @@
 }
 
 .minecraftText {
+    user-select: none;
     margin: 0;
     font-family: Mojang-Regular;
     color: white;
