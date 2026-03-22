@@ -1,7 +1,8 @@
 import { state } from "./state.js"
+import { ItemType } from "./Item.js"
 
 export class ToolTip {
-    constructor(text) {
+    constructor(itemName, enchantments, itemType, itemStatValue1, itemStatValue2) {
         this.svgContainer = state.svg.append('svg').attr('class', 'ToolTipContainer');
         this.svgContainer.raise();
 
@@ -27,16 +28,64 @@ export class ToolTip {
         })
 
         // Text Time!
-        toolTip.append('xhtml:p').attr('class', 'minecraftText').text(text)
-        toolTip.append('xhtml:div').attr('class', 'minecraftText')
-                .style('line-height', state.scale * 12 + 'px')
-                .html('<br/>')
-        toolTip.append('xhtml:p').attr('class', 'minecraftText').text(text)
-        toolTip.append('xhtml:p').attr('class', 'minecraftText').text(text)
+        toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
+                .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
+
+        let phrase = "";
+        switch (itemType) {
+            case ItemType.HELMET:
+                phrase = "When on head:"
+                break;
+            case ItemType.CHESTPLATE:
+                phrase = "When on body:"
+                break;
+            case ItemType.LEGGINGS:
+                phrase = "When on legs:"
+                break;
+            case ItemType.BOOTS:
+                phrase = "When on feet:"
+                break;
+            case ItemType.WEAPON:
+                phrase = "When in main hand:"
+                break;
+        }
+
+        if (itemType != ItemType.DEFAULT) {
+            toolTip.append('xhtml:div').attr('class', 'minecraftText')
+                    .style('line-height', state.scale * 12 + 'px')
+                    .html('<br/>')
+            toolTip.append('xhtml:p').attr('class', 'minecraftText')
+                    .text(phrase)
+                    .style('color', '#a8a8a8')
+                    .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
+
+            if (itemType == ItemType.WEAPON) {
+                toolTip.append('xhtml:p')
+                        .attr('class', 'minecraftText')
+                        .text(" " + itemStatValue1 + " Attack Speed")
+                        .style('color', '#00aa00')
+                        .style('text-shadow', state.scale + "px " + state.scale + "px " + "#002a00")
+                toolTip.append('xhtml:p')
+                        .attr('class', 'minecraftText')
+                        .text(" " + itemStatValue2 + " Attack Damage")
+                        .style('color', '#00aa00')
+                        .style('text-shadow', state.scale + "px " + state.scale + "px " + "#002a00")
+            } else {
+                toolTip.append('xhtml:p')
+                        .attr('class', 'minecraftText')
+                        .text("+" + itemStatValue1 + " Armour Toughness")
+                        .style('color', '#5353f8')
+                        .style('text-shadow', state.scale + "px " + state.scale + "px " + "#15153e")
+                toolTip.append('xhtml:p')
+                        .attr('class', 'minecraftText')
+                        .text("+" + itemStatValue2 + " Armour")
+                        .style('color', '#5353f8')
+                        .style('text-shadow', state.scale + "px " + state.scale + "px " + "#15153e")
+            }
+        }
 
         toolTip.selectAll('p')
-                .style('font-size', 7 * state.scale + "px")
-                .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
+                .style('font-size', 8.0 * state.scale + "px")
                 .style('padding', state.scale + "px");
 
     }

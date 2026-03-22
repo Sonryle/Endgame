@@ -7,13 +7,18 @@ export const ItemType = {
     CHESTPLATE: "1",
     LEGGINGS: "2",
     BOOTS: "3",
-    DEFAULT: "4",
+    WEAPON: "4",
+    DEFAULT: "5",
 }
 
 export class Item {
-    constructor(href, itemType, name) {
-        this.itemType = itemType;
+    constructor(href, itemType, statValue1, statValue2, name) {
+        this.type = itemType;
         this.name = name
+        this.statValue1 = statValue1;
+        this.statValue2 = statValue2;
+        console.log(statValue1)
+        console.log(statValue2)
         this.texture = state.svg.append('image');
         this.texture.attr('href', href);
         this.texture.attr('width', 16 * state.scale);

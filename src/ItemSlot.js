@@ -69,7 +69,7 @@ export class ItemSlot {
     swapItems() {
         // Check if item can go in this itemSlot
         if (state.selectedItem != null && this.itemType != ItemType.DEFAULT)
-            if (state.selectedItem.itemType != this.itemType)
+            if (state.selectedItem.type != this.itemType)
                 return;
 
         // Switch them around
@@ -139,7 +139,13 @@ export class ItemSlot {
 
     showToolTip() {
         if (this.item != null) {
-            this.toolTip = new ToolTip(this.item.name);
+            this.toolTip = new ToolTip(
+                            this.item.name,
+                            this.item.enchantments,
+                            this.item.type,
+                            this.item.statValue1,
+                            this.item.statValue2
+            );
         }
     }
 
