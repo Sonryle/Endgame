@@ -18,7 +18,7 @@ export class ItemSlot {
 
         this.layerSlotTexture = this.svgContainer.append('g').attr('class', 'layerSlotTexture');
         this.layerHighlightBack = this.svgContainer.append('g').attr('class', 'layerHighlightBack');
-        this.layerItemTexture = this.svgContainer.append('g').attr('class', 'layerItemTexture');
+        this.layerItem = this.svgContainer.append('g').attr('class', 'layerItem');
         this.layerHighlightFront = this.svgContainer.append('g').attr('class', 'layerHighlightFront');
 
         this.texture_slot = this.layerHighlightBack.append('image');
@@ -79,9 +79,9 @@ export class ItemSlot {
 
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
-            this.item.texture.attr('x', state.scale);
-            this.item.texture.attr('y', state.scale);
-            this.layerItemTexture.node().appendChild(this.item.texture.node());
+            this.item.svgContainer.attr('x', state.scale);
+            this.item.svgContainer.attr('y', state.scale);
+            this.layerItem.node().appendChild(this.item.svgContainer.node());
         }
 
         // Make new selected item follow mouse cursor
@@ -89,13 +89,13 @@ export class ItemSlot {
             state.svg.on('mousemove', (event) => {
                 state.mouseX = event.x;
                 state.mouseY = event.y;
-                state.selectedItem.texture.attr('x', event.x - state.selectedItem.texture.attr('width') / 2)
-                state.selectedItem.texture.attr('y', event.y - state.selectedItem.texture.attr('height') / 2)
+                state.selectedItem.svgContainer.attr('x', event.x - state.selectedItem.svgContainer.attr('width') / 2)
+                state.selectedItem.svgContainer.attr('y', event.y - state.selectedItem.svgContainer.attr('height') / 2)
             });
-            state.svg.node().appendChild(state.selectedItem.texture.node());
-            state.selectedItem.texture.raise();
-            state.selectedItem.texture.attr('x', state.mouseX - state.selectedItem.texture.attr('width') / 2);
-            state.selectedItem.texture.attr('y', state.mouseY - state.selectedItem.texture.attr('height') / 2);
+            state.svg.node().appendChild(state.selectedItem.svgContainer.node());
+            state.selectedItem.svgContainer.raise();
+            state.selectedItem.svgContainer.attr('x', state.mouseX - state.selectedItem.svgContainer.attr('width') / 2);
+            state.selectedItem.svgContainer.attr('y', state.mouseY - state.selectedItem.svgContainer.attr('height') / 2);
         } else {
             state.svg.on('mousemove', (event) => {
                 state.mouseX = event.x;
@@ -121,9 +121,9 @@ export class ItemSlot {
 
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
-            this.item.texture.attr('x', state.scale);
-            this.item.texture.attr('y', state.scale);
-            this.layerItemTexture.node().appendChild(this.item.texture.node());
+            this.item.svgContainer.attr('x', state.scale);
+            this.item.svgContainer.attr('y', state.scale);
+            this.layerItem.node().appendChild(this.item.svgContainer.node());
         }
 
         // if new item isnt null, set item slot texture to be shown.

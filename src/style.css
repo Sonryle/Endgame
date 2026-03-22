@@ -32,6 +32,7 @@
     font-size: 40px;
     text-shadow: 5px 5px #3e3e3e;
     word-spacing: 20px;
+    white-space: pre;
 }
 
 body {

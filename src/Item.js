@@ -1,5 +1,4 @@
 import { state } from "./state.js"
-import { Grid } from "./grid.js"
 import { Inventory } from "./inventory.js"
 
 export const ItemType = {
@@ -12,32 +11,39 @@ export const ItemType = {
 }
 
 export class Item {
-    constructor(href, itemType, statValue1, statValue2, name) {
+    constructor(href, itemType, statValue1, statValue2, enchantments, name) {
         this.type = itemType;
+        this.enchantments = enchantments;
         this.name = name
         this.statValue1 = statValue1;
         this.statValue2 = statValue2;
-        console.log(statValue1)
-        console.log(statValue2)
-        this.texture = state.svg.append('image');
-        this.texture.attr('href', href);
-        this.texture.attr('width', 16 * state.scale);
-        this.texture.attr('height', 16 * state.scale);
-        this.texture.attr('pointer-events', 'none');
+
+        this.svgContainer = state.svg.append('svg');
+        this.svgContainer.attr('width', 16 * state.scale);
+        this.svgContainer.attr('height', 16 * state.scale);
+        this.itemTexture = this.svgContainer.append('image');
+        this.itemTexture.attr('href', href);
+        this.itemTexture.attr('width', 16 * state.scale);
+        this.itemTexture.attr('height', 16 * state.scale);
+        this.itemTexture.attr('pointer-events', 'none');
+
+        if (enchantments != null && typeof enchantments != "undefined") {
+
+        }
     }
 
     // Cause Item to snap to the grid
     snapToGrid(grid) {
-        let centerX = +this.texture.attr('x') + +this.texture.attr('width') / 2;
-        let centerY = +this.texture.attr('y') + +this.texture.attr('height') / 2;
+        let centerX = +this.svgContainer.attr('x') + +this.svgContainer.attr('width') / 2;
+        let centerY = +this.svgContainer.attr('y') + +this.svgContainer.attr('height') / 2;
         let [new_x, new_y] = grid.nearestCell(centerX, centerY);
         new_x += state.scale;    // Offset coordinates by 1 pixel to center item
         new_y += state.scale;
-        this.texture.attr('x', new_x);
-        this.texture.attr('y', new_y);
+        this.svgContainer.attr('x', new_x);
+        this.svgContainer.attr('y', new_y);
     }
     // Can be either "hidden" or "visible"
-    setVisibility(visibility) {
-        this.texture.attr('visibility', visibility);
+    setOpacity(level) {
+        this.svgContainer.attr('opacity', visibility);
     }
 }

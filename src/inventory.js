@@ -1,5 +1,5 @@
 import { state } from "./state.js"
-import { Grid } from "./grid.js"
+import { grid } from "./grid.js"
 import { Item, ItemType } from "./Item.js"
 import { ItemSlot } from "./ItemSlot.js"
 

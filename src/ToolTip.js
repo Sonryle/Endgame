@@ -1,8 +1,9 @@
 import { state } from "./state.js"
+import { grid } from "./grid.js"
 import { ItemType } from "./Item.js"
 
 export class ToolTip {
-    constructor(itemName, enchantments, itemType, itemStatValue1, itemStatValue2) {
+    constructor(itemName, itemEnchantments, itemType, itemStatValue1, itemStatValue2) {
         this.svgContainer = state.svg.append('svg').attr('class', 'ToolTipContainer');
         this.svgContainer.raise();
 
@@ -22,15 +23,32 @@ export class ToolTip {
         this.svgContainer.attr('y', (Math.trunc(state.mouseY / state.scale) * state.scale) - (24 * state.scale));
         state.svg.node().addEventListener('mousemove', (event) => {
             if (this.svgContainer != null) {
-                this.svgContainer.attr('x', (Math.trunc(state.mouseX / state.scale) * state.scale) - (1 * state.scale));
-                this.svgContainer.attr('y', (Math.trunc(state.mouseY / state.scale) * state.scale) - (24 * state.scale));
+                let [x, y] = grid.nearestPixel(state.mouseX, state.mouseY)
+                this.svgContainer.attr('x', x)
+                this.svgContainer.attr('y', y - 24 * state.scale)
             }
         })
 
         // Text Time!
-        toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
-                .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
 
+        // Item Name
+        const name = toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
+                .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
+        if (itemEnchantments != null && typeof itemEnchantments != "undefined")
+            name.style('color', '#55ffff')
+                    .style('text-shadow', state.scale + "px " + state.scale + "px " + "#153f3f")
+
+        // Item Enchantments
+        if (itemEnchantments != null && typeof itemEnchantments != "undefined") {
+            itemEnchantments.forEach((currentValue) => {
+                toolTip.append('xhtml:p').attr('class', 'minecraftText')
+                        .text(currentValue)
+                        .style('color', '#a8a8a8')
+                        .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
+            })
+        }
+
+        // Item Stats
         let phrase = "";
         switch (itemType) {
             case ItemType.HELMET:

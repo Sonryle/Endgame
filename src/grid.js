@@ -3,7 +3,7 @@ import { state } from "./state.js"
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
-export class Grid {
+class Grid {
     constructor() {
         this.cellScale = 18 * state.scale;
     }
@@ -52,7 +52,22 @@ export class Grid {
 
         return [newX, newY];
     }
+
+    nearestPixel(x, y) {
+        const remainingXSpace = winWidth % this.cellScale;
+        const remainingYSpace = winHeight % this.cellScale;
+        const gridOffsetX = this.cellScale / 2 - remainingXSpace / 2;
+        const gridOffsetY = this.cellScale / 2 - remainingYSpace / 2;
+
+        let newX = +x + gridOffsetX;
+        let newY = +y + gridOffsetY;
+        newX -= (newX % state.scale);
+        newY -= (newY % state.scale);
+        newX -= gridOffsetX;
+        newY -= gridOffsetY;
+
+        return [newX, newY];
+    }
 }
 
-// svg.attr('width', window.innerWidth);
-// svg.attr('height', window.innerHeight);
+export const grid = new Grid();

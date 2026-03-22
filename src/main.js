@@ -1,10 +1,10 @@
 import { select } from 'd3';
 
 import { state } from "./state.js"
+import { grid } from "./grid.js";
 
 import { Item, ItemType } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
-import { Grid } from "./grid.js";
 import { Inventory } from "./inventory.js"
 import "./style.css";
 
@@ -16,16 +16,15 @@ state.svg.on('mousemove', (event) => {
     state.mouseY = event.y;
 })
 
-const grid = new Grid();
 const inventory = new Inventory(grid);
 grid.drawGrid();
 
-const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET, 2, 3,"Diamond Helmet");
-const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE, 2, 8, "Diamond Chestplate");
-const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", ItemType.LEGGINGS, 2, 6, "Diamond Leggings");
-const boots = new Item("./src/assets/textures/item/diamond_boots.png", ItemType.BOOTS, 2, 3, "Diamond Boots");
-const sword = new Item("./src/assets/textures/item/diamond_sword.png", ItemType.WEAPON, 1.6, 10, "Diamond Sword");
-const string = new Item("./src/assets/textures/item/string.png", ItemType.DEFAULT, null, null, "String");
+const helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET, 2, 3, null, "Diamond Helmet");
+const chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE, 2, 8, ["Protection IV", "Thorns III", "Mending"], "Diamond Chestplate");
+const leggings = new Item("./src/assets/textures/item/diamond_leggings.png", ItemType.LEGGINGS, 2, 6, null, "Diamond Leggings");
+const boots = new Item("./src/assets/textures/item/diamond_boots.png", ItemType.BOOTS, 2, 3, null, "Diamond Boots");
+const sword = new Item("./src/assets/textures/item/diamond_sword.png", ItemType.WEAPON, 1.6, 10, ["Sharpness V", "Mending"], "Diamond Sword");
+const string = new Item("./src/assets/textures/item/string.png", ItemType.DEFAULT, null, null, null, "String");
 
 inventory.slots[5].setItem(helmet);
 inventory.slots[6].setItem(chestplate);
