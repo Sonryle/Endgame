@@ -3,24 +3,43 @@
   src: url(./src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
 }
 
-.minecraftText, .minecraftTextShadow {
-    font-family: Mojang-Regular;
+.ToolTip {
+    padding: 60px 80px 60px 80px;
+    --border-image-width: 50px;
     shape-rendering: geometricPrecision;
+    /* background-clip: border-box; */
+    border-image: url("./src/assets/textures/gui/sprites/tooltip/frame.png") 10 fill;
+    border-image-width: var(--border-image-width);
+}
+
+.ToolTip:after {
+    content: '';
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    position: absolute;
+    shape-rendering: geometricPrecision;
+    border-image: url("./src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
+    border-image-width: var(--border-image-width);
+    z-index: -1;
+}
+
+.minecraftText {
+    margin: 0;
+    font-family: Mojang-Regular;
+    color: white;
+    font-size: 35px;
+    text-shadow: 5px 5px #3e3e3e;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+    text-rendering: geometricPrecision;
 }
 
 body {
     margin: 0;
     overflow: hidden;
     image-rendering: pixelated;
-}
-
-.tooltip {
-    background-clip: border-box;
-    border-image: url("./src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
-    border-image-width: 50px;
-}
-.tooltipFrame {
-    background-clip: border-box;
-    border-image: url("./src/assets/textures/gui/sprites/tooltip/frame.png") 10 fill;
-    border-image-width: 50px;
 }
