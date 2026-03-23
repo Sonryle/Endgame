@@ -21,7 +21,7 @@ export class ItemSlot {
         this.layerItem = this.svgContainer.append('g').attr('class', 'layerItem');
         this.layerHighlightFront = this.svgContainer.append('g').attr('class', 'layerHighlightFront');
 
-        this.texture_slot = this.layerHighlightBack.append('image');
+        this.texture_slot = this.layerSlotTexture.append('image');
         this.texture_slot.attr('href', "./src/assets/textures/gui/sprites/container/slot.png");
         this.texture_slot.attr('width', 18 * state.scale);
         this.texture_slot.attr('height', 18 * state.scale);
