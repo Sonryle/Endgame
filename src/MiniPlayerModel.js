@@ -34,8 +34,15 @@ export class MiniPlayerModel {
         let object = null;
         const loader = new GLTFLoader();
         loader.load(
-            './src/assets/models/MinecraftPlayer/scene.gltf',
+            './src/assets/models/MinecraftPlayer/Slim/Untitled.gltf',
             (gltf) => {
+                gltf.scene.traverse((child) => {
+                    if (child.isMesh) {
+                        // child.material.side = THREE.DoubleSide;
+                        child.material.depthWrite = true;
+                        // child.renderOrder = 0;
+                    }
+                });
                 // If file is loaded, add it to scene
                 object = gltf.scene;
                 scene.add(object);
@@ -64,11 +71,11 @@ export class MiniPlayerModel {
         // Add callback for model animation
         state.svg.node().addEventListener('mousemove', (event) => {
             if (object != null) {
-                const a = 1;
+                const a = 1.3;
                 const x = (state.mouseX - xPos - canvasX / 2) / 500
-                const y = (state.mouseY - yPos - canvasY / 2) / 2000
-                const bellX = 1 / (1 + (x / a)*(x / a));
-                const bellY = 1 / (1 + (y / a)*(y / a));
+                const y = (state.mouseY - yPos + canvasY / 2) / 2000
+                const bellX = 1 / (1 + ((x / a)*(x / a)));
+                const bellY = 1 / (1 + ((y / a)*(y / a)));
                 object.rotation.y = x * bellX;
                 object.rotation.x = y * bellY;
             }
