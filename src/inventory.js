@@ -51,7 +51,7 @@ export class Inventory {
         yOffset = topLeftY + 90 * state.scale;
         for (let y = 0; y < 3; y++) {
             for (let x = 0; x < 9; x++) {
-                this.slots[9 + x * (y + 1)] = new ItemSlot(xOffset + x * this.cellScale, yOffset + y * this.cellScale, ItemType.DEFAULT);
+                this.slots[9 + x + (y * 9)] = new ItemSlot(xOffset + x * this.cellScale, yOffset + y * this.cellScale, ItemType.DEFAULT);
                 // console.log(9 + x + (y * 9));
             }
         }

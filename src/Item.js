@@ -64,7 +64,7 @@ export class Item {
             this.itemGlint.attr('fill', `url(#${patternId})`);
             this.itemGlint.attr('pointer-events', 'none');
             this.itemGlint.style('mix-blend-mode', 'screen');
-            this.itemGlint.style('filter', 'saturate(1) blur(1px)');
+            this.itemGlint.style('filter', 'opacity(1.0) saturate(1) blur(2px)');
         }
     }
 
