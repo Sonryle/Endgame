@@ -2,6 +2,7 @@ import { state } from "./state.js"
 import { grid } from "./grid.js"
 import { Item, ItemType } from "./Item.js"
 import { ItemSlot } from "./ItemSlot.js"
+import { MiniPlayerModel } from "./MiniPlayerModel.js"
 
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
@@ -66,5 +67,8 @@ export class Inventory {
 
         // Offhand Slot
         this.slots[45] = new ItemSlot(topLeftX + 87 * state.scale, topLeftY + 68 * state.scale, ItemType.DEFAULT);
+
+        // Create Mini Player Model
+        this.playerModel = new MiniPlayerModel(topLeftX + (36 * state.scale), topLeftY + (15 * state.scale));
     }
 }

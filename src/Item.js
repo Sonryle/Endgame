@@ -43,8 +43,8 @@ export class Item {
                 .attr('href', './src/assets/textures/misc/enchanted_glint_item.png')
             pattern.append('animateTransform')
                 .attr('attributeName', 'patternTransform')
-                .attr('to', `0 ${-16 * state.scale}`)  // move up by one tile height
-                .attr('dur', '2s')
+                .attr('to', `${16 * state.scale} ${-32 * state.scale}`)  // move up by one tile height
+                .attr('dur', '4s')
                 .attr('repeatCount', 'indefinite');
 
             const mask = defs.append('mask')
@@ -53,6 +53,7 @@ export class Item {
             
             mask.append('image')
                 .attr('href', href)
+                .attr('y', 0)
                 .attr('width', 16 * state.scale)
                 .attr('height', 16 * state.scale)
                 .style('filter', 'brightness(0) invert(1)')
