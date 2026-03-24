@@ -60,20 +60,21 @@ export class MiniPlayerModel {
 
 
         // Add lights to the scene
-        const topLight = new THREE.DirectionalLight(0xffffff, 4);
-        topLight.position.set(-500, 500, 100) // Top Right
+        const topLight = new THREE.DirectionalLight(0xffffff, 7);
+        topLight.position.set(-500, 500, 0) // Top Right
         scene.add(topLight);
-        const ambientLight = new THREE.AmbientLight(0x333333, 20);
+        const ambientLight = new THREE.AmbientLight(0x333333, 40);
         scene.add(ambientLight);
 
         // Add callback for model animation
         state.svg.node().addEventListener('mousemove', (event) => {
             if (object != null) {
-                const a = 0.8;
-                const x = Math.max(Math.min((state.mouseX - xPos - canvasX / 2) / 500, a), -a);
-                const y = Math.max(Math.min((state.mouseY - yPos + canvasY / 2) / 2000, a), -a);
-                const bellX = 1 / (1 + ((x / a)*(x / a)));
-                const bellY = 1 / (1 + ((y / a)*(y / a)));
+                const ax = 0.8; // Bell function height at x = 0
+                const ay = 1.0;
+                const x = Math.max(Math.min((state.mouseX - xPos - canvasX / 2) / 500, ax), -ax);
+                const y = Math.max(Math.min((state.mouseY - yPos - canvasY / 2) / 500, ay), -ay);
+                const bellX = 1 / (1 + ((x / ax)*(x / ax)));
+                const bellY = 1 / (1 + ((y / ay)*(y / ay)));
                 object.rotation.y = x * bellX;
                 object.rotation.x = y * bellY;
                 console.log("mouse x = " + x + "   \t rotation x = " + x * bellX );
