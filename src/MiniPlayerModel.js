@@ -25,7 +25,7 @@ export class MiniPlayerModel {
         // Create camera
         const fov = 70; const aspect = canvasX / canvasY; const near = 0.1; const far = 100;
         const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        camera.position.z = 2.0; camera.position.y = 1.25;
+        camera.position.z = 2.0; camera.position.y = 0;
         
         // Create scene
         const scene = new THREE.Scene();
@@ -38,9 +38,7 @@ export class MiniPlayerModel {
             (gltf) => {
                 gltf.scene.traverse((child) => {
                     if (child.isMesh) {
-                        // child.material.side = THREE.DoubleSide;
                         child.material.depthWrite = true;
-                        // child.renderOrder = 0;
                     }
                 });
                 // If file is loaded, add it to scene
@@ -65,19 +63,20 @@ export class MiniPlayerModel {
         const topLight = new THREE.DirectionalLight(0xffffff, 4);
         topLight.position.set(-500, 500, 100) // Top Right
         scene.add(topLight);
-        const ambientLight = new THREE.AmbientLight(0x333333, 13);
+        const ambientLight = new THREE.AmbientLight(0x333333, 20);
         scene.add(ambientLight);
 
         // Add callback for model animation
         state.svg.node().addEventListener('mousemove', (event) => {
             if (object != null) {
-                const a = 1.3;
-                const x = (state.mouseX - xPos - canvasX / 2) / 500
-                const y = (state.mouseY - yPos + canvasY / 2) / 2000
+                const a = 0.8;
+                const x = Math.max(Math.min((state.mouseX - xPos - canvasX / 2) / 500, a), -a);
+                const y = Math.max(Math.min((state.mouseY - yPos + canvasY / 2) / 2000, a), -a);
                 const bellX = 1 / (1 + ((x / a)*(x / a)));
                 const bellY = 1 / (1 + ((y / a)*(y / a)));
                 object.rotation.y = x * bellX;
                 object.rotation.x = y * bellY;
+                console.log("mouse x = " + x + "   \t rotation x = " + x * bellX );
             }
         })
 
