@@ -26,7 +26,7 @@ export class MiniPlayerModel {
         
         const scale = 57.5 * state.scale;
         const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, 1, 3);
-        camera.position.z = 2.0; camera.position.y = -0.05;
+        camera.position.z = 2.0; camera.position.y = 0.15;
         
         // Create scene
         const scene = new THREE.Scene();
@@ -41,22 +41,25 @@ export class MiniPlayerModel {
             './src/assets/models/MinecraftPlayer/Slim/Untitled.gltf',
             (gltf) => {
                 gltf.scene.traverse((child) => {
+                    const modifier = new TessellateModifier( 0.1, 6 );
                     if (child.isMesh) {
-                        child.material.depthWrite = true;
-                        child.renderOrder = 1;
+                        // child = modifier.modify(child);
+                        console.log(child.name)
                     }
+                    if (child.name == "SimpleSlimPlayerBodyLayer1")
+                        child.material.depthWrite = true;
+                    if (child.name == "SimpleSlimPlayerBodyLayer2")
+                        child.material.depthWrite = false;
                     if (child.name == "Head")
                         head = child;
                     if (child.name == "ArmLeftUpper")
                         left_arm = child;
                     if (child.name == "ArmRightUpper")
                         right_arm = child;
-                    console.log(child.name)
                 });
                 // If file is loaded, add it to scene
                 object = gltf.scene;
-                // const modifier = new TessellateModifier( 8, 8 );
-                // object = modifier.modify(object);
+                console.log(object);
                 scene.add(object);
             }, null ,
             (error) => {
