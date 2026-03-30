@@ -3,11 +3,11 @@ const app = express()
 const port = 5137;
 
 app.get('/', (req, res) => {
-  res.send('go to website.xyz/index.html please')
+  res.sendfile(__dirname + "/index.html");
 })
 
 app.use(express.static('/'))
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Endgame listening on port ${port}`)
 })
