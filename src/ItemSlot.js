@@ -3,12 +3,13 @@ import { ToolTip } from "./ToolTip.js"
 import { state } from "./state.js"
 
 export class ItemSlot {
-    constructor(x, y, itemType) {
+    constructor(svg, x, y, itemType) {
+        this.svg = svg;
         this.toolTip = null;
         this.itemType = itemType;
         this.item = null;
         
-        this.svgContainer = state.svg.append('svg').attr('class', 'ItemSlot');
+        this.svgContainer = this.svg.append('svg').attr('class', 'ItemSlot');
         this.svgContainer.raise();
         this.svgContainer.attr('overflow', 'hidden');
         this.svgContainer.attr('width', 18 * state.scale);
@@ -63,6 +64,8 @@ export class ItemSlot {
                 this.showToolTip();
             }
         });
+
+        
     }
 
     // Swaps item in slot with state.selectedItem
@@ -85,22 +88,11 @@ export class ItemSlot {
         }
 
         // Make new selected item follow mouse cursor
-        if (state.selectedItem != null) {
-            state.svg.on('mousemove', (event) => {
-                state.mouseX = event.x;
-                state.mouseY = event.y;
-                state.selectedItem.svgContainer.attr('x', event.x - state.selectedItem.svgContainer.attr('width') / 2)
-                state.selectedItem.svgContainer.attr('y', event.y - state.selectedItem.svgContainer.attr('height') / 2)
-            });
+        if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
             state.svg.node().appendChild(state.selectedItem.svgContainer.node());
             state.selectedItem.svgContainer.raise();
             state.selectedItem.svgContainer.attr('x', state.mouseX - state.selectedItem.svgContainer.attr('width') / 2);
             state.selectedItem.svgContainer.attr('y', state.mouseY - state.selectedItem.svgContainer.attr('height') / 2);
-        } else {
-            state.svg.on('mousemove', (event) => {
-                state.mouseX = event.x;
-                state.mouseY = event.y;
-            })
         }
 
         // if new item isnt null, set item slot texture to be shown.

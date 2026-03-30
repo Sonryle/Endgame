@@ -2,12 +2,13 @@ import { state } from "./state.js"
 import { Inventory } from "./inventory.js"
 
 export const ItemType = {
-    HELMET: "0",
-    CHESTPLATE: "1",
-    LEGGINGS: "2",
-    BOOTS: "3",
-    WEAPON: "4",
-    DEFAULT: "5",
+    NONE: "0",
+    DEFAULT: "1",
+    HELMET: "2",
+    CHESTPLATE: "3",
+    LEGGINGS: "4",
+    BOOTS: "5",
+    WEAPON: "6",
 }
 
 export class Item {
