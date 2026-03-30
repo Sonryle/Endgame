@@ -9,6 +9,7 @@ export const ItemType = {
     LEGGINGS: "4",
     BOOTS: "5",
     WEAPON: "6",
+    BLOCK: "7",
 }
 
 export class Item {

@@ -95,15 +95,14 @@ export class MiniPlayerModel {
             if (object != null) {
                 const ax = 0.8; // Bell function height at x = 0
                 const ay = 1.0;
-                const x = Math.max(Math.min((state.mouseX - xPos - canvasX / 2) / 500, ax), -ax);
-                const y = Math.max(Math.min((state.mouseY - yPos - canvasY / 4) / 500, ay), -ay);
+                const x = Math.max(Math.min((state.mouseX - xPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
+                const y = Math.max(Math.min((state.mouseY - yPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
                 const bellX = 1 / (1 + ((x / ax)*(x / ax)));
                 const bellY = 1 / (1 + ((y / ay)*(y / ay)));
                 object.rotation.y = x * bellX;
                 object.rotation.x = y * bellY;
                 head.rotation.y = x * bellX;
                 head.rotation.x = y * bellY;
-                // console.log("mouse x = " + x + "   \t rotation x = " + x * bellX );
             }
         })
 
@@ -118,13 +117,13 @@ export class Inventory {
         this.cellScale = 18 * state.scale;
         this.slots = [];
 
-        // Create image
+        // Create inventory image
         this.texture = this.svg.append('image');   
         this.texture.attr('href', "./src/assets/textures/gui/container/inventory.png");
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
-        // Create item slots
+        // Create item slots holding items
         this.initSlots(items);
 
         // Create Mini Player Model
@@ -134,7 +133,8 @@ export class Inventory {
     initSlots(items) {
 
         // Crafting Result
-        this.slots[0] = new ItemSlot(this.svg, 96 * state.scale, 51 * state.scale, ItemType.NONE);
+        this.slots[0] = new ItemSlot(this.svg, 153 * state.scale, 27 * state.scale, ItemType.NONE);
+
         // Crafting Input
         let xOffset = 97 * state.scale;
         let yOffset = 17 * state.scale;
@@ -182,5 +182,17 @@ export class Inventory {
 	items.forEach((value, index) => {
 	    this.slots[index].setItem(value);
 	});
+    }
+
+    returnItems() {
+        let items = [];
+        this.slots.forEach((slot, index) => {
+            items[index] = slot.item;
+        });
+        return items;
+    }
+
+    delete() {
+        this.svg.remove();
     }
 }
