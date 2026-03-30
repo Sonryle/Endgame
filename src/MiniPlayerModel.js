@@ -42,19 +42,19 @@ export class MiniPlayerModel {
             (gltf) => {
                 gltf.scene.traverse((child) => {
                     const modifier = new TessellateModifier( 0.1, 6 );
+                    console.log(child.name)
                     if (child.isMesh) {
                         // child = modifier.modify(child);
-                        console.log(child.name)
                     }
-                    if (child.name == "SimpleSlimPlayerBodyLayer1")
+                    if (child.name == "SlimPlayerInnerLayer")
                         child.material.depthWrite = true;
-                    if (child.name == "SimpleSlimPlayerBodyLayer2")
+                    if (child.name == "SlimPlayerOuterLayer")
                         child.material.depthWrite = false;
                     if (child.name == "Head")
                         head = child;
-                    if (child.name == "ArmLeftUpper")
+                    if (child.name == "ArmLeft")
                         left_arm = child;
-                    if (child.name == "ArmRightUpper")
+                    if (child.name == "ArmRight")
                         right_arm = child;
                 });
                 // If file is loaded, add it to scene
