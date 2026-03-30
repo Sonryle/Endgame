@@ -1,6 +1,6 @@
 @font-face {
   font-family: Mojang-Regular; /* set name */
-  src: url(./src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
+  src: url(/src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
 }
 
 .ToolTip {
@@ -8,7 +8,7 @@
     --border-image-width: 50px;
     shape-rendering: geometricPrecision;
     /* background-clip: border-box; */
-    border-image: url("./src/assets/textures/gui/sprites/tooltip/frame.png") 10 fill;
+    border-image: url("/src/assets/textures/gui/sprites/tooltip/frame.png") 10 fill;
     border-image-width: var(--border-image-width);
 }
 
@@ -20,7 +20,7 @@
     bottom: 0px;
     position: absolute;
     shape-rendering: geometricPrecision;
-    border-image: url("./src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
+    border-image: url("/src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
     border-image-width: var(--border-image-width);
     z-index: -1;
 }

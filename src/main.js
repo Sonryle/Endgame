@@ -49,5 +49,5 @@ items[24] = iron_chestplate;
 items[33] = iron_leggings;
 items[42] = iron_boots;
 
-const inventorySvg = state.svg.append('svg').attr('class', "inventory").attr('x', window.innerWidth / 3).attr('y', window.innerHeight / 3);
+const inventorySvg = state.svg.append('svg').attr('class', "inventory").attr('x', window.innerWidth / 4).attr('y', window.innerHeight / 4);
 const inventory = new Inventory(inventorySvg, items);
