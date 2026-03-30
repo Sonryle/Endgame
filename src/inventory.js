@@ -12,7 +12,7 @@ const winHeight = window.innerHeight;
 export class MiniPlayerModel {
     constructor(svg, xPos, yPos) {
 
-        const canvasX = state.scale * 49;
+        const canvasX = state.scale * 50;
         const canvasY = state.scale * 70;
         this.svg = svg;
 
@@ -20,8 +20,8 @@ export class MiniPlayerModel {
         const foreignObject = this.svg.append('foreignObject')
             .attr('class', 'playerModelContainer')
             .attr('pointer-events', 'none')
-            .attr('width', '100%')
-            .attr('height', '100%')
+            .attr('width', 50 * state.scale)
+            .attr('height', 70 * state.scale)
             .attr('x', xPos)
             .attr('y', yPos)
 
