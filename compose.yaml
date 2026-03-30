@@ -1,0 +1,5 @@
+services:
+  endgame:
+    build: .
+    ports:
+      - "5137:5137"
