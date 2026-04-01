@@ -3,7 +3,7 @@ import { select } from 'd3';
 import { state } from "./state.js"
 import { grid } from "./grid.js";
 
-import { Item, ItemType } from "./Item.js";
+import { ItemInstance, MinecraftItem } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
 import { Inventory } from "./inventory.js"
 import "./style.css";
@@ -22,32 +22,23 @@ state.svg.on('mousemove', (event) => {
 });
 
 // Add Items to inventory
-const netherite_helmet = new Item("./src/assets/textures/item/netherite_helmet.png", ItemType.HELMET, 2, 3, ["Pullup XVI", "Aus. Pullup XIII", "Chinup XIV"], "Netherite Helmet");
-const netherite_chestplate = new Item("./src/assets/textures/item/netherite_chestplate.png", ItemType.CHESTPLATE, 2, 8, ["70kg Bench Press I", "30kg Dip II", "0.9m Pike Push IV"], "Netherite Chestplate");
-const netherite_leggings = new Item("./src/assets/textures/item/netherite_leggings.png", ItemType.LEGGINGS, 2, 6, ["Squat 120kg", "Nordic Curl X", "Calf Raise XX 20kg"], "Netherite Leggings");
-const netherite_boots = new Item("./src/assets/textures/item/netherite_boots.png", ItemType.BOOTS, 2, 3, ["Good Looks CL"], "Netherite Boots");
-const diamond_helmet = new Item("./src/assets/textures/item/diamond_helmet.png", ItemType.HELMET, 2, 3, null, "Diamond Helmet");
-const diamond_chestplate = new Item("./src/assets/textures/item/diamond_chestplate.png", ItemType.CHESTPLATE, 2, 8, ["Protection IV", "Thorns III", "Mending"], "Diamond Chestplate");
-const diamond_leggings = new Item("./src/assets/textures/item/diamond_leggings.png", ItemType.LEGGINGS, 2, 6, null, "Diamond Leggings");
-const diamond_boots = new Item("./src/assets/textures/item/diamond_boots.png", ItemType.BOOTS, 2, 3, null, "Diamond Boots");
-const iron_helmet = new Item("./src/assets/textures/item/iron_helmet.png", ItemType.HELMET, 2, 3, null, "Iron Helmet");
-const iron_chestplate = new Item("./src/assets/textures/item/iron_chestplate.png", ItemType.CHESTPLATE, 2, 8, ["Bench V", "Bench IX", "Bench VIII", "Pike Push V", "Pike Push VIII", "Pike Push VII", "Dip IV", "Dip VIII", "Dip VII"], "Iron Chestplate");
-const iron_leggings = new Item("./src/assets/textures/item/iron_leggings.png", ItemType.LEGGINGS, 2, 6, null, "Iron Leggings");
-const iron_boots = new Item("./src/assets/textures/item/iron_boots.png", ItemType.BOOTS, 2, 3, null, "Iron Boots");
+const apple = new ItemInstance( MinecraftItem.apple, null, null);
+const book = new ItemInstance( MinecraftItem.book, null, null);
+const carrot = new ItemInstance( MinecraftItem.carrot, null, null);
+const diamond_helmet = new ItemInstance( MinecraftItem.diamond_helmet, ["Good Looks XII"], null);
+const diamond_chestplate = new ItemInstance( MinecraftItem.diamond_chestplate, null, null);
+const diamond_leggings = new ItemInstance( MinecraftItem.diamond_leggings, null, null);
+const diamond_boots = new ItemInstance( MinecraftItem.diamond_boots, null, null);
+
 
 const items = [];
-items[17] = netherite_helmet;
-items[26] = netherite_chestplate;
-items[35] = netherite_leggings;
-items[44] = netherite_boots;
-items[16] = diamond_helmet;
-items[25] = diamond_chestplate;
-items[34] = diamond_leggings;
-items[43] = diamond_boots;
-items[15] = iron_helmet;
-items[24] = iron_chestplate;
-items[33] = iron_leggings;
-items[42] = iron_boots;
+items[17] = apple;
+items[26] = book;
+items[35] = carrot;
+items[44] = diamond_helmet;
+items[43] = diamond_chestplate;
+items[42] = diamond_leggings;
+items[41] = diamond_boots;
 
 let [invWidth, invHeight] = [176 * state.scale, 166 * state.scale];
 const inventorySvg = state.svg.append('svg')

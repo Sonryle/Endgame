@@ -1,13 +1,15 @@
-import { Item, ItemType } from "./Item.js"
+import { ItemType } from "./Item.js"
 import { ToolTip } from "./ToolTip.js"
 import { state } from "./state.js"
+import { texturePack } from "./TexturePack.js"
 
 export class ItemSlot {
-    constructor(svg, x, y, itemType) {
+    constructor(svg, x, y, itemType, slotTexture) {
         this.svg = svg;
         this.toolTip = null;
         this.itemType = itemType;
         this.item = null;
+        this.slotTexture = slotTexture;
         
         this.svgContainer = this.svg.append('svg').attr('class', 'ItemSlot');
         this.svgContainer.raise();
@@ -23,13 +25,15 @@ export class ItemSlot {
         this.layerHighlightFront = this.svgContainer.append('g').attr('class', 'layerHighlightFront');
 
         this.texture_slot = this.layerSlotTexture.append('image');
-        this.texture_slot.attr('href', "./src/assets/textures/gui/sprites/container/slot.png");
-        this.texture_slot.attr('width', 18 * state.scale);
-        this.texture_slot.attr('height', 18 * state.scale);
-        this.texture_slot.attr('opacity', 0.0);
+        this.texture_slot.attr('width', 16 * state.scale);
+        this.texture_slot.attr('height', 16 * state.scale);
+        this.texture_slot.attr('x', 1 * state.scale);
+        this.texture_slot.attr('y', 1 * state.scale);
+        this.texture_slot.attr('opacity', 1.0);
+        this.texture_slot.attr('href', this.slotTexture);
 
         this.texture_back = this.layerHighlightBack.append('image');
-        this.texture_back.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_back.png");
+        this.texture_back.attr('href', texturePack.getPath("gui/sprites/container/slot_highlight_back.png"));
         this.texture_back.attr('width', 24 * state.scale);
         this.texture_back.attr('height', 24 * state.scale);
         this.texture_back.attr('x', -3 * state.scale);
@@ -37,7 +41,7 @@ export class ItemSlot {
         this.texture_back.attr('opacity', 0.0);
 
         this.texture_front = this.layerHighlightFront.append('image');
-        this.texture_front.attr('href', "./src/assets/textures/gui/sprites/container/slot_highlight_front.png");
+        this.texture_front.attr('href', texturePack.getPath("gui/sprites/container/slot_highlight_front.png"));
         this.texture_front.attr('width', 24 * state.scale);
         this.texture_front.attr('height', 24 * state.scale);
         this.texture_front.attr('x', -3 * state.scale);
@@ -95,12 +99,12 @@ export class ItemSlot {
             state.selectedItem.svgContainer.attr('y', state.mouseY - state.selectedItem.svgContainer.attr('height') / 2);
         }
 
-        // if new item isnt null, set item slot texture to be shown.
-        // this is done to hide any graphic symbols behind the item. (like in the armour slots)
+        // if new item is null, set item slot texture to be shown.
+        // this is done to hide item slot texture when an item is in it.
         if (this.item != null) {
-            this.texture_slot.attr('opacity', 1.0);
-        } else {
             this.texture_slot.attr('opacity', 0.0);
+        } else {
+            this.texture_slot.attr('opacity', 1.0);
         }
         
         this.svgContainer.dispatch('mousemove');
@@ -118,12 +122,12 @@ export class ItemSlot {
             this.layerItem.node().appendChild(this.item.svgContainer.node());
         }
 
-        // if new item isnt null, set item slot texture to be shown.
-        // this is done to hide any graphic symbols behind the item. (like in the armour slots)
+        // if new item is null, set item slot texture to be shown.
+        // this is done to hide item slot texture when an item is in it.
         if (this.item != null) {
-            this.texture_slot.attr('opacity', 1.0);
-        } else {
             this.texture_slot.attr('opacity', 0.0);
+        } else {
+            this.texture_slot.attr('opacity', 1.0);
         }
 
         return oldItem;

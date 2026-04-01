@@ -1,39 +1,56 @@
 import { state } from "./state.js"
+import { texturePack } from './TexturePack.js'
 import { Inventory } from "./inventory.js"
 
-export const ItemType = {
-    NONE: "0",
-    DEFAULT: "1",
-    HELMET: "2",
-    CHESTPLATE: "3",
-    LEGGINGS: "4",
-    BOOTS: "5",
-    WEAPON: "6",
-    BLOCK: "7",
+export const ItemType = Object.freeze({
+    NONE:           "none",
+    DEFAULT:        "default",
+    HELMET:         "helmet",
+    CHESTPLATE:     "chestplate",
+    LEGGINGS:       "leggings",
+    BOOTS:          "boots",
+    WEAPON:         "weapon",
+    BLOCK:          "block",
+});
+
+export const MinecraftItem = {
+    apple:              { texture: "apple.png",              type: ItemType.DEFAULT,     name: "Apple"               },
+    book:               { texture: "book.png",               type: ItemType.DEFAULT,     name: "Book"                },
+    carrot:             { texture: "carrot.png",             type: ItemType.DEFAULT,     name: "Carrot"              },
+    diamond:            { texture: "diamond.png",            type: ItemType.DEFAULT,     name: "Diamond"             },
+    diamond_helmet:     { texture: "diamond_helmet.png",     type: ItemType.HELMET,      name: "Diamond Helmet"      },
+    diamond_chestplate: { texture: "diamond_chestplate.png", type: ItemType.CHESTPLATE,  name: "Diamond Chestplate"  },
+    diamond_leggings:   { texture: "diamond_leggings.png",   type: ItemType.LEGGINGS,    name: "Diamond Leggings"    },
+    diamond_boots:      { texture: "diamond_boots.png",      type: ItemType.BOOTS,       name: "Diamond Boots"       },
 }
 
-export class Item {
-    constructor(href, itemType, statValue1, statValue2, enchantments, name) {
-        this.type = itemType;
+export class ItemInstance {
+    constructor(minecraftItem, enchantments, customName) {
+
+        this.customName = customName;
         this.enchantments = enchantments;
-        this.name = name
-        this.statValue1 = statValue1;
-        this.statValue2 = statValue2;
+        this.type = minecraftItem.type;
+        this.name = minecraftItem.name;
+        this.href = texturePack.getItemPath(minecraftItem.texture);
+
+        // Figure out later
+        this.statValue1 = 5;
+        this.statValue2 = 5;
 
         this.svgContainer = state.svg.append('svg');
         this.svgContainer.attr('width', 16 * state.scale);
         this.svgContainer.attr('height', 16 * state.scale);
 
         this.itemTexture = this.svgContainer.append('image');
-        this.itemTexture.attr('href', href);
+        this.itemTexture.attr('href', this.href);
         this.itemTexture.attr('width', 16 * state.scale);
         this.itemTexture.attr('height', 16 * state.scale);
         this.itemTexture.attr('pointer-events', 'none');
 
         this.itemGlint = null;
         if (enchantments != null && typeof enchantments != "undefined") {
-            const patternId = 'itemGlintPattern-' + href;
-            const maskId = 'maskId-' + href;
+            const patternId = 'itemGlintPattern-' + this.href;
+            const maskId = 'maskId-' + this.href;
             
             // Append a <defs> block with an animated pattern
             const defs = this.svgContainer.append('defs');
@@ -42,7 +59,7 @@ export class Item {
                 .attr('width', 1)
                 .attr('height', 1)
             pattern.append('image')
-                .attr('href', './src/assets/textures/misc/enchanted_glint_item.png')
+                .attr('href', texturePack.getPath("misc/enchanted_glint_item.png"));
             pattern.append('animateTransform')
                 .attr('attributeName', 'patternTransform')
                 .attr('to', `${16 * state.scale} ${-32 * state.scale}`)  // move up by one tile height
@@ -54,7 +71,7 @@ export class Item {
                 .attr('mask-mode', 'alpha')
             
             mask.append('image')
-                .attr('href', href)
+                .attr('href', this.href)
                 .attr('y', 0)
                 .attr('width', 16 * state.scale)
                 .attr('height', 16 * state.scale)

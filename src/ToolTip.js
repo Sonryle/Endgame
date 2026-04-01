@@ -1,24 +1,14 @@
 import { state } from "./state.js"
 import { grid } from "./grid.js"
+import { texturePack } from "./TexturePack.js"
 import { ItemType } from "./Item.js"
 
 export class ToolTip {
     constructor(itemName, itemEnchantments, itemType, itemStatValue1, itemStatValue2) {
+
+        // Set up svg container
         this.svgContainer = state.svg.append('svg').attr('class', 'ToolTipContainer');
         this.svgContainer.raise();
-
-        const foreignObject = this.svgContainer.append('foreignObject')
-            .attr('pointer-events', 'none')
-            .attr('width', 10000 * state.scale)
-            .attr('height', 10000 * state.scale)
-            .style('position', 'relative')
-
-        const toolTip = foreignObject.append('xhtml:div')
-            .attr('class', 'ToolTip')
-            .style('position', 'absolute')
-            .style('padding', state.scale * 11 + "px");
-        toolTip.node().style.setProperty('--border-image-width', (state.scale * 10).toString() + "px");
-
         this.svgContainer.attr('x', (Math.trunc(state.mouseX / state.scale) * state.scale) - (1 * state.scale));
         this.svgContainer.attr('y', (Math.trunc(state.mouseY / state.scale) * state.scale) - (24 * state.scale));
         state.svg.node().addEventListener('mousemove', (event) => {
@@ -29,14 +19,28 @@ export class ToolTip {
             }
         })
 
-        // Text Time!
+        // Set up foreign object for html to be rendered
+        const foreignObject = this.svgContainer.append('foreignObject')
+            .attr('pointer-events', 'none')
+            .attr('width', 10000 * state.scale)
+            .attr('height', 10000 * state.scale)
+            .style('position', 'relative')
+
+        // Set up css stylised border
+        const toolTip = foreignObject.append('xhtml:div')
+            .attr('class', 'ToolTip')
+            .style('position', 'absolute')
+            .style('padding', state.scale * 11 + "px");
+        toolTip.node().style.setProperty('--border-image-width', (state.scale * 10).toString() + "px");
+        document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${texturePack.getPath('/gui/sprites/tooltip/background.png')}")`);
+        document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${texturePack.getPath('/gui/sprites/tooltip/frame.png')}")`);
 
         // Item Name
         const name = toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
                 .style('text-shadow', state.scale + "px " + state.scale + "px " + "#3e3e3e")
         if (itemEnchantments != null && typeof itemEnchantments != "undefined")
             name.style('color', '#55ffff')
-                    .style('text-shadow', state.scale + "px " + state.scale + "px " + "#153f3f")
+                .style('text-shadow', state.scale + "px " + state.scale + "px " + "#153f3f")
 
         // Item Enchantments
         if (itemEnchantments != null && typeof itemEnchantments != "undefined") {
@@ -102,6 +106,7 @@ export class ToolTip {
             }
         }
 
+        // Stylise
         toolTip.selectAll('p')
                 .style('font-size', 8 * state.scale + "px")
                 .style('padding', state.scale + "px")

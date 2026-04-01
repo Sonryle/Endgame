@@ -3,12 +3,18 @@
   src: url(/src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
 }
 
+:root {
+    /* --tooltip-texture-path:        url("/src/assets/TexturePacks/Vanilla/assets/minecraft/textures/gui/sprites/tooltip/background.png"); */
+    --tooltip-texture-path:        url("/src/assets/TexturePacks/TextureNotFound.png");
+    --tooltip-frame-texture-path:  url("/src/assets/TexturePacks/TextureNotFound.png");
+}
+
 .ToolTip {
-    padding: 60px 80px 60px 80px;
     --border-image-width: 50px;
+    padding: 60px 80px 60px 80px;
     shape-rendering: geometricPrecision;
     /* background-clip: border-box; */
-    border-image: url("/src/assets/textures/gui/sprites/tooltip/frame.png") 10 fill;
+    border-image: var(--tooltip-texture-path) 10 fill;
     border-image-width: var(--border-image-width);
 }
 
@@ -20,9 +26,8 @@
     bottom: 0px;
     position: absolute;
     shape-rendering: geometricPrecision;
-    border-image: url("/src/assets/textures/gui/sprites/tooltip/background.png") 10 fill;
+    border-image: var(--tooltip-frame-texture-path) 10 fill;
     border-image-width: var(--border-image-width);
-    z-index: -1;
 }
 
 .minecraftText {

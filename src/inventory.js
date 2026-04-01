@@ -1,6 +1,7 @@
 import { state } from "./state.js"
 import { grid } from "./grid.js"
-import { Item, ItemType } from "./Item.js"
+import { texturePack } from "./TexturePack.js"
+import { ItemType } from "./Item.js"
 import { ItemSlot } from "./ItemSlot.js"
 
 import * as THREE from 'three';
@@ -45,7 +46,7 @@ export class MiniPlayerModel {
         let right_arm = null;
         const loader = new GLTFLoader();
         loader.load(
-            './src/assets/models/MinecraftPlayer/Slim/Untitled.gltf',
+            './src/assets/models/PlayerSlim/Untitled.gltf',
             (gltf) => {
                 gltf.scene.traverse((child) => {
                     if (child.name == "SlimPlayerInnerLayer")
@@ -119,7 +120,7 @@ export class Inventory {
 
         // Create inventory image
         this.texture = this.svg.append('image');   
-        this.texture.attr('href', "./src/assets/textures/gui/container/inventory.png");
+        this.texture.attr('href', texturePack.getPath("gui/container/inventory.png"));
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
@@ -138,18 +139,18 @@ export class Inventory {
         // Crafting Input
         let xOffset = 97 * state.scale;
         let yOffset = 17 * state.scale;
-        this.slots[1] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT)
-        this.slots[2] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT);
-        this.slots[3] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT);
-        this.slots[4] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT);
+        this.slots[1] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT, null)
+        this.slots[2] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT, null);
+        this.slots[3] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT, null);
+        this.slots[4] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT, null);
 
         // Armour
         xOffset = 7 * state.scale;
         yOffset = 7 * state.scale;
-        this.slots[5] = new ItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET);
-        this.slots[6] = new ItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE);
-        this.slots[7] = new ItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS);
-        this.slots[8] = new ItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS);
+        this.slots[5] = new ItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET, texturePack.getPath("gui/sprites/container/slot/helmet.png"));
+        this.slots[6] = new ItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE, texturePack.getPath("gui/sprites/container/slot/chestplate.png"));
+        this.slots[7] = new ItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS, texturePack.getPath("gui/sprites/container/slot/leggings.png"));
+        this.slots[8] = new ItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS, texturePack.getPath("gui/sprites/container/slot/boots.png"));
 
         // Main Inventory
         xOffset = 7 * state.scale;
@@ -160,7 +161,7 @@ export class Inventory {
                 this.slots[slotNum] = new ItemSlot( this.svg,
                                     xOffset + x * this.cellScale,
                                     yOffset + y * this.cellScale,
-                                    ItemType.DEFAULT);
+                                    ItemType.DEFAULT, null);
             }
         }
 
@@ -172,11 +173,11 @@ export class Inventory {
             this.slots[slotNum] = new ItemSlot(this.svg,
                                 xOffset + x * this.cellScale,
                                 yOffset + 0 * this.cellScale,
-                                ItemType.DEFAULT);
+                                ItemType.DEFAULT, null);
         }
 
         // Offhand Slot
-        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, ItemType.DEFAULT);
+        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, ItemType.DEFAULT, texturePack.getPath("gui/sprites/container/slot/shield.png"));
 
         // Fill every slot with respective item
 	items.forEach((value, index) => {
