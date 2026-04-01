@@ -4,12 +4,11 @@ import { state } from "./state.js"
 import { texturePack } from "./TexturePack.js"
 
 export class ItemSlot {
-    constructor(svg, x, y, itemType, slotTexture) {
+    constructor(svg, x, y, optionalSlotTexture, optionalItemType) {
         this.svg = svg;
+        this.itemType = optionalItemType;
         this.toolTip = null;
-        this.itemType = itemType;
         this.item = null;
-        this.slotTexture = slotTexture;
         
         this.svgContainer = this.svg.append('svg').attr('class', 'ItemSlot');
         this.svgContainer.raise();
@@ -30,7 +29,7 @@ export class ItemSlot {
         this.texture_slot.attr('x', 1 * state.scale);
         this.texture_slot.attr('y', 1 * state.scale);
         this.texture_slot.attr('opacity', 1.0);
-        this.texture_slot.attr('href', this.slotTexture);
+        this.texture_slot.attr('href', optionalSlotTexture);
 
         this.texture_back = this.layerHighlightBack.append('image');
         this.texture_back.attr('href', texturePack.getPath("gui/sprites/container/slot_highlight_back.png"));
@@ -62,7 +61,7 @@ export class ItemSlot {
             // Hide tooltip because item under cursor is now held
             this.hideToolTip();
             // Swap Items
-            this.swapItems();
+            this.swapWithSelectedItem();
             // Show tooltip & blank item slot texture if item under cursor isnt null
             if (this.item != null) {
                 this.showToolTip();
@@ -73,41 +72,23 @@ export class ItemSlot {
     }
 
     // Swaps item in slot with state.selectedItem
-    swapItems() {
-        // Check if item can go in this itemSlot
-        if (state.selectedItem != null && this.itemType != ItemType.DEFAULT)
-            if (state.selectedItem.type != this.itemType)
-                return;
+    swapWithSelectedItem() {
+
+        // If item types dont match, then return
+            if (state.selectedItem != null && this.itemType != ItemType.DEFAULT && this.itemType != null && typeof this.itemType != "undefined")
+                if (this.itemType != state.selectedItem.itemType)
+                    return;
 
         // Switch them around
-        let temp = this.item;
-        this.item = state.selectedItem;
-        state.selectedItem = temp;
+        state.selectedItem = this.setItem(state.selectedItem);
 
-        // Lock new item to grid & reorder DOM
-        if (this.item != null) {
-            this.item.svgContainer.attr('x', state.scale);
-            this.item.svgContainer.attr('y', state.scale);
-            this.layerItem.node().appendChild(this.item.svgContainer.node());
-        }
-
-        // Make new selected item follow mouse cursor
+        // Lock new selected item to mouse cursor
         if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
             state.svg.node().appendChild(state.selectedItem.svgContainer.node());
             state.selectedItem.svgContainer.raise();
             state.selectedItem.svgContainer.attr('x', state.mouseX - state.selectedItem.svgContainer.attr('width') / 2);
             state.selectedItem.svgContainer.attr('y', state.mouseY - state.selectedItem.svgContainer.attr('height') / 2);
         }
-
-        // if new item is null, set item slot texture to be shown.
-        // this is done to hide item slot texture when an item is in it.
-        if (this.item != null) {
-            this.texture_slot.attr('opacity', 0.0);
-        } else {
-            this.texture_slot.attr('opacity', 1.0);
-        }
-        
-        this.svgContainer.dispatch('mousemove');
     }
 
     // Replaces any item in this slot with a new item. returns old item
@@ -138,7 +119,7 @@ export class ItemSlot {
             this.toolTip = new ToolTip(
                             this.item.name,
                             this.item.enchantments,
-                            this.item.type,
+                            this.item.itemType,
                             this.item.statValue1,
                             this.item.statValue2
             );
@@ -150,5 +131,31 @@ export class ItemSlot {
             this.toolTip.delete();
             this.toolTip = null;
         }
+    }
+}
+
+export class ArmourItemSlot extends ItemSlot {
+    constructor(svg, x, y, itemType, onArmourChanged) {
+        switch (itemType) {
+            case ItemType.HELMET:
+                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/helmet.png"), ItemType.HELMET);
+                break;
+            case ItemType.CHESTPLATE:
+                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/chestplate.png"), ItemType.CHESTPLATE);
+                break;
+            case ItemType.LEGGINGS:
+                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/leggings.png"), ItemType.LEGGINGS);
+                break;
+            case ItemType.BOOTS:
+                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/boots.png"), ItemType.BOOTS);
+                break;
+
+        }
+        this.itemType = itemType;
+        this.onArmourChanged = onArmourChanged;
+    }
+
+    swapItems() {
+        super.swapItems();
     }
 }

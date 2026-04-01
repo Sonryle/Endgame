@@ -2,7 +2,7 @@ import { state } from "./state.js"
 import { grid } from "./grid.js"
 import { texturePack } from "./TexturePack.js"
 import { ItemType } from "./Item.js"
-import { ItemSlot } from "./ItemSlot.js"
+import { ItemSlot, ArmourItemSlot } from "./ItemSlot.js"
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -40,6 +40,8 @@ export class MiniPlayerModel {
         const scene = new THREE.Scene();
 
         // Create & Load player model
+        let innerLayer = null;
+        let outerLayer = null;
         let object = null;
         let head = null;
         let left_arm = null;
@@ -49,10 +51,15 @@ export class MiniPlayerModel {
             './src/assets/models/PlayerSlim/Untitled.gltf',
             (gltf) => {
                 gltf.scene.traverse((child) => {
-                    if (child.name == "SlimPlayerInnerLayer")
+                    if (child.name == "SlimPlayerInnerLayer") {
                         child.material.depthWrite = true;
-                    if (child.name == "SlimPlayerOuterLayer")
+                        innerLayer = child;
+                        console.log(child)
+                    }
+                    if (child.name == "SlimPlayerOuterLayer") {
                         child.material.depthWrite = false;
+                        outerLayer = child;
+                    }
                     if (child.name == "Head")
                         head = child;
                     if (child.name == "ArmLeft")
@@ -69,6 +76,7 @@ export class MiniPlayerModel {
                 console.log(error);
             }
         )
+        console.log(innerLayer);
 
         // Start the render loop
         const animate = () => {
@@ -104,6 +112,29 @@ export class MiniPlayerModel {
                 object.rotation.x = y * bellY;
                 head.rotation.y = x * bellX;
                 head.rotation.x = y * bellY;
+
+                const textureLoader = new THREE.TextureLoader();
+                if (head.rotation.y > 0) {
+                    textureLoader.load('./src/assets/models/PlayerSlim/alex.png', (newTexture) => {
+                        newTexture.flipY = false;  // important for GLTF models
+                        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                        newTexture.colorSpace = THREE.SRGBColorSpace;
+                        innerLayer.material.map = newTexture;
+                        innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                        outerLayer.material.map = newTexture;
+                        outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                    });
+                } else {
+                    textureLoader.load('./src/assets/models/PlayerSlim/alex3.png', (newTexture) => {
+                        newTexture.flipY = false;  // important for GLTF models
+                        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                        newTexture.colorSpace = THREE.SRGBColorSpace;
+                        innerLayer.material.map = newTexture;
+                        innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                        outerLayer.material.map = newTexture;
+                        outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                    });
+                }
             }
         })
 
@@ -134,23 +165,23 @@ export class Inventory {
     initSlots(items) {
 
         // Crafting Result
-        this.slots[0] = new ItemSlot(this.svg, 153 * state.scale, 27 * state.scale, ItemType.NONE);
+        this.slots[0] = new ItemSlot(this.svg, 153 * state.scale, 27 * state.scale, null, ItemType.NONE);
 
         // Crafting Input
         let xOffset = 97 * state.scale;
         let yOffset = 17 * state.scale;
-        this.slots[1] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT, null)
-        this.slots[2] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 0 * this.cellScale, ItemType.DEFAULT, null);
-        this.slots[3] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT, null);
-        this.slots[4] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 1 * this.cellScale, ItemType.DEFAULT, null);
+        this.slots[1] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 0 * this.cellScale)
+        this.slots[2] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 0 * this.cellScale);
+        this.slots[3] = new ItemSlot(this.svg, xOffset + 0 * this.cellScale, yOffset + 1 * this.cellScale);
+        this.slots[4] = new ItemSlot(this.svg, xOffset + 1 * this.cellScale, yOffset + 1 * this.cellScale);
 
         // Armour
         xOffset = 7 * state.scale;
         yOffset = 7 * state.scale;
-        this.slots[5] = new ItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET, texturePack.getPath("gui/sprites/container/slot/helmet.png"));
-        this.slots[6] = new ItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE, texturePack.getPath("gui/sprites/container/slot/chestplate.png"));
-        this.slots[7] = new ItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS, texturePack.getPath("gui/sprites/container/slot/leggings.png"));
-        this.slots[8] = new ItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS, texturePack.getPath("gui/sprites/container/slot/boots.png"));
+        this.slots[5] = new ArmourItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET);
+        this.slots[6] = new ArmourItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE);
+        this.slots[7] = new ArmourItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS);
+        this.slots[8] = new ArmourItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS);
 
         // Main Inventory
         xOffset = 7 * state.scale;
@@ -160,8 +191,7 @@ export class Inventory {
                 let slotNum = 9 + x + (y * 9);
                 this.slots[slotNum] = new ItemSlot( this.svg,
                                     xOffset + x * this.cellScale,
-                                    yOffset + y * this.cellScale,
-                                    ItemType.DEFAULT, null);
+                                    yOffset + y * this.cellScale);
             }
         }
 
@@ -172,12 +202,11 @@ export class Inventory {
             let slotNum = 36 + x;
             this.slots[slotNum] = new ItemSlot(this.svg,
                                 xOffset + x * this.cellScale,
-                                yOffset + 0 * this.cellScale,
-                                ItemType.DEFAULT, null);
+                                yOffset + 0 * this.cellScale);
         }
 
         // Offhand Slot
-        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, ItemType.DEFAULT, texturePack.getPath("gui/sprites/container/slot/shield.png"));
+        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale);
 
         // Fill every slot with respective item
 	items.forEach((value, index) => {

@@ -29,7 +29,7 @@ export class ItemInstance {
 
         this.customName = customName;
         this.enchantments = enchantments;
-        this.type = minecraftItem.type;
+        this.itemType = minecraftItem.type;
         this.name = minecraftItem.name;
         this.href = texturePack.getItemPath(minecraftItem.texture);
 
