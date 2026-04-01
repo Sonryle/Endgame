@@ -1,7 +1,7 @@
 import { state } from "./state.js"
 import { grid } from "./grid.js"
 import { texturePack } from "./TexturePack.js"
-import { ItemType } from "./Item.js"
+import { ItemType, MinecraftItem } from "./Item.js"
 import { ItemSlot, ArmourItemSlot } from "./ItemSlot.js"
 
 import * as THREE from 'three';
@@ -40,8 +40,6 @@ export class MiniPlayerModel {
         const scene = new THREE.Scene();
 
         // Create & Load player model
-        let innerLayer = null;
-        let outerLayer = null;
         let object = null;
         let head = null;
         let left_arm = null;
@@ -53,12 +51,11 @@ export class MiniPlayerModel {
                 gltf.scene.traverse((child) => {
                     if (child.name == "SlimPlayerInnerLayer") {
                         child.material.depthWrite = true;
-                        innerLayer = child;
-                        console.log(child)
+                        this.innerLayer = child;
                     }
                     if (child.name == "SlimPlayerOuterLayer") {
                         child.material.depthWrite = false;
-                        outerLayer = child;
+                        this.outerLayer = child;
                     }
                     if (child.name == "Head")
                         head = child;
@@ -76,7 +73,6 @@ export class MiniPlayerModel {
                 console.log(error);
             }
         )
-        console.log(innerLayer);
 
         // Start the render loop
         const animate = () => {
@@ -112,29 +108,6 @@ export class MiniPlayerModel {
                 object.rotation.x = y * bellY;
                 head.rotation.y = x * bellX;
                 head.rotation.x = y * bellY;
-
-                const textureLoader = new THREE.TextureLoader();
-                if (head.rotation.y > 0) {
-                    textureLoader.load('./src/assets/models/PlayerSlim/alex.png', (newTexture) => {
-                        newTexture.flipY = false;  // important for GLTF models
-                        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-                        newTexture.colorSpace = THREE.SRGBColorSpace;
-                        innerLayer.material.map = newTexture;
-                        innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                        outerLayer.material.map = newTexture;
-                        outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                    });
-                } else {
-                    textureLoader.load('./src/assets/models/PlayerSlim/alex3.png', (newTexture) => {
-                        newTexture.flipY = false;  // important for GLTF models
-                        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-                        newTexture.colorSpace = THREE.SRGBColorSpace;
-                        innerLayer.material.map = newTexture;
-                        innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                        outerLayer.material.map = newTexture;
-                        outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                    });
-                }
             }
         })
 
@@ -178,10 +151,10 @@ export class Inventory {
         // Armour
         xOffset = 7 * state.scale;
         yOffset = 7 * state.scale;
-        this.slots[5] = new ArmourItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET);
-        this.slots[6] = new ArmourItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE);
-        this.slots[7] = new ArmourItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS);
-        this.slots[8] = new ArmourItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS);
+        this.slots[5] = new ArmourItemSlot(this.svg, xOffset, yOffset + 0 * this.cellScale, ItemType.HELMET, (item, itemType) => this.swapPlayerArmour(item, itemType));
+        this.slots[6] = new ArmourItemSlot(this.svg, xOffset, yOffset + 1 * this.cellScale, ItemType.CHESTPLATE, (item, itemType) => this.swapPlayerArmour(item, itemType));
+        this.slots[7] = new ArmourItemSlot(this.svg, xOffset, yOffset + 2 * this.cellScale, ItemType.LEGGINGS, (item, itemType) => this.swapPlayerArmour(item, itemType));
+        this.slots[8] = new ArmourItemSlot(this.svg, xOffset, yOffset + 3 * this.cellScale, ItemType.BOOTS, (item, itemType) => this.swapPlayerArmour(item, itemType));
 
         // Main Inventory
         xOffset = 7 * state.scale;
@@ -206,12 +179,12 @@ export class Inventory {
         }
 
         // Offhand Slot
-        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale);
+        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, texturePack.getPath("gui/sprites/container/slot/shield.png"));
 
         // Fill every slot with respective item
-	items.forEach((value, index) => {
-	    this.slots[index].setItem(value);
-	});
+	    items.forEach((value, index) => {
+	        this.slots[index].setItem(value);
+	    });
     }
 
     returnItems() {
@@ -220,6 +193,73 @@ export class Inventory {
             items[index] = slot.item;
         });
         return items;
+    }
+
+    swapPlayerArmour(item, itemType) {
+
+        switch (itemType) {
+            case ItemType.HELMET:
+                this.swapHelmet(item);
+                break;
+            case ItemType.CHESTPLATE:
+                this.swapChestplate(item);
+                break;
+            case ItemType.LEGGINGS:
+                this.swapLeggings(item);
+                break;
+            case ItemType.BOOTS:
+                this.swapBoots(item);
+                break;
+        }
+        // const textureLoader = new THREE.TextureLoader();
+        // if (head.rotation.y > 0) {
+        //     textureLoader.load('./src/assets/models/PlayerSlim/alex.png', (newTexture) => {
+        //         newTexture.flipY = false;  // important for GLTF models
+        //         newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        //         newTexture.colorSpace = THREE.SRGBColorSpace;
+        //         this.innerLayer.material.map = newTexture;
+        //         this.innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+        //         this.outerLayer.material.map = newTexture;
+        //         this.outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+        //     });
+        // } else {
+        //     textureLoader.load('./src/assets/models/PlayerSlim/alex3.png', (newTexture) => {
+        //         newTexture.flipY = false;  // important for GLTF models
+        //         newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        //         newTexture.colorSpace = THREE.SRGBColorSpace;
+        //         this.innerLayer.material.map = newTexture;
+        //         this.innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+        //         this.outerLayer.material.map = newTexture;
+        //         this.outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+        //     });
+        // }
+        return;
+    }
+
+    swapHelmet(item) {
+        // Find out which texture to use
+        if (item == null)
+            console.log("No Helmet");
+        else {
+            let str = (item.enchantments != null)? "Enchanted " : "";
+            if (item.minecraftItem.name.includes("Diamond", 0))
+                console.log(str + "Diamond Helmet");
+        }
+    }
+
+    swapChestplate(item) {
+
+        console.log("chestplate");
+    }
+
+    swapLeggings(item) {
+
+        console.log("leggings");
+    }
+
+    swapBoots(item) {
+
+        console.log("boots");
     }
 
     delete() {

@@ -27,6 +27,7 @@ export const MinecraftItem = {
 export class ItemInstance {
     constructor(minecraftItem, enchantments, customName) {
 
+        this.minecraftItem = minecraftItem;
         this.customName = customName;
         this.enchantments = enchantments;
         this.itemType = minecraftItem.type;

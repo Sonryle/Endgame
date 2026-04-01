@@ -74,15 +74,10 @@ export class ItemSlot {
     // Swaps item in slot with state.selectedItem
     swapWithSelectedItem() {
 
-        // If item types dont match, then return
-            if (state.selectedItem != null && this.itemType != ItemType.DEFAULT && this.itemType != null && typeof this.itemType != "undefined")
-                if (this.itemType != state.selectedItem.itemType)
-                    return;
-
         // Switch them around
         state.selectedItem = this.setItem(state.selectedItem);
 
-        // Lock new selected item to mouse cursor
+        // Append selected item to svg and lock new selected item to mouse cursor
         if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
             state.svg.node().appendChild(state.selectedItem.svgContainer.node());
             state.selectedItem.svgContainer.raise();
@@ -93,19 +88,27 @@ export class ItemSlot {
 
     // Replaces any item in this slot with a new item. returns old item
     setItem(newItem) {
+
+        // Do ItemType checking
+        if (this.itemType != null && typeof this.itemType != "undefined" && newItem != null) {
+            if (newItem.itemType != this.itemType)
+                return newItem; // return input back as output
+        }
+
+        // Swap items
         let oldItem = this.item;
         this.item = newItem;
 
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
+            this.layerItem.node().appendChild(this.item.svgContainer.node());
             this.item.svgContainer.attr('x', state.scale);
             this.item.svgContainer.attr('y', state.scale);
-            this.layerItem.node().appendChild(this.item.svgContainer.node());
         }
 
         // if new item is null, set item slot texture to be shown.
         // this is done to hide item slot texture when an item is in it.
-        if (this.item != null) {
+        if (this.item != null && typeof this.item != "undefined") {
             this.texture_slot.attr('opacity', 0.0);
         } else {
             this.texture_slot.attr('opacity', 1.0);
@@ -155,7 +158,15 @@ export class ArmourItemSlot extends ItemSlot {
         this.onArmourChanged = onArmourChanged;
     }
 
-    swapItems() {
-        super.swapItems();
+    setItem(newItem) {
+        // Record current armour in slot
+        let startItem = this.item;
+        // Run slot swapping code and keep return value for later
+        let returnItem = super.setItem(newItem);
+        // If armour in slot has changed, call inventory onArmourChanged callback
+        if (startItem != this.item)
+            this.onArmourChanged(this.item, this.itemType);
+        // Return return value from super.setItem();
+        return returnItem;
     }
 }
