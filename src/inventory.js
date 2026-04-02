@@ -154,7 +154,6 @@ export class Inventory {
         // Create Mini Player Model
         this.playerModel = new MiniPlayerModel(this.svg, (25 * state.scale), (8 * state.scale));
         await this.playerModel.ready;
-        console.log("Player Model Loaded, Moving on to initSlots now")
 
         // Create item slots holding items
         this.initSlots(items)
@@ -250,6 +249,9 @@ export class Inventory {
                 case "Diamond Helmet":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
                     break;
+                case "Golden Helmet":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
+                    break;
                 case "Iron Helmet":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
@@ -282,6 +284,9 @@ export class Inventory {
                     break;
                 case "Diamond Chestplate":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+                case "Golden Chestplate":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
                     break;
                 case "Iron Chestplate":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
@@ -316,6 +321,9 @@ export class Inventory {
                 case "Diamond Leggings":
                     texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
                     break;
+                case "Golden Leggings":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/gold.png");
+                    break;
                 case "Iron Leggings":
                     texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/iron.png");
                     break;
@@ -348,6 +356,9 @@ export class Inventory {
                     break;
                 case "Diamond Boots":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+                case "Golden Boots":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
                     break;
                 case "Iron Boots":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
