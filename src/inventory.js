@@ -100,25 +100,25 @@ export class MiniPlayerModel {
             if (child.name == "Helmet") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
-                child.material.alphaTest = 1.0;
+                child.material.alphaTest = 0.5;
                 this.helmet = child;
             }
             if (child.name == "Chestplate") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
-                child.material.alphaTest = 1.0;
+                child.material.alphaTest = 0.5;
                 this.chestplate = child;
             }
             if (child.name == "Leggings") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
-                child.material.alphaTest = 1.0;
+                child.material.alphaTest = 0.5;
                 this.leggings = child;
             }
             if (child.name == "Boots") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
-                child.material.alphaTest = 1.0;
+                child.material.alphaTest = 0.5;
                 this.boots = child;
             }
             if (child.name == "Head")
