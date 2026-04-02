@@ -32,8 +32,8 @@ export class ToolTip {
             .style('position', 'absolute')
             .style('padding', state.scale * 11 + "px");
         toolTip.node().style.setProperty('--border-image-width', (state.scale * 10).toString() + "px");
-        document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${texturePack.getPath('/gui/sprites/tooltip/background.png')}")`);
-        document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${texturePack.getPath('/gui/sprites/tooltip/frame.png')}")`);
+        document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${texturePack.getPath('gui/sprites/tooltip/background.png')}")`);
+        document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${texturePack.getPath('gui/sprites/tooltip/frame.png')}")`);
 
         // Item Name
         const name = toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
