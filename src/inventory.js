@@ -147,7 +147,7 @@ export class Inventory {
 
         // Create inventory image
         this.texture = this.svg.append('image');   
-        this.texture.attr('href', texturePack.getPath("gui/container/inventory.png"));
+        this.texture.attr('href', await texturePack.getPath("gui/container/inventory.png"));
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
@@ -159,7 +159,7 @@ export class Inventory {
         this.initSlots(items)
     }
 
-    initSlots(items) {
+    async initSlots(items) {
 
         // Crafting Result
         this.slots[0] = new ItemSlot(this.svg, 153 * state.scale, 27 * state.scale, null, ItemType.NONE);
@@ -203,7 +203,7 @@ export class Inventory {
         }
 
         // Offhand Slot
-        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, texturePack.getPath("gui/sprites/container/slot/shield.png"));
+        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, await texturePack.getPath("gui/sprites/container/slot/shield.png"));
 
         // Fill every slot with respective item
 	    items.forEach((value, index) => {
@@ -238,22 +238,22 @@ export class Inventory {
         return;
     }
 
-    swapHelmet(item) {
+    async swapHelmet(item) {
         // Find out which texture to use
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Helmet":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
                     break;
                 case "Diamond Helmet":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
                     break;
                 case "Golden Helmet":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
                     break;
                 case "Iron Helmet":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }
@@ -274,22 +274,22 @@ export class Inventory {
         }
     }
 
-    swapChestplate(item) {
+    async swapChestplate(item) {
         // Find out which texture to use
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Chestplate":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
                     break;
                 case "Diamond Chestplate":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
                     break;
                 case "Golden Chestplate":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
                     break;
                 case "Iron Chestplate":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }
@@ -310,22 +310,22 @@ export class Inventory {
         }
     }
 
-    swapLeggings(item) {
+    async swapLeggings(item) {
         // Find out which texture to use
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Leggings":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/netherite.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/netherite.png");
                     break;
                 case "Diamond Leggings":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
                     break;
                 case "Golden Leggings":
                     texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/gold.png");
                     break;
                 case "Iron Leggings":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/iron.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/iron.png");
                     break;
             }
         }
@@ -346,22 +346,22 @@ export class Inventory {
         }
     }
 
-    swapBoots(item) {
+    async swapBoots(item) {
         // Find out which texture to use
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Boots":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
                     break;
                 case "Diamond Boots":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
                     break;
                 case "Golden Boots":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
                     break;
                 case "Iron Boots":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }

@@ -1,9 +1,1 @@
-{
-  "variants": {
-    "": [
-      {
-        "model": "minecraft:block/brown_concrete_powder"
-      }
-    ]
-  }
-}
+{"variants":{"normal":{"model":"brown_concrete_powder"}}}

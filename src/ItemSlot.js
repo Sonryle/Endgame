@@ -32,7 +32,6 @@ export class ItemSlot {
         this.texture_slot.attr('href', optionalSlotTexture);
 
         this.texture_back = this.layerHighlightBack.append('image');
-        this.texture_back.attr('href', texturePack.getPath("gui/sprites/container/slot_highlight_back.png"));
         this.texture_back.attr('width', 24 * state.scale);
         this.texture_back.attr('height', 24 * state.scale);
         this.texture_back.attr('x', -3 * state.scale);
@@ -40,7 +39,6 @@ export class ItemSlot {
         this.texture_back.attr('opacity', 0.0);
 
         this.texture_front = this.layerHighlightFront.append('image');
-        this.texture_front.attr('href', texturePack.getPath("gui/sprites/container/slot_highlight_front.png"));
         this.texture_front.attr('width', 24 * state.scale);
         this.texture_front.attr('height', 24 * state.scale);
         this.texture_front.attr('x', -3 * state.scale);
@@ -68,7 +66,12 @@ export class ItemSlot {
             }
         });
 
-        
+        this.initTextures();
+    }
+
+    async initTextures() {
+        await this.texture_front.attr('href', await texturePack.getPath("gui/sprites/container/slot_highlight_front.png"));
+        await this.texture_back.attr('href', await texturePack.getPath("gui/sprites/container/slot_highlight_back.png"));
     }
 
     // Swaps item in slot with state.selectedItem
@@ -141,21 +144,38 @@ export class ArmourItemSlot extends ItemSlot {
     constructor(svg, x, y, itemType, onArmourChanged) {
         switch (itemType) {
             case ItemType.HELMET:
-                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/helmet.png"), ItemType.HELMET);
+                super(svg, x, y, null, ItemType.HELMET);
                 break;
             case ItemType.CHESTPLATE:
-                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/chestplate.png"), ItemType.CHESTPLATE);
+                super(svg, x, y, null, ItemType.CHESTPLATE);
                 break;
             case ItemType.LEGGINGS:
-                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/leggings.png"), ItemType.LEGGINGS);
+                super(svg, x, y, null, ItemType.LEGGINGS);
                 break;
             case ItemType.BOOTS:
-                super(svg, x, y, texturePack.getPath("gui/sprites/container/slot/boots.png"), ItemType.BOOTS);
+                super(svg, x, y, null, ItemType.BOOTS);
                 break;
-
         }
         this.itemType = itemType;
         this.onArmourChanged = onArmourChanged;
+        this.init(svg, x, y, itemType, onArmourChanged);
+    }
+
+    async init(svg, x, y, itemType, onArmourChanged) {
+        switch (itemType) {
+            case ItemType.HELMET:
+                this.texture_slot.attr('href', await texturePack.getPath("gui/sprites/container/slot/helmet.png"));
+                break;
+            case ItemType.CHESTPLATE:
+                this.texture_slot.attr('href', await texturePack.getPath("gui/sprites/container/slot/chestplate.png"));
+                break;
+            case ItemType.LEGGINGS:
+                this.texture_slot.attr('href', await texturePack.getPath("gui/sprites/container/slot/leggings.png"));
+                break;
+            case ItemType.BOOTS:
+                this.texture_slot.attr('href', await texturePack.getPath("gui/sprites/container/slot/boots.png"));
+                break;
+        }
     }
 
     setItem(newItem) {

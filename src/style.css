@@ -10,11 +10,11 @@
 }
 
 .ToolTip {
-    --border-image-width: 50px;
-    padding: 60px 80px 60px 80px;
+    --border-image-width: 50%;
+    padding: 60% 80% 60% 80%;
     shape-rendering: geometricPrecision;
     /* background-clip: border-box; */
-    border-image: var(--tooltip-texture-path) 10 fill;
+    border-image: var(--tooltip-texture-path) 10% fill;
     border-image-width: var(--border-image-width);
 }
 
@@ -26,7 +26,7 @@
     bottom: 0px;
     position: absolute;
     shape-rendering: geometricPrecision;
-    border-image: var(--tooltip-frame-texture-path) 10 fill;
+    border-image: var(--tooltip-frame-texture-path) 10% fill;
     border-image-width: var(--border-image-width);
 }
 

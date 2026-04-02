@@ -2,6 +2,7 @@ import { select } from 'd3';
 
 import { state } from "./state.js"
 import { grid } from "./grid.js";
+import { texturePack } from "./TexturePack.js"
 
 import { ItemInstance, MinecraftItem } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
@@ -11,6 +12,9 @@ import "./style.css";
 state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
+
+document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${await texturePack.getPath('gui/sprites/tooltip/background.png')}")`);
+document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${await texturePack.getPath('gui/sprites/tooltip/frame.png')}")`);
 
 state.svg.on('mousemove', (event) => {
     state.mouseX = event.x;
@@ -48,7 +52,6 @@ const iron_chestplate         = new ItemInstance( MinecraftItem.iron_chestplate,
 const iron_leggings           = new ItemInstance( MinecraftItem.iron_leggings,          null, null);
 const iron_boots              = new ItemInstance( MinecraftItem.iron_boots,             null, null);
 // ----------------------------
-
 
 const items = [];
 items[9] = apple;

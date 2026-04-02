@@ -1,33 +1,33 @@
 // Manages texturepacks and returns correct textures
 
-// const current_pack = "./src/assets/TexturePacks/Bare Bones 1.21.11";
-const current_pack = "/src/assets/texturePacks/Vanilla";
+const fallback_pack = "/src/assets/texturePacks/Vanilla";
+const current_pack = "./src/assets/texturePacks/Bare Bones";
+// const current_pack = "./src/assets/texturePacks/Vanilla";
+// const current_pack = "./src/assets/texturePacks/Faithful 64x";
 
 class TexturePack {
     constructor() {
     }
 
-    // Begins at TexturePack/assets/minecraft/textures/item
-    getItemPath(textureFileName) {
-        return this.getPath("item/" + textureFileName);
+    // Begins at TexturePack/minecraft/textures
+    async getPath(texturePath) {
+
+        const URL = current_pack + "/assets/minecraft/textures/" + texturePath;
+        if(await this.textureExists(URL)) {
+            return URL;
+        } else {
+            console.log("Missing Texture. Using fallback texture for texture \"" + URL + "\"");
+            return fallback_pack + "/assets/minecraft/textures/" + texturePath;
+        }
     }
 
-    // Begins at TexturePack/minecraft/textures
-    getPath(texturePath) {
-        // Test if texture exists in texture pack
-        return current_pack + "/assets/minecraft/textures/" + texturePath;
-
-        // try {
-        //     const response = await fetch(url);
-        //     if (response.ok) {
-        //         return url
-        //     } else {
-        //         console.log("error");
-        //         throw new Error(`Response status: ${response.status}`);
-        //     }
-        // } catch (error) {
-        //     console.error(error.message);
-        // }
+    async textureExists(URL) {
+        let response = await fetch(URL, { method: "HEAD" });
+        const contentType = response.headers.get("content-type");
+        if (contentType != "image/png")
+            return false
+        else
+            return true;
     }
 }
 

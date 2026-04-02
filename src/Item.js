@@ -42,13 +42,16 @@ export const MinecraftItem = {
 
 export class ItemInstance {
     constructor(minecraftItem, enchantments, customName) {
+        this.init(minecraftItem, enchantments, customName);
+    }
 
+    async init(minecraftItem, enchantments, customName) {
         this.minecraftItem = minecraftItem;
         this.customName = customName;
         this.enchantments = enchantments;
         this.itemType = minecraftItem.type;
         this.name = minecraftItem.name;
-        this.href = texturePack.getItemPath(minecraftItem.texture);
+        this.href = await texturePack.getPath("item/" + minecraftItem.texture);
 
         // Figure out later
         this.statValue1 = 5;
@@ -76,7 +79,7 @@ export class ItemInstance {
                 .attr('width', 1)
                 .attr('height', 1)
             pattern.append('image')
-                .attr('href', texturePack.getPath("misc/enchanted_glint_item.png"));
+                .attr('href', await texturePack.getPath("misc/enchanted_glint_item.png"));
             pattern.append('animateTransform')
                 .attr('attributeName', 'patternTransform')
                 .attr('to', `${16 * state.scale} ${-32 * state.scale}`)  // move up by one tile height
