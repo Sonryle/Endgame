@@ -1,7 +1,7 @@
 // Manages texturepacks and returns correct textures
 
 // const current_pack = "./src/assets/TexturePacks/Bare Bones 1.21.11";
-const current_pack = "./src/assets/texturePacks/Vanilla";
+const current_pack = "/src/assets/texturePacks/Vanilla";
 
 class TexturePack {
     constructor() {
