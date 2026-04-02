@@ -14,14 +14,25 @@ export const ItemType = Object.freeze({
 });
 
 export const MinecraftItem = {
-    apple:              { texture: "apple.png",              type: ItemType.DEFAULT,     name: "Apple"               },
-    book:               { texture: "book.png",               type: ItemType.DEFAULT,     name: "Book"                },
-    carrot:             { texture: "carrot.png",             type: ItemType.DEFAULT,     name: "Carrot"              },
-    diamond:            { texture: "diamond.png",            type: ItemType.DEFAULT,     name: "Diamond"             },
-    diamond_helmet:     { texture: "diamond_helmet.png",     type: ItemType.HELMET,      name: "Diamond Helmet"      },
-    diamond_chestplate: { texture: "diamond_chestplate.png", type: ItemType.CHESTPLATE,  name: "Diamond Chestplate"  },
-    diamond_leggings:   { texture: "diamond_leggings.png",   type: ItemType.LEGGINGS,    name: "Diamond Leggings"    },
-    diamond_boots:      { texture: "diamond_boots.png",      type: ItemType.BOOTS,       name: "Diamond Boots"       },
+    apple:                { texture: "apple.png",                type: ItemType.DEFAULT,     name: "Apple"                 },
+    book:                 { texture: "book.png",                 type: ItemType.DEFAULT,     name: "Book"                  },
+    carrot:               { texture: "carrot.png",               type: ItemType.DEFAULT,     name: "Carrot"                },
+    dark_oak_sign:        { texture: "dark_oak_sign.png",        type: ItemType.DEFAULT,     name: "Dark Oak Sign"         },
+    diamond:              { texture: "diamond.png",              type: ItemType.DEFAULT,     name: "Diamond"               },
+    diamond_boots:        { texture: "diamond_boots.png",        type: ItemType.BOOTS,       name: "Diamond Boots"         },
+    diamond_chestplate:   { texture: "diamond_chestplate.png",   type: ItemType.CHESTPLATE,  name: "Diamond Chestplate"    },
+    diamond_helmet:       { texture: "diamond_helmet.png",       type: ItemType.HELMET,      name: "Diamond Helmet"        },
+    diamond_leggings:     { texture: "diamond_leggings.png",     type: ItemType.LEGGINGS,    name: "Diamond Leggings"      },
+    iron_boots:           { texture: "iron_boots.png",           type: ItemType.BOOTS,       name: "Iron Boots"            },
+    iron_chestplate:      { texture: "iron_chestplate.png",      type: ItemType.CHESTPLATE,  name: "Iron Chestplate"       },
+    iron_helmet:          { texture: "iron_helmet.png",          type: ItemType.HELMET,      name: "Iron Helmet"           },
+    iron_ingot:           { texture: "iron_ingot.png",           type: ItemType.DEFAULT,     name: "Iron Ingot"            },
+    iron_leggings:        { texture: "iron_leggings.png",        type: ItemType.LEGGINGS,    name: "Iron Leggings"         },
+    netherite_boots:      { texture: "netherite_boots.png",      type: ItemType.BOOTS,       name: "Netherite Boots"       },
+    netherite_chestplate: { texture: "netherite_chestplate.png", type: ItemType.CHESTPLATE,  name: "Netherite Chestplate"  },
+    netherite_helmet:     { texture: "netherite_helmet.png",     type: ItemType.HELMET,      name: "Netherite Helmet"      },
+    netherite_ingot:      { texture: "netherite_ingot.png",      type: ItemType.DEFAULT,     name: "Netherite Ingot"       },
+    netherite_leggings:   { texture: "netherite_leggings.png",   type: ItemType.LEGGINGS,    name: "Netherite Leggings"    },
 }
 
 export class ItemInstance {

@@ -147,7 +147,7 @@ export class Inventory {
 
         // Create inventory image
         this.texture = this.svg.append('image');   
-        this.texture.attr('href', texturePack.getPath("gui/container/inventory.png"));
+        this.texture.attr('href', texturePack.getPath("gui/container/numbered_inventory.png"));
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
@@ -244,8 +244,14 @@ export class Inventory {
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
+                case "Netherite Helmet":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    break;
                 case "Diamond Helmet":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+                case "Iron Helmet":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }
@@ -271,8 +277,14 @@ export class Inventory {
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
+                case "Netherite Chestplate":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    break;
                 case "Diamond Chestplate":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+                case "Iron Chestplate":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }
@@ -298,8 +310,14 @@ export class Inventory {
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
+                case "Netherite Leggings":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/netherite.png");
+                    break;
                 case "Diamond Leggings":
                     texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
+                    break;
+                case "Iron Leggings":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/iron.png");
                     break;
             }
         }
@@ -325,8 +343,14 @@ export class Inventory {
         let texturePath = null;
         if (item != null) {
             switch (item.name) {
+                case "Netherite Boots":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    break;
                 case "Diamond Boots":
                     texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+                case "Iron Boots":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/iron.png");
                     break;
             }
         }
