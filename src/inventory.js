@@ -28,9 +28,8 @@ export class MiniPlayerModel {
 
         // Create renderer
         const renderer = new THREE.WebGLRenderer( {antialias: false});
-        renderer.setSize(canvasX, canvasY);
-        // renderer.setClearColor( 0x88ffff, 1 );
         foreignObject.node().appendChild(renderer.domElement);
+        renderer.setSize(canvasX, canvasY);
         
         const scale = 57.5 * state.scale;
         const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, 1, 3);
@@ -52,10 +51,35 @@ export class MiniPlayerModel {
                     if (child.name == "SlimPlayerInnerLayer") {
                         child.material.depthWrite = true;
                         this.innerLayer = child;
+                        console.log(child);
                     }
                     if (child.name == "SlimPlayerOuterLayer") {
                         child.material.depthWrite = false;
                         this.outerLayer = child;
+                    }
+                    if (child.name == "Helmet") {
+                        child.material.depthWrite = true;
+                        child.material.opacity = 0.0;
+                        child.material.alphaTest = 1.0;
+                        this.helmet = child;
+                    }
+                    if (child.name == "Chestplate") {
+                        child.material.depthWrite = true;
+                        child.material.opacity = 0.0;
+                        child.material.alphaTest = 1.0;
+                        this.chestplate = child;
+                    }
+                    if (child.name == "Leggings") {
+                        child.material.depthWrite = true;
+                        child.material.opacity = 0.0;
+                        child.material.alphaTest = 1.0;
+                        this.leggings = child;
+                    }
+                    if (child.name == "Boots") {
+                        child.material.depthWrite = true;
+                        child.material.opacity = 0.0;
+                        child.material.alphaTest = 1.0;
+                        this.boots = child;
                     }
                     if (child.name == "Head")
                         head = child;
@@ -128,11 +152,11 @@ export class Inventory {
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
-        // Create item slots holding items
-        this.initSlots(items);
-
         // Create Mini Player Model
         this.playerModel = new MiniPlayerModel(this.svg, (25 * state.scale), (8 * state.scale));
+
+        // Create item slots holding items
+        this.initSlots(items);
     }
 
     initSlots(items) {
@@ -238,28 +262,110 @@ export class Inventory {
 
     swapHelmet(item) {
         // Find out which texture to use
-        if (item == null)
-            console.log("No Helmet");
-        else {
-            let str = (item.enchantments != null)? "Enchanted " : "";
-            if (item.minecraftItem.name.includes("Diamond", 0))
-                console.log(str + "Diamond Helmet");
+        let texturePath = null;
+        if (item != null) {
+            switch (item.name) {
+                case "Diamond Helmet":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+            }
+        }
+
+        const textureLoader = new THREE.TextureLoader();
+        if (texturePath == null) {
+            this.playerModel.helmet.material.opacity = 0.0;
+        } else {
+            textureLoader.load(texturePath, (newTexture) => {
+                newTexture.flipY = false;  // important for GLTF models
+                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                newTexture.colorSpace = THREE.SRGBColorSpace;
+                this.playerModel.helmet.material.opacity = 1.0;
+                this.playerModel.helmet.material.map = newTexture;
+                this.playerModel.helmet.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                console.log(texturePath)
+            });
         }
     }
 
     swapChestplate(item) {
+        // Find out which texture to use
+        let texturePath = null;
+        if (item != null) {
+            switch (item.name) {
+                case "Diamond Chestplate":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+            }
+        }
 
-        console.log("chestplate");
+        const textureLoader = new THREE.TextureLoader();
+        if (texturePath == null) {
+            this.playerModel.chestplate.material.opacity = 0.0;
+        } else {
+            textureLoader.load(texturePath, (newTexture) => {
+                newTexture.flipY = false;  // important for GLTF models
+                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                newTexture.colorSpace = THREE.SRGBColorSpace;
+                this.playerModel.chestplate.material.opacity = 1.0;
+                this.playerModel.chestplate.material.map = newTexture;
+                this.playerModel.chestplate.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                console.log(texturePath)
+            });
+        }
     }
 
     swapLeggings(item) {
+        // Find out which texture to use
+        let texturePath = null;
+        if (item != null) {
+            switch (item.name) {
+                case "Diamond Leggings":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
+                    break;
+            }
+        }
 
-        console.log("leggings");
+        const textureLoader = new THREE.TextureLoader();
+        if (texturePath == null) {
+            this.playerModel.leggings.material.opacity = 0.0;
+        } else {
+            textureLoader.load(texturePath, (newTexture) => {
+                newTexture.flipY = false;  // important for GLTF models
+                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                newTexture.colorSpace = THREE.SRGBColorSpace;
+                this.playerModel.leggings.material.opacity = 1.0;
+                this.playerModel.leggings.material.map = newTexture;
+                this.playerModel.leggings.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                console.log(texturePath)
+            });
+        }
     }
 
     swapBoots(item) {
+        // Find out which texture to use
+        let texturePath = null;
+        if (item != null) {
+            switch (item.name) {
+                case "Diamond Boots":
+                    texturePath = texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    break;
+            }
+        }
 
-        console.log("boots");
+        const textureLoader = new THREE.TextureLoader();
+        if (texturePath == null) {
+            this.playerModel.boots.material.opacity = 0.0;
+        } else {
+            textureLoader.load(texturePath, (newTexture) => {
+                newTexture.flipY = false;  // important for GLTF models
+                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+                newTexture.colorSpace = THREE.SRGBColorSpace;
+                this.playerModel.boots.material.opacity = 1.0;
+                this.playerModel.boots.material.map = newTexture;
+                this.playerModel.boots.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+                console.log(texturePath)
+            });
+        }
     }
 
     delete() {
