@@ -36,106 +36,100 @@ export class MiniPlayerModel {
         camera.position.z = 2.0; camera.position.y = 0.15;
         
         // Create scene
-        const scene = new THREE.Scene();
+        this.scene = new THREE.Scene();
 
         // Create & Load player model
-        let object = null;
-        let head = null;
-        let left_arm = null;
-        let right_arm = null;
-        const loader = new GLTFLoader();
-        loader.load(
-            './src/assets/models/PlayerSlim/Untitled.gltf',
-            (gltf) => {
-                gltf.scene.traverse((child) => {
-                    if (child.name == "SlimPlayerInnerLayer") {
-                        child.material.depthWrite = true;
-                        this.innerLayer = child;
-                        console.log(child);
-                    }
-                    if (child.name == "SlimPlayerOuterLayer") {
-                        child.material.depthWrite = false;
-                        this.outerLayer = child;
-                    }
-                    if (child.name == "Helmet") {
-                        child.material.depthWrite = true;
-                        child.material.opacity = 0.0;
-                        child.material.alphaTest = 1.0;
-                        this.helmet = child;
-                    }
-                    if (child.name == "Chestplate") {
-                        child.material.depthWrite = true;
-                        child.material.opacity = 0.0;
-                        child.material.alphaTest = 1.0;
-                        this.chestplate = child;
-                    }
-                    if (child.name == "Leggings") {
-                        child.material.depthWrite = true;
-                        child.material.opacity = 0.0;
-                        child.material.alphaTest = 1.0;
-                        this.leggings = child;
-                    }
-                    if (child.name == "Boots") {
-                        child.material.depthWrite = true;
-                        child.material.opacity = 0.0;
-                        child.material.alphaTest = 1.0;
-                        this.boots = child;
-                    }
-                    if (child.name == "Head")
-                        head = child;
-                    if (child.name == "ArmLeft")
-                        left_arm = child;
-                    if (child.name == "ArmRight")
-                        right_arm = child;
-                });
-                // If file is loaded, add it to scene
-                object = gltf.scene;
-                scene.add(object);
-            }, null ,
-            (error) => {
-                // If there is an error, log it
-                console.log(error);
-            }
-        )
+        this.ready = this.loadPlayerModel();
 
         // Start the render loop
         const animate = () => {
             requestAnimationFrame(animate);
-            if (right_arm != null && left_arm != null) {
+            if (this.right_arm != null && this.left_arm != null) {
         	const d = new Date();
                 let time = d.getSeconds() * 1000 + d.getMilliseconds();
-                left_arm.rotation.z = (Math.sin(time / 750) - 1) / 15;
-                right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
+                this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 15;
+                this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
             };
-            renderer.render(scene, camera);
+            renderer.render(this.scene, camera);
         };
         animate();
-
 
         // Add lights to the scene
         const topLight = new THREE.DirectionalLight(0xffffff, 7);
         topLight.position.set(-500, 500, 0) // Top Right
-        scene.add(topLight);
+        this.scene.add(topLight);
         const ambientLight = new THREE.AmbientLight(0x333333, 40);
-        scene.add(ambientLight);
+        this.scene.add(ambientLight);
 
         // Add callback for model rotation
         state.svg.node().addEventListener('mousemove', (event) => {
-            if (object != null) {
+            if (this.object != null) {
                 const ax = 0.8; // Bell function height at x = 0
                 const ay = 1.0;
                 const x = Math.max(Math.min((state.mouseX - xPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
                 const y = Math.max(Math.min((state.mouseY - yPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
                 const bellX = 1 / (1 + ((x / ax)*(x / ax)));
                 const bellY = 1 / (1 + ((y / ay)*(y / ay)));
-                object.rotation.y = x * bellX;
-                object.rotation.x = y * bellY;
-                head.rotation.y = x * bellX;
-                head.rotation.x = y * bellY;
+                this.object.rotation.y = x * bellX;
+                this.object.rotation.x = y * bellY;
+                this.head.rotation.y = x * bellX;
+                this.head.rotation.x = y * bellY;
             }
         })
 
-        renderer.render(scene, camera);
+        renderer.render(this.scene, camera);
+    }
+
+    async loadPlayerModel() {
+        this.object = null;
+        this.head = null;
+        this.left_arm = null;
+        this.right_arm = null;
+        const loader = new GLTFLoader();
+        const gltf = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+        this.scene.add( gltf.scene );
+        gltf.scene.traverse((child) => {
+            if (child.name == "SlimPlayerInnerLayer") {
+                child.material.depthWrite = true;
+                this.innerLayer = child;
+            }
+            if (child.name == "SlimPlayerOuterLayer") {
+                child.material.depthWrite = false;
+                this.outerLayer = child;
+            }
+            if (child.name == "Helmet") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                child.material.alphaTest = 1.0;
+                this.helmet = child;
+            }
+            if (child.name == "Chestplate") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                child.material.alphaTest = 1.0;
+                this.chestplate = child;
+            }
+            if (child.name == "Leggings") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                child.material.alphaTest = 1.0;
+                this.leggings = child;
+            }
+            if (child.name == "Boots") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                child.material.alphaTest = 1.0;
+                this.boots = child;
+            }
+            if (child.name == "Head")
+                this.head = child;
+            if (child.name == "ArmLeft")
+                this.left_arm = child;
+            if (child.name == "ArmRight")
+                this.right_arm = child;
+        });
+        // If file is loaded, add it to scene
+        this.object = gltf.scene;
     }
 }
 
@@ -146,6 +140,11 @@ export class Inventory {
         this.cellScale = 18 * state.scale;
         this.slots = [];
 
+        this.init(items);
+    }
+
+    async init(items) {
+
         // Create inventory image
         this.texture = this.svg.append('image');   
         this.texture.attr('href', texturePack.getPath("gui/container/inventory.png"));
@@ -154,9 +153,11 @@ export class Inventory {
 
         // Create Mini Player Model
         this.playerModel = new MiniPlayerModel(this.svg, (25 * state.scale), (8 * state.scale));
+        await this.playerModel.ready;
+        console.log("Player Model Loaded, Moving on to initSlots now")
 
         // Create item slots holding items
-        this.initSlots(items);
+        this.initSlots(items)
     }
 
     initSlots(items) {
@@ -235,28 +236,6 @@ export class Inventory {
                 this.swapBoots(item);
                 break;
         }
-        // const textureLoader = new THREE.TextureLoader();
-        // if (head.rotation.y > 0) {
-        //     textureLoader.load('./src/assets/models/PlayerSlim/alex.png', (newTexture) => {
-        //         newTexture.flipY = false;  // important for GLTF models
-        //         newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-        //         newTexture.colorSpace = THREE.SRGBColorSpace;
-        //         this.innerLayer.material.map = newTexture;
-        //         this.innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-        //         this.outerLayer.material.map = newTexture;
-        //         this.outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-        //     });
-        // } else {
-        //     textureLoader.load('./src/assets/models/PlayerSlim/alex3.png', (newTexture) => {
-        //         newTexture.flipY = false;  // important for GLTF models
-        //         newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-        //         newTexture.colorSpace = THREE.SRGBColorSpace;
-        //         this.innerLayer.material.map = newTexture;
-        //         this.innerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-        //         this.outerLayer.material.map = newTexture;
-        //         this.outerLayer.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-        //     });
-        // }
         return;
     }
 
