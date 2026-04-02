@@ -18,9 +18,10 @@ COPY . .
 # Build the app
 RUN npm run build
 
-RUN ls /app/dist
-RUN ls /app/
+#RUN ls /app/dist
+#RUN ls /app/
 
+# Copy server.cjs and src/ into distribution dir
 RUN cp /app/server.cjs /app/dist/server.cjs
 RUN cp /app/package*.json /app/dist/
 RUN cp /app/src /app/dist/ -r
