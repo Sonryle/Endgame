@@ -147,7 +147,7 @@ export class Inventory {
 
         // Create inventory image
         this.texture = this.svg.append('image');   
-        this.texture.attr('href', texturePack.getPath("gui/container/numbered_inventory.png"));
+        this.texture.attr('href', texturePack.getPath("gui/container/inventory.png"));
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
 
