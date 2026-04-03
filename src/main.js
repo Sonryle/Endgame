@@ -37,7 +37,7 @@ const netherite_chestplate    = new ItemInstance( MinecraftItem.netherite_chestp
 const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggings,     null, null);
 const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        null, null);
 // ----------------------------
-const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         null, null);
+const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         ["Bravery XII"], null);
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
 const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       null, null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);

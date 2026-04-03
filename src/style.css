@@ -45,5 +45,4 @@ body {
     margin: 0;
     overflow: hidden;
     image-rendering: pixelated;
-    image-rendering: -webkit-optimize-contrast; /* Fix Stupid A** Safari Nonsense */
 }

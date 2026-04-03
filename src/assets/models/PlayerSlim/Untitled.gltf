@@ -207,7 +207,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char_alpha.008",
+			"name":"char_alpha.001",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -230,7 +230,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char_alpha.005",
+			"name":"char_alpha.003",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -253,7 +253,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char_alpha.002",
+			"name":"char_alpha.009",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -276,7 +276,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char_alpha.007",
+			"name":"char_alpha.010",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -299,7 +299,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char.003",
+			"name":"char.002",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -322,7 +322,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char_alpha.004",
+			"name":"char_alpha.012",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -485,8 +485,8 @@
 		},
 		{
 			"mimeType":"image/png",
-			"name":"alex",
-			"uri":"alex.png"
+			"name":"alex2",
+			"uri":"alex2.png"
 		}
 	],
 	"skins":[
@@ -578,12 +578,12 @@
 			"componentType":5126,
 			"count":72,
 			"max":[
-				0.5586569309234619,
+				0.5586568117141724,
 				0.6026543378829956,
 				0.1875956654548645
 			],
 			"min":[
-				-0.5585470199584961,
+				-0.5585470795631409,
 				-0.3450315296649933,
 				-0.18759550154209137
 			],
