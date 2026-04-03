@@ -45,4 +45,5 @@ body {
     margin: 0;
     overflow: hidden;
     image-rendering: pixelated;
+    transform: unset !important;	/* Fix stupid a** safari nonsense */
 }
