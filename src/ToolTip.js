@@ -29,7 +29,6 @@ export class ToolTip {
         // Set up css stylised border
         const toolTip = foreignObject.append('xhtml:div')
             .attr('class', 'ToolTip')
-            .style('position', 'absolute')
             .style('padding', state.scale * 11 + "px");
         toolTip.node().style.setProperty('--border-image-width', (state.scale * 10).toString() + "px");
 

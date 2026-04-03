@@ -15,7 +15,7 @@ export const ItemType = Object.freeze({
 
 export const MinecraftItem = {
     apple:                { texture: "apple.png",                type: ItemType.DEFAULT,     name: "Apple"                 },
-    book:                 { texture: "book.png",                 type: ItemType.DEFAULT,     name: "Book"                  },
+    bread:                { texture: "bread.png",                type: ItemType.DEFAULT,     name: "Bread"                 },
     carrot:               { texture: "carrot.png",               type: ItemType.DEFAULT,     name: "Carrot"                },
     dark_oak_sign:        { texture: "dark_oak_sign.png",        type: ItemType.DEFAULT,     name: "Dark Oak Sign"         },
     diamond:              { texture: "diamond.png",              type: ItemType.DEFAULT,     name: "Diamond"               },

@@ -28,7 +28,7 @@ state.svg.on('mousemove', (event) => {
 // Add Items to inventory
 // ----------------------------
 const apple                   = new ItemInstance( MinecraftItem.apple,                  null, null);
-const book                    = new ItemInstance( MinecraftItem.book,                   null, null);
+const bread                   = new ItemInstance( MinecraftItem.bread,                  null, null);
 const carrot                  = new ItemInstance( MinecraftItem.carrot,                 null, null);
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
 // ----------------------------
@@ -55,7 +55,7 @@ const iron_boots              = new ItemInstance( MinecraftItem.iron_boots,     
 
 const items = [];
 items[9] = apple;
-items[18] = book;
+items[18] = bread;
 items[27] = carrot;
 items[36] = dark_oak_sign;
 items[17] = netherite_helmet;
