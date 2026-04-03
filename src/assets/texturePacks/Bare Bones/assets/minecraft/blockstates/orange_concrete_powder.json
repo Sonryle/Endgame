@@ -1,1 +1,6 @@
-{"variants":{"normal":{"model":"orange_concrete_powder"}}}
+{
+    "variants": {
+        "normal": 
+            { "model": "orange_concrete_powder" }
+    }
+}

@@ -239,21 +239,32 @@ export class Inventory {
     }
 
     async swapHelmet(item) {
+
         // Find out which texture to use
         let texturePath = null;
+        let legacyTextureLocation = false;
+        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png"))) {
+            legacyTextureLocation = true;
+	}
+
+        let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Helmet":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Helmet":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Helmet":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
+                    path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Helmet":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
             }
         }
@@ -269,7 +280,6 @@ export class Inventory {
                 this.playerModel.helmet.material.opacity = 1.0;
                 this.playerModel.helmet.material.map = newTexture;
                 this.playerModel.helmet.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                console.log(texturePath)
             });
         }
     }
@@ -277,19 +287,28 @@ export class Inventory {
     async swapChestplate(item) {
         // Find out which texture to use
         let texturePath = null;
+        let legacyTextureLocation = false;
+        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+	    legacyTextureLocation = true;
+
+        let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Chestplate":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Chestplate":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Chestplate":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
+                    path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Chestplate":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
             }
         }
@@ -305,7 +324,6 @@ export class Inventory {
                 this.playerModel.chestplate.material.opacity = 1.0;
                 this.playerModel.chestplate.material.map = newTexture;
                 this.playerModel.chestplate.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                console.log(texturePath)
             });
         }
     }
@@ -313,19 +331,28 @@ export class Inventory {
     async swapLeggings(item) {
         // Find out which texture to use
         let texturePath = null;
+        let legacyTextureLocation = false;
+        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+            legacyTextureLocation = true;
+
+        let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Leggings":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/netherite.png");
+                    path = (legacyTextureLocation)? "models/armor/netherite_layer_2.png" : "entity/equipment/humanoid/netherite.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Leggings":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/diamond.png");
+                    path = (legacyTextureLocation)? "models/armor/diamond_layer_2.png" : "entity/equipment/humanoid/diamond.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Leggings":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid_leggings/gold.png");
+                    path = (legacyTextureLocation)? "models/armor/gold_layer_2.png" : "entity/equipment/humanoid/gold.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Leggings":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid_leggings/iron.png");
+                    path = (legacyTextureLocation)? "models/armor/iron_layer_2.png" : "entity/equipment/humanoid/iron.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
             }
         }
@@ -341,7 +368,6 @@ export class Inventory {
                 this.playerModel.leggings.material.opacity = 1.0;
                 this.playerModel.leggings.material.map = newTexture;
                 this.playerModel.leggings.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                console.log(texturePath)
             });
         }
     }
@@ -349,19 +375,28 @@ export class Inventory {
     async swapBoots(item) {
         // Find out which texture to use
         let texturePath = null;
+        let legacyTextureLocation = false;
+        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+            legacyTextureLocation = true;
+
+        let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Boots":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/netherite.png");
+                    path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Boots":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/diamond.png");
+                    path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Boots":
-                    texturePath = texturePack.getPath("entity/equipment/humanoid/gold.png");
+                    path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Boots":
-                    texturePath = await texturePack.getPath("entity/equipment/humanoid/iron.png");
+                    path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
+                    texturePath = await texturePack.getPath(path);
                     break;
             }
         }
@@ -377,7 +412,6 @@ export class Inventory {
                 this.playerModel.boots.material.opacity = 1.0;
                 this.playerModel.boots.material.map = newTexture;
                 this.playerModel.boots.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-                console.log(texturePath)
             });
         }
     }

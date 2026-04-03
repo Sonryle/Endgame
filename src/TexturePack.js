@@ -1,6 +1,7 @@
 // Manages texturepacks and returns correct textures
 
 const fallback_pack = "/src/assets/texturePacks/Vanilla";
+// ------------------------
 const current_pack = "./src/assets/texturePacks/Bare Bones";
 // const current_pack = "./src/assets/texturePacks/Vanilla";
 // const current_pack = "./src/assets/texturePacks/Faithful 64x";
@@ -11,14 +12,17 @@ class TexturePack {
 
     // Begins at TexturePack/minecraft/textures
     async getPath(texturePath) {
-
         const URL = current_pack + "/assets/minecraft/textures/" + texturePath;
         if(await this.textureExists(URL)) {
             return URL;
         } else {
-            console.log("Missing Texture. Using fallback texture for texture \"" + URL + "\"");
+            // console.log("missing texture. using fallback texture for texture \"" + URL + "\"");
             return fallback_pack + "/assets/minecraft/textures/" + texturePath;
         }
+    }
+
+    getPathNoFallback(texturePath) {
+        return current_pack + "/assets/minecraft/textures/" + texturePath;
     }
 
     async textureExists(URL) {
