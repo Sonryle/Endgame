@@ -33,7 +33,7 @@ const carrot                  = new ItemInstance( MinecraftItem.carrot,         
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
 // ----------------------------
 const netherite_helmet        = new ItemInstance( MinecraftItem.netherite_helmet,       null, null);
-const netherite_chestplate    = new ItemInstance( MinecraftItem.netherite_chestplate,   null, null);
+const netherite_chestplate    = new ItemInstance( MinecraftItem.netherite_chestplate,   ["Joe Is Cool"], null);
 const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggings,     null, null);
 const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        null, null);
 // ----------------------------

@@ -69,8 +69,15 @@ export class ItemInstance {
 
         this.itemGlint = null;
         if (enchantments != null && typeof enchantments != "undefined") {
-            const patternId = 'itemGlintPattern-' + this.href;
-            const maskId = 'maskId-' + this.href;
+            // Check for legacy texture location
+            let enchantedItemGlintPath = null;
+            if (await texturePack.textureExists(texturePack.getPathNoFallback("misc/enchanted_item_glint.png")))
+                enchantedItemGlintPath = await texturePack.getPath("misc/enchanted_item_glint.png");
+            else
+                enchantedItemGlintPath = await texturePack.getPath("misc/enchanted_glint_item.png");
+
+            const patternId = 'itemGlintPattern-' + this.href.replaceAll(" ", "");
+            const maskId = 'maskId-' + this.href.replaceAll(" ", "");
             
             // Append a <defs> block with an animated pattern
             const defs = this.svgContainer.append('defs');
@@ -79,10 +86,10 @@ export class ItemInstance {
                 .attr('width', 1)
                 .attr('height', 1)
             pattern.append('image')
-                .attr('href', await texturePack.getPath("misc/enchanted_glint_item.png"));
+                .attr('href', enchantedItemGlintPath);
             pattern.append('animateTransform')
                 .attr('attributeName', 'patternTransform')
-                .attr('to', `${16 * state.scale} ${-32 * state.scale}`)  // move up by one tile height
+                .attr('to', `${16 * state.scale} ${-64 * state.scale}`)  // move up by one tile height
                 .attr('dur', '4s')
                 .attr('repeatCount', 'indefinite');
 
@@ -92,19 +99,18 @@ export class ItemInstance {
             
             mask.append('image')
                 .attr('href', this.href)
-                .attr('y', 0)
                 .attr('width', 16 * state.scale)
                 .attr('height', 16 * state.scale)
                 .style('filter', 'brightness(0) invert(1)')
             
             this.itemGlint = this.svgContainer.append('rect');
             this.itemGlint.attr('mask', `url(#${maskId})`);
+            this.itemGlint.attr('fill', `url(#${patternId})`);
             this.itemGlint.attr('width', 16 * state.scale);
             this.itemGlint.attr('height', 16 * state.scale);
-            this.itemGlint.attr('fill', `url(#${patternId})`);
             this.itemGlint.attr('pointer-events', 'none');
             this.itemGlint.style('mix-blend-mode', 'screen');
-            this.itemGlint.style('filter', 'opacity(1.0) saturate(1) blur(2px)');
+            this.itemGlint.style('filter', 'blur(2px)');
         }
     }
 

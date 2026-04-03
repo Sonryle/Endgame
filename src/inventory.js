@@ -339,19 +339,19 @@ export class Inventory {
         if (item != null) {
             switch (item.name) {
                 case "Netherite Leggings":
-                    path = (legacyTextureLocation)? "models/armor/netherite_layer_2.png" : "entity/equipment/humanoid/netherite.png"
+                    path = (legacyTextureLocation)? "models/armor/netherite_layer_2.png" : "entity/equipment/humanoid_leggings/netherite.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Leggings":
-                    path = (legacyTextureLocation)? "models/armor/diamond_layer_2.png" : "entity/equipment/humanoid/diamond.png"
+                    path = (legacyTextureLocation)? "models/armor/diamond_layer_2.png" : "entity/equipment/humanoid_leggings/diamond.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Leggings":
-                    path = (legacyTextureLocation)? "models/armor/gold_layer_2.png" : "entity/equipment/humanoid/gold.png"
+                    path = (legacyTextureLocation)? "models/armor/gold_layer_2.png" : "entity/equipment/humanoid_leggings/gold.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Leggings":
-                    path = (legacyTextureLocation)? "models/armor/iron_layer_2.png" : "entity/equipment/humanoid/iron.png"
+                    path = (legacyTextureLocation)? "models/armor/iron_layer_2.png" : "entity/equipment/humanoid_leggings/iron.png"
                     texturePath = await texturePack.getPath(path);
                     break;
             }
