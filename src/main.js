@@ -13,8 +13,8 @@ state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
 
-document.querySelector(':root').style.setProperty('--tooltip-texture-path', await texturePack.getPath('gui/sprites/tooltip/background.png'));
-document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', await texturePack.getPath('gui/sprites/tooltip/frame.png'));
+document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/background.png")}")`);
+document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
 
 state.svg.on('mousemove', (event) => {
     state.mouseX = event.x;

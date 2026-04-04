@@ -4,9 +4,8 @@
 }
 
 :root {
-    /* --tooltip-texture-path:        url("/src/assets/TexturePacks/Vanilla/assets/minecraft/textures/gui/sprites/tooltip/background.png"); */
-    --tooltip-texture-path:        url("/src/assets/TexturePacks/TextureNotFound.png");
-    --tooltip-frame-texture-path:  url("/src/assets/TexturePacks/TextureNotFound.png");
+    --tooltip-texture-path:        url("/src/assets/texturePacks/TextureNotFound.png");
+    --tooltip-frame-texture-path:  url("/src/assets/texturePacks/TextureNotFound.png");
 }
 
 .ToolTip {

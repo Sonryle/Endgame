@@ -2,9 +2,9 @@
 
 const fallback_pack = "/src/assets/texturePacks/Vanilla";
 // ------------------------
-// const current_pack = "./src/assets/texturePacks/Bare Bones";
-const current_pack = "./src/assets/texturePacks/Vanilla";
-// const current_pack = "./src/assets/texturePacks/Faithful 64x";
+// const current_pack = "/src/assets/texturePacks/Bare Bones";
+const current_pack = "/src/assets/texturePacks/Vanilla";
+// const current_pack = "/src/assets/texturePacks/Faithful 64x";
 
 class TexturePack {
     constructor() {

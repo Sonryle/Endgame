@@ -5,6 +5,10 @@ import { ItemType } from "./Item.js"
 
 export class ToolTip {
     constructor(itemName, itemEnchantments, itemType, itemStatValue1, itemStatValue2) {
+        this.init(itemName, itemEnchantments, itemType, itemStatValue1, itemStatValue2);
+    }
+
+    async init(itemName, itemEnchantments, itemType, itemStatValue1, itemStatValue2) {
 
         // Set up svg container
         this.svgContainer = state.svg.append('svg').attr('class', 'ToolTipContainer');
@@ -32,6 +36,9 @@ export class ToolTip {
             .style('position', 'absolute')
             .style('padding', state.scale * 11 + "px");
         toolTip.node().style.setProperty('--border-image-width', (state.scale * 10).toString() + "px");
+        // document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/background.png")}")`);
+        // document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
+        // console.log(await texturePack.getPath("gui/sprites/tooltip/background.png"));
 
         // Item Name
         const name = toolTip.append('xhtml:p').attr('class', 'minecraftText').text(itemName)
