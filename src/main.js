@@ -32,23 +32,23 @@ const bread                   = new ItemInstance( MinecraftItem.bread,          
 const carrot                  = new ItemInstance( MinecraftItem.carrot,                 null, null);
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
 // ----------------------------
-const netherite_helmet        = new ItemInstance( MinecraftItem.netherite_helmet,       ["Nether Doesn't Brush His Teeth"], null);
+const netherite_helmet        = new ItemInstance( MinecraftItem.netherite_helmet,       ["Nether you mind"], null);
 const netherite_chestplate    = new ItemInstance( MinecraftItem.netherite_chestplate,   ["Joe Is Cool"], null);
 const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggings,     null, null);
 const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        null, null);
 // ----------------------------
-const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         ["Bravery XII"], null);
+const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         ["Intelligence XII"], null);
 const diamond_helmet2         = new ItemInstance( MinecraftItem.diamond_helmet,        null, null);
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
 const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       null, null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);
 // ----------------------------
-const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["Butteryness VI"], null);
+const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["VI VII"], null);
 const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplate,      null, null);
 const golden_leggings         = new ItemInstance( MinecraftItem.golden_leggings,        null, null);
 const golden_boots            = new ItemInstance( MinecraftItem.golden_boots,           null, null);
 // ----------------------------
-const iron_helmet             = new ItemInstance( MinecraftItem.iron_helmet,            ["Iron Pun Please :("], null);
+const iron_helmet             = new ItemInstance( MinecraftItem.iron_helmet,            ["Cant Iron this Iron"], null);
 const iron_chestplate         = new ItemInstance( MinecraftItem.iron_chestplate,        null, null);
 const iron_leggings           = new ItemInstance( MinecraftItem.iron_leggings,          null, null);
 const iron_boots              = new ItemInstance( MinecraftItem.iron_boots,             null, null);
