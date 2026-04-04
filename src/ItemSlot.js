@@ -84,8 +84,8 @@ export class ItemSlot {
         if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
             state.svg.node().appendChild(state.selectedItem.svgContainer.node());
             state.selectedItem.svgContainer.raise();
-            state.selectedItem.svgContainer.attr('x', state.mouseX - state.selectedItem.svgContainer.attr('width') / 2);
-            state.selectedItem.svgContainer.attr('y', state.mouseY - state.selectedItem.svgContainer.attr('height') / 2);
+            state.selectedItem.svgContainer.attr('x', Math.floor(state.mouseX) - state.selectedItem.svgContainer.attr('width') / 2);
+            state.selectedItem.svgContainer.attr('y', Math.floor(state.mouseY) - state.selectedItem.svgContainer.attr('height') / 2);
         }
     }
 
@@ -105,8 +105,8 @@ export class ItemSlot {
         // Lock new item to grid & reorder DOM
         if (this.item != null) {
             this.layerItem.node().appendChild(this.item.svgContainer.node());
-            this.item.svgContainer.attr('x', state.scale);
-            this.item.svgContainer.attr('y', state.scale);
+            this.item.svgContainer.attr('x', Math.floor(state.scale));
+            this.item.svgContainer.attr('y', Math.floor(state.scale));
         }
 
         // if new item is null, set item slot texture to be shown.

@@ -25,9 +25,11 @@ export class Inventory {
         this.texture.attr('href', await texturePack.getPath("gui/container/inventory.png"));
         this.texture.attr('width', 256 * state.scale);
         this.texture.attr('height', 256 * state.scale);
+        this.texture.attr('x', 0);
+        this.texture.attr('y', 0);
 
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (25 * state.scale), (8 * state.scale));
+        this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (55 * state.scale));
         await this.playerModel.ready;
 
         // Create item slots holding items

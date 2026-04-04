@@ -5,30 +5,29 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export class PlayerModel {
-    constructor(svg, xPos, yPos) {
+    constructor(svg, canvasXPos, canvasYPos, canvasX, canvasY, animationCallback, scale) {
 
-        const canvasX = state.scale * 50;
-        const canvasY = state.scale * 70;
         this.svg = svg;
+        this.animationCallback = animationCallback;
 
         // Create foreign html element to store rendered element
         const foreignObject = this.svg.append('foreignObject')
             .attr('class', 'playerModelContainer')
             .attr('pointer-events', 'none')
-            .attr('width', 50 * state.scale)
-            .attr('height', 70 * state.scale)
-            .attr('x', xPos)
-            .attr('y', yPos)
+            .attr('width', canvasX)
+            .attr('height', canvasY)
+            .attr('x', canvasXPos)
+            .attr('y', canvasYPos)
 
         // Create renderer
         const renderer = new THREE.WebGLRenderer( {antialias: false});
-	    renderer.sortObjects = false;
         foreignObject.node().appendChild(renderer.domElement);
         renderer.setSize(canvasX, canvasY);
+        renderer.sortObjects = false;
+        renderer.setClearColor( 0xFF0000, 0);
         
-        const scale = 57.5 * state.scale;
         const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, 1, 3);
-        camera.position.z = 2.0; camera.position.y = 0.15;
+        camera.position.z = 2.0;
         
         // Create scene
         this.scene = new THREE.Scene();
@@ -69,8 +68,8 @@ export class PlayerModel {
             if (this.object != null) {
                 const ax = 0.8; // Bell function height at x = 0
                 const ay = 1.0;
-                const x = Math.max(Math.min((state.mouseX - xPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
-                const y = Math.max(Math.min((state.mouseY - yPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
+                const x = Math.max(Math.min((state.mouseX - canvasXPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
+                const y = Math.max(Math.min((state.mouseY - canvasYPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
                 const bellX = 1 / (1 + ((x / ax)*(x / ax)));
                 const bellY = 1 / (1 + ((y / ay)*(y / ay)));
                 this.object.rotation.y = x * bellX;

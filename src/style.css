@@ -29,6 +29,10 @@
     border-image-width: var(--border-image-width);
 }
 
+svg {
+  transform: translateZ(0);  /* own compositing layer (removes blur from chrome) */
+}
+
 .minecraftText {
     user-select: none;
     margin: 0;
