@@ -38,11 +38,12 @@ const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggin
 const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        null, null);
 // ----------------------------
 const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         ["Bravery XII"], null);
+const diamond_helmet2         = new ItemInstance( MinecraftItem.diamond_helmet,        null, null);
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
 const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       null, null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);
 // ----------------------------
-const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          null, null);
+const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["Butteryness VI"], null);
 const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplate,      null, null);
 const golden_leggings         = new ItemInstance( MinecraftItem.golden_leggings,        null, null);
 const golden_boots            = new ItemInstance( MinecraftItem.golden_boots,           null, null);
@@ -63,6 +64,7 @@ items[26] = netherite_chestplate;
 items[35] = netherite_leggings;
 items[8] = netherite_boots;
 items[16] = diamond_helmet;
+items[13] = diamond_helmet2;
 items[25] = diamond_chestplate;
 items[7] = diamond_leggings;
 items[43] = diamond_boots;
