@@ -13,8 +13,8 @@ state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
 
-document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${await texturePack.getPath('gui/sprites/tooltip/background.png')}")`);
-document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${await texturePack.getPath('gui/sprites/tooltip/frame.png')}")`);
+document.querySelector(':root').style.setProperty('--tooltip-texture-path', await texturePack.getPath('gui/sprites/tooltip/background.png'));
+document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', await texturePack.getPath('gui/sprites/tooltip/frame.png'));
 
 state.svg.on('mousemove', (event) => {
     state.mouseX = event.x;
@@ -78,10 +78,11 @@ items[32] = iron_leggings;
 items[41] = iron_boots;
 
 let [invWidth, invHeight] = [176 * state.scale, 166 * state.scale];
+let [invX, invY] = grid.nearestPixel(window.innerWidth / 2 - invWidth / 2, window.innerHeight / 2 - invHeight / 2);
 const inventorySvg = state.svg.append('svg')
                       .attr('class', "inventory")
-                      .attr('x', window.innerWidth / 2 - invWidth / 2)
-                      .attr('y', window.innerHeight / 2 - invHeight / 2)
+                      .attr('x', invX)
+                      .attr('y', invY)
                       .attr('width', invWidth)
                       .attr('height', invHeight)
 const inventory = new Inventory(inventorySvg, items);

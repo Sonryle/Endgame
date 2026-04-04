@@ -12,8 +12,8 @@
 .ToolTip {
     --border-image-width: 50px;
     padding: 60px 80px 60px 80px;
-    position: absolute;
     shape-rendering: geometricPrecision;
+    /* background-clip: border-box; */
     border-image: var(--tooltip-texture-path) 10 fill;
     border-image-width: var(--border-image-width);
 }
