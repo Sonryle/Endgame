@@ -34,17 +34,17 @@ const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,  
 // ----------------------------
 const netherite_helmet        = new ItemInstance( MinecraftItem.netherite_helmet,       ["Nether you mind"], null);
 const netherite_chestplate    = new ItemInstance( MinecraftItem.netherite_chestplate,   ["Joe Is Cool"], null);
-const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggings,     null, null);
-const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        null, null);
+const netherite_leggings      = new ItemInstance( MinecraftItem.netherite_leggings,     ["Leg Day XI"], null);
+const netherite_boots         = new ItemInstance( MinecraftItem.netherite_boots,        ["Swift Sneak"], null);
 // ----------------------------
 const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet,         ["Intelligence XII"], null);
 const diamond_helmet2         = new ItemInstance( MinecraftItem.diamond_helmet,        null, null);
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
-const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       null, null);
+const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       ["Leg It"], null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);
 // ----------------------------
 const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["VI VII"], null);
-const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplate,      null, null);
+const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplate,      ["I cant think of any"], null);
 const golden_leggings         = new ItemInstance( MinecraftItem.golden_leggings,        null, null);
 const golden_boots            = new ItemInstance( MinecraftItem.golden_boots,           null, null);
 // ----------------------------

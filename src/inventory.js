@@ -52,8 +52,12 @@ export class MiniPlayerModel {
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
                 this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -8000;
                 this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -8000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.905;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.52;
+                this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.35;
+                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.145;
+                this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.35;
+                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.145;
             };
             renderer.render(this.scene, camera);
         };
@@ -90,6 +94,8 @@ export class MiniPlayerModel {
         // Create shader for armor enchantment glint
         this.helmetGlintMaterial = await this.createEnchantGlintMaterial();
         this.chestplateGlintMaterial = await this.createEnchantGlintMaterial();
+        this.leggingsGlintMaterial = await this.createEnchantGlintMaterial();
+        this.bootsGlintMaterial = await this.createEnchantGlintMaterial();
 
         this.object = null;
         this.head = null;
@@ -127,7 +133,6 @@ export class MiniPlayerModel {
                 child.material.wrapS = THREE.RepeatWrapping;
                 child.material.wrapT = THREE.RepeatWrapping;
                 this.chestplateGlint = child;
-		console.log("done");
             }
             if (child.name == "Chestplate") {
                 child.material.depthWrite = true;
@@ -141,11 +146,25 @@ export class MiniPlayerModel {
                 child.material.alphaTest = 0.5;
                 this.leggings = child;
             }
+            if (child.name == "LeggingsGlint") {
+                child.material = this.leggingsGlintMaterial;
+                child.material.depthWrite = false;
+                child.material.wrapS = THREE.RepeatWrapping;
+                child.material.wrapT = THREE.RepeatWrapping;
+                this.leggingsGlint = child;
+            }
             if (child.name == "Boots") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
                 child.material.alphaTest = 0.5;
                 this.boots = child;
+            }
+            if (child.name == "BootsGlint") {
+                child.material = this.bootsGlintMaterial;
+                child.material.depthWrite = false;
+                child.material.wrapS = THREE.RepeatWrapping;
+                child.material.wrapT = THREE.RepeatWrapping;
+                this.bootsGlint = child;
             }
             if (child.name == "Head")
                 this.head = child;
@@ -161,8 +180,7 @@ export class MiniPlayerModel {
     async createEnchantGlintMaterial() {
 
         const texturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
-        const textureLoader = new THREE.TextureLoader();
-        const glintTexture = textureLoader.load(texturePath);
+        const glintTexture = new THREE.TextureLoader().load(texturePath);
         glintTexture.flipY = false;  // important for GLTF models
         glintTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
         glintTexture.colorSpace = THREE.NoColorSpace;
@@ -196,9 +214,22 @@ export class MiniPlayerModel {
                   return result;
               }
 
+              vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+                  vec4 color = vec4(0.0);
+                  vec2 off1 = vec2(1.3846153846) * direction;
+                  vec2 off2 = vec2(3.2307692308) * direction;
+                  color += texture2D(image, uv) * 0.2270270270;
+                  color += texture2D(image, uv + (off1 / resolution)) * 0.3162162162;
+                  color += texture2D(image, uv - (off1 / resolution)) * 0.3162162162;
+                  color += texture2D(image, uv + (off2 / resolution)) * 0.0702702703;
+                  color += texture2D(image, uv - (off2 / resolution)) * 0.0702702703;
+                  return color;
+              }
+
               void main() {
 	        vec4 mask = texture(maskTexture, vUv);
-                vec4 glint = texture(glintTexture, vUv + glintOffset);
+                // vec4 glint = texture(glintTexture, vUv + glintOffset);
+		vec4 glint = blur9(glintTexture, vUv + glintOffset, vec2(2, 2), vec2(2, 2));
 
                 if (hide == true || mask.w < 0.5)
                     discard;
@@ -473,17 +504,23 @@ export class Inventory {
         }
 
         const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        
         if (texturePath == null) {
             this.playerModel.leggings.material.opacity = 0.0;
+            this.playerModel.leggingsGlintMaterial.uniforms.hide.value = 1;
         } else {
-            textureLoader.load(texturePath, (newTexture) => {
-                newTexture.flipY = false;  // important for GLTF models
-                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-                newTexture.colorSpace = THREE.SRGBColorSpace;
-                this.playerModel.leggings.material.opacity = 1.0;
-                this.playerModel.leggings.material.map = newTexture;
-                this.playerModel.leggings.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-            });
+            newTexture.flipY = false;  // important for GLTF models
+            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.colorSpace = THREE.SRGBColorSpace;
+            this.playerModel.leggings.material.opacity = 1.0;
+            this.playerModel.leggings.material.map = newTexture;
+            this.playerModel.leggings.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+            if (item.enchantments != null) {
+                this.playerModel.leggingsGlintMaterial.uniforms.hide.value = 0;
+		this.playerModel.leggingsGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    } else
+                this.playerModel.leggingsGlintMaterial.uniforms.hide.value = 1;
         }
     }
 
@@ -517,18 +554,23 @@ export class Inventory {
         }
 
         const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        
         if (texturePath == null) {
             this.playerModel.boots.material.opacity = 0.0;
+            this.playerModel.bootsGlintMaterial.uniforms.hide.value = 1;
         } else {
-            // textureLoader.load(texturePath, (newTexture) => {
-                // newTexture.flipY = false;  // important for GLTF models
-                // newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-                // newTexture.colorSpace = THREE.SRGBColorSpace;
-                // this.playerModel.boots.material.opacity = 1.0;
-                // this.playerModel.boots.material.map = newTexture;
-                // this.playerModel.boots.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-            // });
+            newTexture.flipY = false;  // important for GLTF models
+            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.colorSpace = THREE.SRGBColorSpace;
             this.playerModel.boots.material.opacity = 1.0;
+            this.playerModel.boots.material.map = newTexture;
+            this.playerModel.boots.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+            if (item.enchantments != null) {
+                this.playerModel.bootsGlintMaterial.uniforms.hide.value = 0;
+		this.playerModel.bootsGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    } else
+                this.playerModel.bootsGlintMaterial.uniforms.hide.value = 1;
         }
     }
 
