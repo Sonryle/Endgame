@@ -50,14 +50,14 @@ export class MiniPlayerModel {
                 let time = d.getSeconds() * 1000 + d.getMilliseconds();
                 this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 15;
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
-                this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -8000;
+                this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
                 this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.905;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.52;
-                this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.35;
-                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.145;
-                this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -4000 + 0.35;
-                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  2000 + 0.145;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
             };
             renderer.render(this.scene, camera);
         };
@@ -228,8 +228,8 @@ export class MiniPlayerModel {
 
               void main() {
 	        vec4 mask = texture(maskTexture, vUv);
-                // vec4 glint = texture(glintTexture, vUv + glintOffset);
-		vec4 glint = blur9(glintTexture, vUv + glintOffset, vec2(2, 2), vec2(2, 2));
+                // vec4 glint = texture(glintTexture,  (vUv) / vec2(2, 2) + glintOffset);
+		vec4 glint = blur9(glintTexture, (vUv) / vec2(4, 4) + glintOffset, vec2(120, 120), vec2(1, 1));
 
                 if (hide == true || mask.w < 0.5)
                     discard;
