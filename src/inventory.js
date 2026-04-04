@@ -50,8 +50,10 @@ export class MiniPlayerModel {
                 let time = d.getSeconds() * 1000 + d.getMilliseconds();
                 this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 15;
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
-                this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -4000;
+                this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -8000;
                 this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -8000;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
             };
             renderer.render(this.scene, camera);
         };
@@ -87,6 +89,7 @@ export class MiniPlayerModel {
 
         // Create shader for armor enchantment glint
         this.helmetGlintMaterial = await this.createEnchantGlintMaterial();
+        this.chestplateGlintMaterial = await this.createEnchantGlintMaterial();
 
         this.object = null;
         this.head = null;
@@ -96,6 +99,7 @@ export class MiniPlayerModel {
         const gltf = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
         this.scene.add( gltf.scene );
         gltf.scene.traverse((child) => {
+	    console.log(child.name);
             if (child.name == "SlimPlayerInnerLayer") {
                 child.material.depthWrite = true;
                 this.innerLayer = child;
@@ -116,6 +120,14 @@ export class MiniPlayerModel {
                 child.material.opacity = 0.0;
                 child.material.alphaTest = 0.5;
                 this.helmet = child;
+            }
+            if (child.name == "ChestplateGlint") {
+                child.material = this.chestplateGlintMaterial;
+                child.material.depthWrite = false;
+                child.material.wrapS = THREE.RepeatWrapping;
+                child.material.wrapT = THREE.RepeatWrapping;
+                this.chestplateGlint = child;
+		console.log("done");
             }
             if (child.name == "Chestplate") {
                 child.material.depthWrite = true;
@@ -166,6 +178,8 @@ export class MiniPlayerModel {
             },
             transparent: true,
             depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            premultipliedAlpha: true,
             fragmentShader: `
               uniform sampler2D glintTexture;
               uniform sampler2D maskTexture;
@@ -183,15 +197,23 @@ export class MiniPlayerModel {
               }
 
               void main() {
-	        vec4 mask = texture2D(maskTexture, vUv);
-                vec4 base = texture2D(glintTexture, vUv + glintOffset);
-		if (hide == true || mask.w < 0.5)
-		                  discard;
-                float gamma = 2.2;
-		mask.rgb = pow(mask.rgb, vec3(1.0/gamma));
+	        vec4 mask = texture(maskTexture, vUv);
+                vec4 glint = texture(glintTexture, vUv + glintOffset);
 
-		gl_FragColor = blendScreen(mask, base);
-		gl_FragColor = base;
+                if (hide == true || mask.w < 0.5)
+                    discard;
+
+                // float gamma = 2.2;
+                // mask.rgb = pow(mask.rgb, vec3(1.0/gamma));
+                
+		// Find Brightest Pixel
+		float brightest = glint.r;
+		if (brightest < glint.g)
+		    brightest = glint.g;
+		if (brightest < glint.b)
+		    brightest = glint.b;
+                // gl_FragColor = blendScreen(mask, glint);
+                gl_FragColor = vec4(glint.rgb, brightest);
               }
             `,
             vertexShader: `
@@ -401,17 +423,23 @@ export class Inventory {
         }
 
         const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        
         if (texturePath == null) {
             this.playerModel.chestplate.material.opacity = 0.0;
+            this.playerModel.chestplateGlintMaterial.uniforms.hide.value = 1;
         } else {
-            textureLoader.load(texturePath, (newTexture) => {
-                newTexture.flipY = false;  // important for GLTF models
-                newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-                newTexture.colorSpace = THREE.SRGBColorSpace;
-                this.playerModel.chestplate.material.opacity = 1.0;
-                this.playerModel.chestplate.material.map = newTexture;
-                this.playerModel.chestplate.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-            });
+            newTexture.flipY = false;  // important for GLTF models
+            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.colorSpace = THREE.SRGBColorSpace;
+            this.playerModel.chestplate.material.opacity = 1.0;
+            this.playerModel.chestplate.material.map = newTexture;
+            this.playerModel.chestplate.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+            if (item.enchantments != null) {
+                this.playerModel.chestplateGlintMaterial.uniforms.hide.value = 0;
+		this.playerModel.chestplateGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    } else
+                this.playerModel.chestplateGlintMaterial.uniforms.hide.value = 1;
         }
     }
 
