@@ -16,7 +16,7 @@ class TexturePack {
         if(await this.textureExists(URL)) {
             return URL;
         } else {
-            // console.log("missing texture. using fallback texture for texture \"" + URL + "\"");
+            console.log("missing texture in texturepack. using fallback texture for texture \"" + URL + "\"");
             return fallback_pack + "/assets/minecraft/textures/" + texturePath;
         }
     }
