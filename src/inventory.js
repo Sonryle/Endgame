@@ -2,7 +2,7 @@ import { state } from "./state.js"
 import { grid } from "./grid.js"
 import { texturePack } from "./TexturePack.js"
 import { ItemType, MinecraftItem } from "./Item.js"
-import { ItemSlot, ArmourItemSlot } from "./ItemSlot.js"
+import { ItemSlot, ArmourItemSlot, CallbackItemSlot } from "./ItemSlot.js"
 import { PlayerModel } from "./PlayerModel"
 
 const winWidth = window.innerWidth;
@@ -31,8 +31,6 @@ export class Inventory {
         // Create Mini Player Model
         this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (55 * state.scale));
         await this.playerModel.ready;
-        this.playerModel.updateLeftHand(await texturePack.getPath("item/axolotl_bucket.png"));
-        this.playerModel.updateRightHand(await texturePack.getPath("item/axolotl_bucket.png"));
 
         // Create item slots holding items
         this.initSlots(items)
@@ -76,13 +74,19 @@ export class Inventory {
         yOffset = 141 * state.scale;
         for (let x = 0; x < 9; x++) {
             let slotNum = 36 + x;
-            this.slots[slotNum] = new ItemSlot(this.svg,
-                                xOffset + x * this.cellScale,
-                                yOffset + 0 * this.cellScale);
+            if (x == 0)
+                this.slots[slotNum] = new CallbackItemSlot(this.svg,
+                                    xOffset + x * this.cellScale,
+                                    yOffset + 0 * this.cellScale,
+                                    null, null, (item, itemType) => this.swapRightHand(item, itemType));
+            else
+                this.slots[slotNum] = new ItemSlot(this.svg,
+                                    xOffset + x * this.cellScale,
+                                    yOffset + 0 * this.cellScale);
         }
 
         // Offhand Slot
-        this.slots[45] = new ItemSlot(this.svg, 76 * state.scale, 61 * state.scale, await texturePack.getPath("gui/sprites/container/slot/shield.png"));
+        this.slots[45] = new CallbackItemSlot(this.svg, 76 * state.scale, 61 * state.scale, await texturePack.getPath("gui/sprites/container/slot/shield.png"), null, (item, itemType) => this.swapLeftHand(item, itemType));
 
         // Fill every slot with respective item
 	    items.forEach((value, index) => {
@@ -254,6 +258,20 @@ export class Inventory {
         }
 
         this.playerModel.updateBoots(texturePath, true);
+    }
+
+    swapLeftHand(item) {
+        if (item != null && typeof item != "undefined")
+            this.playerModel.updateLeftHand(item.href, false);
+        else
+            this.playerModel.updateLeftHand(null, false);
+    }
+
+    swapRightHand(item) {
+        if (item != null && typeof item != "undefined")
+            this.playerModel.updateRightHand(item.href, false);
+        else
+            this.playerModel.updateRightHand(null, false);
     }
 
     delete() {

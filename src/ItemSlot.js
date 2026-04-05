@@ -185,15 +185,16 @@ export class ArmourItemSlot extends ItemSlot {
     }
 }
 
-export class HandItemSlot extends ItemSlot {
-    constructor(svg, x, y, optionalSlotTexture, optionalItemType, onItemChanged) {
+// Calls callback function when item is placed in slot
+export class CallbackItemSlot extends ItemSlot {
+    constructor(svg, x, y, optionalSlotTexture, optionalItemType, callbackOnItemChanged) {
         super(svg, x, y, optionalSlotTexture, optionalItemType);
-        this.onItemChanged = onItemChanged;
+        this.callbackOnItemChanged = callbackOnItemChanged;
     }
 
     setItem(newItem) {
         let returnItem = super.setItem(newItem);
-        this.onItemChanged(this.item, this.itemType);
+        this.callbackOnItemChanged(this.item);
         return returnItem;
     }
 }
