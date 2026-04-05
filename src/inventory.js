@@ -221,8 +221,6 @@ export class Inventory {
         } else {
             this.playerModel.updateLeggings(null, false);
         }
-
-        this.playerModel.updateLeggings(texturePath, true);
     }
 
     async swapBoots(item) {
@@ -256,8 +254,6 @@ export class Inventory {
         } else {
             this.playerModel.updateBoots(null, false);
         }
-
-        this.playerModel.updateBoots(texturePath, true);
     }
 
     swapLeftHand(item) {

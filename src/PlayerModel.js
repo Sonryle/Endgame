@@ -99,10 +99,11 @@ export class PlayerModel {
     async loadPlayerModel() {
 
         // Create shader for armor enchantment glint
-        this.helmetGlintMaterial = await this.createEnchantGlintMaterial();
-        this.chestplateGlintMaterial = await this.createEnchantGlintMaterial();
-        this.leggingsGlintMaterial = await this.createEnchantGlintMaterial();
-        this.bootsGlintMaterial = await this.createEnchantGlintMaterial();
+        let armourGlintTexturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
+        this.helmetGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
+        this.chestplateGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
+        this.leggingsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
+        this.bootsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
 
         this.playerModel = null;
         this.head = null;
@@ -122,10 +123,11 @@ export class PlayerModel {
                 child.material.depthWrite = false;
                 this.outerLayer = child;
             }
-            if (child.name == "LeftHandItem") {
+            if (child.name == "Helmet") {
                 child.material.depthWrite = true;
-                child.material.alphaTest = 1.0;
-                this.outerLayer = child;
+                child.material.opacity = 0.0;
+                child.material.alphaTest = 0.5;
+                this.helmet = child;
             }
             if (child.name == "HelmetGlint") {
                 child.material = this.helmetGlintMaterial;
@@ -134,11 +136,11 @@ export class PlayerModel {
                 child.material.wrapT = THREE.RepeatWrapping;
                 this.helmetGlint = child;
             }
-            if (child.name == "Helmet") {
+            if (child.name == "Chestplate") {
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
                 child.material.alphaTest = 0.5;
-                this.helmet = child;
+                this.chestplate = child;
             }
             if (child.name == "ChestplateGlint") {
                 child.material = this.chestplateGlintMaterial;
@@ -146,12 +148,6 @@ export class PlayerModel {
                 child.material.wrapS = THREE.RepeatWrapping;
                 child.material.wrapT = THREE.RepeatWrapping;
                 this.chestplateGlint = child;
-            }
-            if (child.name == "Chestplate") {
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                child.material.alphaTest = 0.5;
-                this.chestplate = child;
             }
             if (child.name == "Leggings") {
                 child.material.depthWrite = true;
@@ -212,13 +208,11 @@ export class PlayerModel {
         this.left_arm.add(this.leftHandItemModel);
     }
 
-    async createEnchantGlintMaterial() {
+    async createEnchantGlintMaterial(glintTexturePath, depthWrite, zoom, blur) {
 
-        const texturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
-        const glintTexture = new THREE.TextureLoader().load(texturePath);
+        const glintTexture = new THREE.TextureLoader().load(glintTexturePath);
         glintTexture.flipY = false;  // important for GLTF models
         glintTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-        glintTexture.colorSpace = THREE.NoColorSpace;
         glintTexture.wrapS = THREE.RepeatWrapping;
         glintTexture.wrapT = THREE.RepeatWrapping;
 
@@ -228,15 +222,19 @@ export class PlayerModel {
               maskTexture:   { value: null },
               hide:          { value: false },
               glintOffset:   { value: new THREE.Vector2(0, 0) },
+              zoom:          { value: zoom },
+              blur:          { value: blur },
             },
             transparent: true,
-            depthWrite: false,
+            depthWrite: depthWrite,
             blending: THREE.AdditiveBlending,
             premultipliedAlpha: true,
             fragmentShader: `
               uniform sampler2D glintTexture;
               uniform sampler2D maskTexture;
               uniform bool hide;
+              uniform float zoom;
+              uniform float blur;
 	      uniform vec2 glintOffset;
               varying vec2 vUv;
 
@@ -263,22 +261,18 @@ export class PlayerModel {
 
               void main() {
 	        vec4 mask = texture(maskTexture, vUv);
-                // vec4 glint = texture(glintTexture,  (vUv) / vec2(2, 2) + glintOffset);
-		vec4 glint = blur9(glintTexture, (vUv) / vec2(4, 4) + glintOffset, vec2(120, 120), vec2(1, 1));
+		vec4 glint = blur9(glintTexture, (vUv) / vec2(zoom, zoom) + glintOffset, vec2(blur, blur), vec2(1, 1));
 
                 if (hide == true || mask.w < 0.5)
                     discard;
 
-                // float gamma = 2.2;
-                // mask.rgb = pow(mask.rgb, vec3(1.0/gamma));
-                
-		// Find Brightest Pixel
-		float brightest = glint.r;
-		if (brightest < glint.g)
-		    brightest = glint.g;
-		if (brightest < glint.b)
-		    brightest = glint.b;
-                // gl_FragColor = blendScreen(mask, glint);
+               // Find Brightest Pixel
+               float brightest = glint.r;
+               if (brightest < glint.g)
+                   brightest = glint.g;
+               if (brightest < glint.b)
+                   brightest = glint.b;
+
                 gl_FragColor = vec4(glint.rgb, brightest);
               }
             `,
@@ -350,6 +344,7 @@ export class PlayerModel {
         if (texturePath == null) {
             this.leggings.material.opacity = 0.0;
             this.leggingsGlintMaterial.uniforms.hide.value = 1;
+	    console.log(this.leggingsGlintMaterial);
         } else {
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
@@ -358,6 +353,7 @@ export class PlayerModel {
             this.leggings.material.map = newTexture;
             this.leggings.material.needsUpdate = true;  // tells Three.js to re-render with new texture
             if (enchanted) {
+		console.log("enchanted");
                 this.leggingsGlintMaterial.uniforms.hide.value = 0;
 		this.leggingsGlintMaterial.uniforms.maskTexture.value = newTexture;
 	    } else
@@ -426,6 +422,7 @@ export class PlayerModel {
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.leftHandItemModel.material.opacity = 1.0;
             this.leftHandItemModel.material.map = newTexture;
+            this.leftHandItemModel.material.alphaTest = 1.0;
             this.leftHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
             // if (enchanted) {
 		//               this.leftHandItemModelGlintMaterial.uniforms.hide.value = 0;
@@ -476,6 +473,7 @@ export class PlayerModel {
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.rightHandItemModel.material.opacity = 1.0;
             this.rightHandItemModel.material.map = newTexture;
+            this.rightHandItemModel.material.alphaTest = 1.0;
             this.rightHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
             // if (enchanted) {
 		//               this.rightHandItemModelGlintMaterial.uniforms.hide.value = 0;

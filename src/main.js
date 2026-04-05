@@ -42,7 +42,7 @@ const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet, 
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
 const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       ["Leg It"], null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);
-const diamond_sword           = new ItemInstance( MinecraftItem.diamond_sword,          null, null);
+const diamond_sword           = new ItemInstance( MinecraftItem.diamond_sword,          ["Sweeping Edge I"], null);
 const diamond_pickaxe         = new ItemInstance( MinecraftItem.diamond_pickaxe,        null, null);
 // ----------------------------
 const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["VI VII"], null);
@@ -50,7 +50,7 @@ const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplat
 const golden_leggings         = new ItemInstance( MinecraftItem.golden_leggings,        null, null);
 const golden_boots            = new ItemInstance( MinecraftItem.golden_boots,           null, null);
 // ----------------------------
-const iron_helmet             = new ItemInstance( MinecraftItem.iron_helmet,            ["Cant Iron this Iron"], null);
+const iron_helmet             = new ItemInstance( MinecraftItem.iron_helmet,            null, null);
 const iron_chestplate         = new ItemInstance( MinecraftItem.iron_chestplate,        null, null);
 const iron_leggings           = new ItemInstance( MinecraftItem.iron_leggings,          null, null);
 const iron_boots              = new ItemInstance( MinecraftItem.iron_boots,             null, null);
