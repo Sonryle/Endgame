@@ -305,6 +305,7 @@ export class PlayerModel {
         } else {
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.helmet.material.opacity = 1.0;
             this.helmet.material.map = newTexture;
@@ -326,6 +327,7 @@ export class PlayerModel {
         } else {
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.chestplate.material.opacity = 1.0;
             this.chestplate.material.map = newTexture;
@@ -348,6 +350,7 @@ export class PlayerModel {
         } else {
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.leggings.material.opacity = 1.0;
             this.leggings.material.map = newTexture;
@@ -370,6 +373,7 @@ export class PlayerModel {
         } else {
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.boots.material.opacity = 1.0;
             this.boots.material.map = newTexture;
@@ -390,17 +394,17 @@ export class PlayerModel {
                 this.leftHandItemModel.position.x = 0;
                 this.leftHandItemModel.position.y = 0.58;
                 this.leftHandItemModel.position.z = 0.35;
-                this.leftHandItemModel.scale.x = 1.5; // Negative so texture is mirrored
-                this.leftHandItemModel.scale.y = 1.5;
-                this.leftHandItemModel.scale.z = 1.5;
+                this.leftHandItemModel.scale.x = 0.7; // Negative so texture is mirrored
+                this.leftHandItemModel.scale.y = 0.7;
+                this.leftHandItemModel.scale.z = 0.7;
                 this.leftHandItemModel.rotation.z = 3.141592 / 2;
                 this.leftHandItemModel.rotation.x = 3.141592 / -8;
             } else {
-                this.leftHandItemModel.position.x = 0.4;
+                this.leftHandItemModel.position.x = 0.35;
                 this.leftHandItemModel.position.y = 0.85;
-                this.leftHandItemModel.scale.x = -0.9; // Negative so texture is mirrored
-                this.leftHandItemModel.scale.y = 0.9;
-                this.leftHandItemModel.scale.z = 0.9;
+                this.leftHandItemModel.scale.x = -0.4; // Negative so texture is mirrored
+                this.leftHandItemModel.scale.y = 0.4;
+                this.leftHandItemModel.scale.z = 0.4;
                 this.leftHandItemModel.position.z = 0;
                 this.leftHandItemModel.rotation.z = 0;
                 this.leftHandItemModel.rotation.x = 0;
@@ -419,10 +423,11 @@ export class PlayerModel {
             this.left_arm.rotation.x = 2.8;
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.leftHandItemModel.material.opacity = 1.0;
             this.leftHandItemModel.material.map = newTexture;
-            this.leftHandItemModel.material.alphaTest = 1.0;
+            this.leftHandItemModel.material.alphaTest = 0.1;
             this.leftHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
             // if (enchanted) {
 		//               this.leftHandItemModelGlintMaterial.uniforms.hide.value = 0;
@@ -440,19 +445,19 @@ export class PlayerModel {
                 this.rightHandItemModel.position.x = 0.1;
                 this.rightHandItemModel.position.y = 0.58;
                 this.rightHandItemModel.position.z = 0.35;
-                this.rightHandItemModel.scale.x = 1.5; // Negative so texture is mirrored
-                this.rightHandItemModel.scale.y = 1.5;
-                this.rightHandItemModel.scale.z = 1.5;
+                this.rightHandItemModel.scale.x = 0.7; // Negative so texture is mirrored
+                this.rightHandItemModel.scale.y = 0.7;
+                this.rightHandItemModel.scale.z = 0.7;
                 this.rightHandItemModel.rotation.z = 3.141592 / 2;
                 this.rightHandItemModel.rotation.x = 3.141592 / -8;
 		console.log("Holding Weapon");
             } else {
                 console.log("Holding Non-Weapon");
-                this.rightHandItemModel.position.x = 0.5;
+                this.rightHandItemModel.position.x = 0.45;
                 this.rightHandItemModel.position.y = 0.85;
-                this.rightHandItemModel.scale.x = -0.9; // Negative so texture is mirrored
-                this.rightHandItemModel.scale.y = 0.9;
-                this.rightHandItemModel.scale.z = 0.9;
+                this.rightHandItemModel.scale.x = -0.4; // Negative so texture is mirrored
+                this.rightHandItemModel.scale.y = 0.4;
+                this.rightHandItemModel.scale.z = 0.4;
                 this.rightHandItemModel.position.z = 0;
                 this.rightHandItemModel.rotation.z = 0;
                 this.rightHandItemModel.rotation.x = 0;
@@ -470,10 +475,11 @@ export class PlayerModel {
             this.right_arm.rotation.x = 2.8;
             newTexture.flipY = false;  // important for GLTF models
             newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.minFilter = THREE.NearestFilter;
             newTexture.colorSpace = THREE.SRGBColorSpace;
             this.rightHandItemModel.material.opacity = 1.0;
             this.rightHandItemModel.material.map = newTexture;
-            this.rightHandItemModel.material.alphaTest = 1.0;
+            this.rightHandItemModel.material.alphaTest = 0.1;
             this.rightHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
             // if (enchanted) {
 		//               this.rightHandItemModelGlintMaterial.uniforms.hide.value = 0;
