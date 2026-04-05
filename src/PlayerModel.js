@@ -3,6 +3,7 @@ import { texturePack } from "./TexturePack.js"
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as SceneUtils from 'three/addons/utils/SceneUtils.js';
 
 export class PlayerModel {
     constructor(svg, canvasXPos, canvasYPos, canvasX, canvasY, animationCallback, scale) {
@@ -65,17 +66,18 @@ export class PlayerModel {
 
         // Add callback for model rotation
         state.svg.node().addEventListener('mousemove', (event) => {
-            if (this.object != null) {
+            if (this.playerModel != null) {
                 const ax = 0.8; // Bell function height at x = 0
                 const ay = 1.0;
                 const x = Math.max(Math.min((state.mouseX - canvasXPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
                 const y = Math.max(Math.min((state.mouseY - canvasYPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
                 const bellX = 1 / (1 + ((x / ax)*(x / ax)));
                 const bellY = 1 / (1 + ((y / ay)*(y / ay)));
-                this.object.rotation.y = x * bellX;
-                this.object.rotation.x = y * bellY;
+                this.playerModel.rotation.y = x * bellX;
+                this.playerModel.rotation.x = y * bellY;
                 this.head.rotation.y = x * bellX;
                 this.head.rotation.x = y * bellY;
+                // this.rightHandItemModel.position
             }
         })
 
@@ -90,14 +92,14 @@ export class PlayerModel {
         this.leggingsGlintMaterial = await this.createEnchantGlintMaterial();
         this.bootsGlintMaterial = await this.createEnchantGlintMaterial();
 
-        this.object = null;
+        this.playerModel = null;
         this.head = null;
         this.left_arm = null;
         this.right_arm = null;
         const loader = new GLTFLoader();
-        const gltf = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
-        this.scene.add( gltf.scene );
-        gltf.scene.traverse((child) => {
+        const playerGLTF = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+        this.scene.add( playerGLTF.scene );
+        playerGLTF.scene.traverse((child) => {
 	    console.log(child.name);
             if (child.name == "SlimPlayerInnerLayer") {
                 child.material.depthWrite = true;
@@ -105,6 +107,11 @@ export class PlayerModel {
             }
             if (child.name == "SlimPlayerOuterLayer") {
                 child.material.depthWrite = false;
+                this.outerLayer = child;
+            }
+            if (child.name == "LeftHandItem") {
+                child.material.depthWrite = true;
+                child.material.alphaTest = 1.0;
                 this.outerLayer = child;
             }
             if (child.name == "HelmetGlint") {
@@ -168,7 +175,34 @@ export class PlayerModel {
                 this.right_arm = child;
         });
         // If file is loaded, add it to scene
-        this.object = gltf.scene;
+        this.playerModel = playerGLTF.scene;
+        
+        // Load Item Models for player hands
+        const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( rightHandItemGLTF.scene );
+        rightHandItemGLTF.scene.traverse((child) => {
+            if (child.name == "ItemModel") {
+                child.material.depthWrite = true;
+                this.rightHandItemModel = child;
+            }
+        });
+        this.right_arm.add(this.rightHandItemModel);
+        this.right_arm.rotation.x = 2.8;
+        this.rightHandItemModel.position.y = 0.85;
+        this.rightHandItemModel.position.x = -0.5;
+
+        const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( leftHandItemGLTF.scene );
+        leftHandItemGLTF.scene.traverse((child) => {
+            if (child.name == "ItemModel") {
+                child.material.depthWrite = true;
+                this.leftHandItemModel = child;
+            }
+        });
+        this.left_arm.add(this.leftHandItemModel);
+        this.left_arm.rotation.x = 2.8;
+        this.leftHandItemModel.position.y = 0.85;
+        this.leftHandItemModel.position.x = -0.5;
     }
 
     async createEnchantGlintMaterial() {
