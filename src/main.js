@@ -29,6 +29,7 @@ state.svg.on('mousemove', (event) => {
 // ----------------------------
 const apple                   = new ItemInstance( MinecraftItem.apple,                  null, null);
 const axolotl_bucket          = new ItemInstance( MinecraftItem.axolotl_bucket,         null, null);
+const axolotl_bucket2         = new ItemInstance( MinecraftItem.axolotl_bucket,         null, null);
 const bread                   = new ItemInstance( MinecraftItem.bread,                  null, null);
 const carrot                  = new ItemInstance( MinecraftItem.carrot,                 null, null);
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
@@ -58,7 +59,8 @@ const items = [];
 items[9] = apple;
 items[18] = bread;
 items[27] = carrot;
-items[36] = dark_oak_sign;
+items[36] = axolotl_bucket2;
+items[37] = dark_oak_sign;
 items[5] = netherite_helmet;
 items[6] = netherite_chestplate;
 items[7] = netherite_leggings;

@@ -42,8 +42,14 @@ export class PlayerModel {
             if (this.right_arm != null && this.left_arm != null) {
         	const d = new Date();
                 let time = d.getSeconds() * 1000 + d.getMilliseconds();
-                this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 15;
-                this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -15;
+
+                // Arm Animation
+                this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 13;
+                this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -13;
+                this.left_arm.rotation.x = 3.141592 - 0.5 - (Math.sin(time / 400) - 1) / 60;
+                this.right_arm.rotation.x = 3.141592 - 0.5- (Math.sin(time / -350) - 1) / -60;
+
+                // Enchantment Glints
                 this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
                 this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
                 this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
@@ -77,7 +83,6 @@ export class PlayerModel {
                 this.playerModel.rotation.x = y * bellY;
                 this.head.rotation.y = x * bellX;
                 this.head.rotation.x = y * bellY;
-                // this.rightHandItemModel.position
             }
         })
 
