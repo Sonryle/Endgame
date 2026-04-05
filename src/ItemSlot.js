@@ -179,14 +179,21 @@ export class ArmourItemSlot extends ItemSlot {
     }
 
     setItem(newItem) {
-        // Record current armour in slot
-        let startItem = this.item;
-        // Run slot swapping code and keep return value for later
         let returnItem = super.setItem(newItem);
-        // If armour in slot has changed, call inventory onArmourChanged callback
-        if (startItem != this.item)
-            this.onArmourChanged(this.item, this.itemType);
-        // Return return value from super.setItem();
+        this.onArmourChanged(this.item, this.itemType);
+        return returnItem;
+    }
+}
+
+export class HandItemSlot extends ItemSlot {
+    constructor(svg, x, y, optionalSlotTexture, optionalItemType, onItemChanged) {
+        super(svg, x, y, optionalSlotTexture, optionalItemType);
+        this.onItemChanged = onItemChanged;
+    }
+
+    setItem(newItem) {
+        let returnItem = super.setItem(newItem);
+        this.onItemChanged(this.item, this.itemType);
         return returnItem;
     }
 }
