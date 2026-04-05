@@ -29,7 +29,7 @@ export class Inventory {
         this.texture.attr('y', 0);
 
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (56 * state.scale));
+        this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (53 * state.scale));
         await this.playerModel.ready;
 
         // Create item slots holding items
@@ -78,7 +78,7 @@ export class Inventory {
                 this.slots[slotNum] = new CallbackItemSlot(this.svg,
                                     xOffset + x * this.cellScale,
                                     yOffset + 0 * this.cellScale,
-                                    null, null, (item, itemType) => this.swapRightHand(item, itemType));
+                                    null, null, (item) => this.swapRightHand(item));
             else
                 this.slots[slotNum] = new ItemSlot(this.svg,
                                     xOffset + x * this.cellScale,
@@ -86,7 +86,7 @@ export class Inventory {
         }
 
         // Offhand Slot
-        this.slots[45] = new CallbackItemSlot(this.svg, 76 * state.scale, 61 * state.scale, await texturePack.getPath("gui/sprites/container/slot/shield.png"), null, (item, itemType) => this.swapLeftHand(item, itemType));
+        this.slots[45] = new CallbackItemSlot(this.svg, 76 * state.scale, 61 * state.scale, await texturePack.getPath("gui/sprites/container/slot/shield.png"), null, (item) => this.swapLeftHand(item));
 
         // Fill every slot with respective item
 	    items.forEach((value, index) => {
@@ -261,17 +261,11 @@ export class Inventory {
     }
 
     swapLeftHand(item) {
-        if (item != null && typeof item != "undefined")
-            this.playerModel.updateLeftHand(item.href, false);
-        else
-            this.playerModel.updateLeftHand(null, false);
+        this.playerModel.updateLeftHand(item);
     }
 
     swapRightHand(item) {
-        if (item != null && typeof item != "undefined")
-            this.playerModel.updateRightHand(item.href, false);
-        else
-            this.playerModel.updateRightHand(null, false);
+        this.playerModel.updateRightHand(item);
     }
 
     delete() {

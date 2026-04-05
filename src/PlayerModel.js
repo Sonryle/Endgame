@@ -1,5 +1,6 @@
 import { state } from "./state.js"
 import { texturePack } from "./TexturePack.js"
+import { ItemType } from "./Item.js"
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -27,7 +28,7 @@ export class PlayerModel {
         renderer.sortObjects = false;
         renderer.setClearColor( 0xFF0000, 0);
         
-        const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, 1, 3);
+        const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, -3, 3);
         camera.position.z = 2.0;
         
         // Create scene
@@ -46,8 +47,14 @@ export class PlayerModel {
                 // Arm Animation
                 this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 13;
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -13;
-                this.left_arm.rotation.x = 3.141592 - 0.5 - (Math.sin(time / 400) - 1) / 60;
-                this.right_arm.rotation.x = 3.141592 - 0.5- (Math.sin(time / -350) - 1) / -60;
+                if (this.rightHandItemModel != null && typeof this.rightHandItemModel != "undefined")
+                    if (this.rightHandItemModel.material.opacity == 1.0) {
+                        this.right_arm.rotation.x = 3.141592 - 0.5- (Math.sin(time / -350) - 1) / -80;
+                    }
+                if (this.leftHandItemModel != null && typeof this.rightHandItemModel != "undefined")
+                    if (this.leftHandItemModel.material.opacity == 1.0) {
+                        this.left_arm.rotation.x = 3.141592 - 0.5 - (Math.sin(time / 400) - 1) / 80;
+                    }
 
                 // Enchantment Glints
                 this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
@@ -73,7 +80,7 @@ export class PlayerModel {
         // Add callback for model rotation
         state.svg.node().addEventListener('mousemove', (event) => {
             if (this.playerModel != null) {
-                const ax = 0.8; // Bell function height at x = 0
+                const ax = 1.0; // Bell function height at x = 0
                 const ay = 1.0;
                 const x = Math.max(Math.min((state.mouseX - canvasXPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
                 const y = Math.max(Math.min((state.mouseY - canvasYPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
@@ -378,10 +385,32 @@ export class PlayerModel {
                 this.bootsGlintMaterial.uniforms.hide.value = 1;
         }
     }
-    updateLeftHand(texturePath, enchanted) {
+    updateLeftHand(item) {
 
-        this.leftHandItemModel.position.y = 0.85;
-        this.leftHandItemModel.position.x = -0.55;
+        let texturePath = null;
+        if (item != null && typeof item != "undefined") {
+            texturePath = item.href;
+            if (item.itemType == ItemType.WEAPON) {
+                this.leftHandItemModel.position.x = 0;
+                this.leftHandItemModel.position.y = 0.58;
+                this.leftHandItemModel.position.z = 0.35;
+                this.leftHandItemModel.scale.x = 1.5; // Negative so texture is mirrored
+                this.leftHandItemModel.scale.y = 1.5;
+                this.leftHandItemModel.scale.z = 1.5;
+                this.leftHandItemModel.rotation.z = 3.141592 / 2;
+                this.leftHandItemModel.rotation.x = 3.141592 / -8;
+            } else {
+                this.leftHandItemModel.position.x = 0.4;
+                this.leftHandItemModel.position.y = 0.85;
+                this.leftHandItemModel.scale.x = -0.9; // Negative so texture is mirrored
+                this.leftHandItemModel.scale.y = 0.9;
+                this.leftHandItemModel.scale.z = 0.9;
+                this.leftHandItemModel.position.z = 0;
+                this.leftHandItemModel.rotation.z = 0;
+                this.leftHandItemModel.rotation.x = 0;
+            }
+        }
+		
 
         const textureLoader = new THREE.TextureLoader();
         let newTexture = textureLoader.load(texturePath);
@@ -405,10 +434,33 @@ export class PlayerModel {
                 // this.leftHandItemModelGlintMaterial.uniforms.hide.value = 1;
         }
     }
-    updateRightHand(texturePath, enchanted) {
+    updateRightHand(item) {
 
-        this.rightHandItemModel.position.y = 0.85;
-        this.rightHandItemModel.position.x = -0.45;
+        let texturePath = null;
+        if (item != null && typeof item != "undefined") {
+            texturePath = item.href;
+            if (item.itemType == ItemType.WEAPON) {
+                this.rightHandItemModel.position.x = 0.1;
+                this.rightHandItemModel.position.y = 0.58;
+                this.rightHandItemModel.position.z = 0.35;
+                this.rightHandItemModel.scale.x = 1.5; // Negative so texture is mirrored
+                this.rightHandItemModel.scale.y = 1.5;
+                this.rightHandItemModel.scale.z = 1.5;
+                this.rightHandItemModel.rotation.z = 3.141592 / 2;
+                this.rightHandItemModel.rotation.x = 3.141592 / -8;
+		console.log("Holding Weapon");
+            } else {
+                console.log("Holding Non-Weapon");
+                this.rightHandItemModel.position.x = 0.5;
+                this.rightHandItemModel.position.y = 0.85;
+                this.rightHandItemModel.scale.x = -0.9; // Negative so texture is mirrored
+                this.rightHandItemModel.scale.y = 0.9;
+                this.rightHandItemModel.scale.z = 0.9;
+                this.rightHandItemModel.position.z = 0;
+                this.rightHandItemModel.rotation.z = 0;
+                this.rightHandItemModel.rotation.x = 0;
+            }
+        }
 
         const textureLoader = new THREE.TextureLoader();
         let newTexture = textureLoader.load(texturePath);

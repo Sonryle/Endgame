@@ -24,6 +24,8 @@ export const MinecraftItem = {
     diamond_chestplate:   { texture: "diamond_chestplate.png",   type: ItemType.CHESTPLATE,  name: "Diamond Chestplate"    },
     diamond_helmet:       { texture: "diamond_helmet.png",       type: ItemType.HELMET,      name: "Diamond Helmet"        },
     diamond_leggings:     { texture: "diamond_leggings.png",     type: ItemType.LEGGINGS,    name: "Diamond Leggings"      },
+    diamond_sword:        { texture: "diamond_sword.png",        type: ItemType.WEAPON,      name: "Diamond Sword"         },
+    diamond_pickaxe:      { texture: "diamond_pickaxe.png",      type: ItemType.WEAPON,      name: "Diamond Pickaxe"       },
     golden_boots:         { texture: "golden_boots.png",         type: ItemType.BOOTS,       name: "Golden Boots"          },
     golden_chestplate:    { texture: "golden_chestplate.png",    type: ItemType.CHESTPLATE,  name: "Golden Chestplate"     },
     golden_helmet:        { texture: "golden_helmet.png",        type: ItemType.HELMET,      name: "Golden Helmet"         },
@@ -39,6 +41,7 @@ export const MinecraftItem = {
     netherite_helmet:     { texture: "netherite_helmet.png",     type: ItemType.HELMET,      name: "Netherite Helmet"      },
     netherite_ingot:      { texture: "netherite_ingot.png",      type: ItemType.DEFAULT,     name: "Netherite Ingot"       },
     netherite_leggings:   { texture: "netherite_leggings.png",   type: ItemType.LEGGINGS,    name: "Netherite Leggings"    },
+    totem_of_undying:     { texture: "totem_of_undying.png",     type: ItemType.DEFAULT,     name: "Totem of Undying"      },
 }
 
 export class ItemInstance {

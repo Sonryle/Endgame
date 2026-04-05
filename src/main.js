@@ -29,7 +29,6 @@ state.svg.on('mousemove', (event) => {
 // ----------------------------
 const apple                   = new ItemInstance( MinecraftItem.apple,                  null, null);
 const axolotl_bucket          = new ItemInstance( MinecraftItem.axolotl_bucket,         null, null);
-const axolotl_bucket2         = new ItemInstance( MinecraftItem.axolotl_bucket,         null, null);
 const bread                   = new ItemInstance( MinecraftItem.bread,                  null, null);
 const carrot                  = new ItemInstance( MinecraftItem.carrot,                 null, null);
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
@@ -43,6 +42,8 @@ const diamond_helmet          = new ItemInstance( MinecraftItem.diamond_helmet, 
 const diamond_chestplate      = new ItemInstance( MinecraftItem.diamond_chestplate,     null, null);
 const diamond_leggings        = new ItemInstance( MinecraftItem.diamond_leggings,       ["Leg It"], null);
 const diamond_boots           = new ItemInstance( MinecraftItem.diamond_boots,          null, null);
+const diamond_sword           = new ItemInstance( MinecraftItem.diamond_sword,          null, null);
+const diamond_pickaxe         = new ItemInstance( MinecraftItem.diamond_pickaxe,        null, null);
 // ----------------------------
 const golden_helmet           = new ItemInstance( MinecraftItem.golden_helmet,          ["VI VII"], null);
 const golden_chestplate       = new ItemInstance( MinecraftItem.golden_chestplate,      ["I cant think of any"], null);
@@ -54,17 +55,20 @@ const iron_chestplate         = new ItemInstance( MinecraftItem.iron_chestplate,
 const iron_leggings           = new ItemInstance( MinecraftItem.iron_leggings,          null, null);
 const iron_boots              = new ItemInstance( MinecraftItem.iron_boots,             null, null);
 // ----------------------------
+const totem_of_undying        = new ItemInstance( MinecraftItem.totem_of_undying,       null, null);
 
 const items = [];
-items[9] = apple;
+items[9]  = apple;
 items[18] = bread;
+items[19] = totem_of_undying;
 items[27] = carrot;
-items[36] = axolotl_bucket2;
+items[28] = axolotl_bucket;
+items[36] = diamond_sword;
 items[37] = dark_oak_sign;
-items[5] = netherite_helmet;
-items[6] = netherite_chestplate;
-items[7] = netherite_leggings;
-items[8] = netherite_boots;
+items[5]  = netherite_helmet;
+items[6]  = netherite_chestplate;
+items[7]  = netherite_leggings;
+items[8]  = netherite_boots;
 items[16] = diamond_helmet;
 items[25] = diamond_chestplate;
 items[34] = diamond_leggings;
@@ -77,7 +81,7 @@ items[14] = iron_helmet;
 items[23] = iron_chestplate;
 items[32] = iron_leggings;
 items[41] = iron_boots;
-items[45] = axolotl_bucket;
+items[45] = diamond_pickaxe;
 
 let [invWidth, invHeight] = [176 * state.scale, 166 * state.scale];
 let [invX, invY] = grid.nearestPixel(window.innerWidth / 2 - invWidth / 2, window.innerHeight / 2 - invHeight / 2);
