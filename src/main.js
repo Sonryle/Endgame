@@ -28,6 +28,7 @@ state.svg.on('mousemove', (event) => {
 // Add Items to inventory
 // ----------------------------
 const apple                   = new ItemInstance( MinecraftItem.apple,                  null, null);
+const axolotl_bucket          = new ItemInstance( MinecraftItem.axolotl_bucket,         null, null);
 const bread                   = new ItemInstance( MinecraftItem.bread,                  null, null);
 const carrot                  = new ItemInstance( MinecraftItem.carrot,                 null, null);
 const dark_oak_sign           = new ItemInstance( MinecraftItem.dark_oak_sign,          null, null);
@@ -74,6 +75,7 @@ items[14] = iron_helmet;
 items[23] = iron_chestplate;
 items[32] = iron_leggings;
 items[41] = iron_boots;
+items[45] = axolotl_bucket;
 
 let [invWidth, invHeight] = [176 * state.scale, 166 * state.scale];
 let [invX, invY] = grid.nearestPixel(window.innerWidth / 2 - invWidth / 2, window.innerHeight / 2 - invHeight / 2);
