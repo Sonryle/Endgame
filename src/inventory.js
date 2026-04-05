@@ -31,6 +31,8 @@ export class Inventory {
         // Create Mini Player Model
         this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (55 * state.scale));
         await this.playerModel.ready;
+        this.playerModel.updateLeftHand(await texturePack.getPath("item/axolotl_bucket.png"));
+        this.playerModel.updateRightHand(await texturePack.getPath("item/axolotl_bucket.png"));
 
         // Create item slots holding items
         this.initSlots(items)

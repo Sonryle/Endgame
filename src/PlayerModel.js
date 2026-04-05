@@ -98,6 +98,7 @@ export class PlayerModel {
         this.right_arm = null;
         const loader = new GLTFLoader();
         const playerGLTF = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+        this.playerModel = playerGLTF.scene;
         this.scene.add( playerGLTF.scene );
         playerGLTF.scene.traverse((child) => {
 	    console.log(child.name);
@@ -174,8 +175,6 @@ export class PlayerModel {
             if (child.name == "ArmRight")
                 this.right_arm = child;
         });
-        // If file is loaded, add it to scene
-        this.playerModel = playerGLTF.scene;
         
         // Load Item Models for player hands
         const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
@@ -183,26 +182,22 @@ export class PlayerModel {
         rightHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
                 child.material.depthWrite = true;
+                child.material.opacity = 0.0;
                 this.rightHandItemModel = child;
             }
         });
         this.right_arm.add(this.rightHandItemModel);
-        this.right_arm.rotation.x = 2.8;
-        this.rightHandItemModel.position.y = 0.85;
-        this.rightHandItemModel.position.x = -0.5;
 
         const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( leftHandItemGLTF.scene );
         leftHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
                 child.material.depthWrite = true;
+                child.material.opacity = 0.0;
                 this.leftHandItemModel = child;
             }
         });
         this.left_arm.add(this.leftHandItemModel);
-        this.left_arm.rotation.x = 2.8;
-        this.leftHandItemModel.position.y = 0.85;
-        this.leftHandItemModel.position.x = -0.5;
     }
 
     async createEnchantGlintMaterial() {
@@ -376,6 +371,60 @@ export class PlayerModel {
 		this.bootsGlintMaterial.uniforms.maskTexture.value = newTexture;
 	    } else
                 this.bootsGlintMaterial.uniforms.hide.value = 1;
+        }
+    }
+    updateLeftHand(texturePath, enchanted) {
+
+        this.leftHandItemModel.position.y = 0.85;
+        this.leftHandItemModel.position.x = -0.55;
+
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        
+        if (texturePath == null) {
+            this.left_arm.rotation.x = 3.141592;
+            this.leftHandItemModel.material.opacity = 0.0;
+            // this.leftHandItemModelGlintMaterial.uniforms.hide.value = 1;
+        } else {
+            this.left_arm.rotation.x = 2.8;
+            newTexture.flipY = false;  // important for GLTF models
+            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.colorSpace = THREE.SRGBColorSpace;
+            this.leftHandItemModel.material.opacity = 1.0;
+            this.leftHandItemModel.material.map = newTexture;
+            this.leftHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+            // if (enchanted) {
+		//               this.leftHandItemModelGlintMaterial.uniforms.hide.value = 0;
+		// this.leftHandItemModelGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    // } else
+                // this.leftHandItemModelGlintMaterial.uniforms.hide.value = 1;
+        }
+    }
+    updateRightHand(texturePath, enchanted) {
+
+        this.rightHandItemModel.position.y = 0.85;
+        this.rightHandItemModel.position.x = -0.45;
+
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        
+        if (texturePath == null) {
+            this.right_arm.rotation.x = 3.141592;
+            this.rightHandItemModel.material.opacity = 0.0;
+            // this.rightHandItemModelGlintMaterial.uniforms.hide.value = 1;
+        } else {
+            this.right_arm.rotation.x = 2.8;
+            newTexture.flipY = false;  // important for GLTF models
+            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+            newTexture.colorSpace = THREE.SRGBColorSpace;
+            this.rightHandItemModel.material.opacity = 1.0;
+            this.rightHandItemModel.material.map = newTexture;
+            this.rightHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
+            // if (enchanted) {
+		//               this.rightHandItemModelGlintMaterial.uniforms.hide.value = 0;
+		// this.rightHandItemModelGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    // } else
+                // this.rightHandItemModelGlintMaterial.uniforms.hide.value = 1;
         }
     }
 }
