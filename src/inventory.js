@@ -126,26 +126,31 @@ export class Inventory {
         // Find out which texture to use
         let texturePath = null;
         let legacyTextureLocation = false;
-        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png"))) {
-            legacyTextureLocation = true;
-	}
 
         let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Helmet":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/netherite_layer_1.png")) == true)
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Helmet":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")) == true)
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Helmet":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/gold_layer_1.png")) == true)
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Helmet":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/iron_layer_1.png")) == true)
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
                     texturePath = await texturePack.getPath(path);
                     break;
@@ -161,25 +166,31 @@ export class Inventory {
         // Find out which texture to use
         let texturePath = null;
         let legacyTextureLocation = false;
-        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
-	    legacyTextureLocation = true;
 
         let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Chestplate":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/netherite_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Chestplate":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Chestplate":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/gold_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Chestplate":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/iron_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
                     texturePath = await texturePack.getPath(path);
                     break;
@@ -194,25 +205,31 @@ export class Inventory {
         // Find out which texture to use
         let texturePath = null;
         let legacyTextureLocation = false;
-        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
-            legacyTextureLocation = true;
 
         let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Leggings":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/netherite_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/netherite_layer_2.png" : "entity/equipment/humanoid_leggings/netherite.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Leggings":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/diamond_layer_2.png" : "entity/equipment/humanoid_leggings/diamond.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Leggings":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/gold_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/gold_layer_2.png" : "entity/equipment/humanoid_leggings/gold.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Leggings":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/iron_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/iron_layer_2.png" : "entity/equipment/humanoid_leggings/iron.png"
                     texturePath = await texturePack.getPath(path);
                     break;
@@ -227,25 +244,31 @@ export class Inventory {
         // Find out which texture to use
         let texturePath = null;
         let legacyTextureLocation = false;
-        if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
-            legacyTextureLocation = true;
 
         let path = null;
         if (item != null) {
             switch (item.name) {
                 case "Netherite Boots":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/netherite_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/netherite_layer_1.png" : "entity/equipment/humanoid/netherite.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Diamond Boots":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/diamond_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/diamond_layer_1.png" : "entity/equipment/humanoid/diamond.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Golden Boots":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/gold_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/gold_layer_1.png" : "entity/equipment/humanoid/gold.png"
                     texturePath = await texturePack.getPath(path);
                     break;
                 case "Iron Boots":
+                    if (await texturePack.textureExists(texturePack.getPathNoFallback("models/armor/iron_layer_1.png")))
+                        legacyTextureLocation = true;
                     path = (legacyTextureLocation)? "models/armor/iron_layer_1.png" : "entity/equipment/humanoid/iron.png"
                     texturePath = await texturePack.getPath(path);
                     break;
