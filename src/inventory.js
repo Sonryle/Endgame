@@ -29,7 +29,7 @@ export class Inventory {
         this.texture.attr('y', 0);
 
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (20 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (53 * state.scale));
+        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (6 * state.scale), (60 * state.scale), (80 * state.scale), null, (53 * state.scale));
         await this.playerModel.ready;
 
         // Create item slots holding items

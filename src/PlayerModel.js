@@ -24,9 +24,10 @@ export class PlayerModel {
         // Create renderer
         const renderer = new THREE.WebGLRenderer( {antialias: false});
         foreignObject.node().appendChild(renderer.domElement);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor( 0xFF0000, 0);
         renderer.setSize(canvasX, canvasY);
         renderer.sortObjects = false;
-        renderer.setClearColor( 0xFF0000, 0);
         
         const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, -3, 3);
         camera.position.z = 2.0;
@@ -58,17 +59,17 @@ export class PlayerModel {
 
                 // Enchantment Glints
                 this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
                 this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
                 this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
                 this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
                 this.leftHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
                 this.rightHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
             };
             renderer.render(this.scene, camera);
         };
@@ -104,10 +105,10 @@ export class PlayerModel {
 
         // Create shader for armor enchantment glint
         let armourGlintTexturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
-        this.helmetGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
-        this.chestplateGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
-        this.leggingsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
-        this.bootsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4, 120);
+        this.helmetGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 7, 20);
+        this.chestplateGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 7, 20);
+        this.leggingsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 7, 20);
+        this.bootsGlintMaterial = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 7, 20);
 
         this.playerModel = null;
         this.head = null;
@@ -189,7 +190,7 @@ export class PlayerModel {
         });
         
         // Load Item Models for player hands
-        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 1, 1);
+        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
         const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( rightHandItemGLTF.scene );
         rightHandItemGLTF.scene.traverse((child) => {
@@ -211,7 +212,7 @@ export class PlayerModel {
         });
         this.right_arm.add(this.rightHandItemBone);
 
-        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 1, 1);
+        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
         const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( leftHandItemGLTF.scene );
         leftHandItemGLTF.scene.traverse((child) => {
@@ -235,7 +236,7 @@ export class PlayerModel {
         this.left_arm.add(this.leftHandItemBone);
     }
 
-    async createEnchantGlintMaterial(glintTexturePath, depthWrite, zoom, blur) {
+    async createEnchantGlintMaterial(glintTexturePath, depthWrite, zoom) {
 
         const glintTexture = new THREE.TextureLoader().load(glintTexturePath);
         glintTexture.flipY = false;  // important for GLTF models
@@ -251,20 +252,18 @@ export class PlayerModel {
               hide:          { value: false },
               glintOffset:   { value: new THREE.Vector2(0, 0) },
               zoom:          { value: zoom },
-              blur:          { value: blur },
             },
-            transparent: true,
-            depthWrite: depthWrite,
             blending: THREE.AdditiveBlending,
             premultipliedAlpha: true,
             side: THREE.DoubleSide,
+            depthWrite: depthWrite,
+            transparent: true,
             fragmentShader: `
               uniform sampler2D glintTexture;
               uniform sampler2D maskTexture;
-              uniform bool hide;
-              uniform float zoom;
-              uniform float blur;
 	      uniform vec2 glintOffset;
+              uniform float zoom;
+              uniform bool hide;
               varying vec2 vUv;
 
               vec4 blendScreen (vec4 base, vec4 top) {
@@ -276,33 +275,62 @@ export class PlayerModel {
                   return result;
               }
 
-              vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
-                  vec4 color = vec4(0.0);
-                  vec2 off1 = vec2(1.3846153846) * direction;
-                  vec2 off2 = vec2(3.2307692308) * direction;
-                  color += texture2D(image, uv) * 0.2270270270;
-                  color += texture2D(image, uv + (off1 / resolution)) * 0.3162162162;
-                  color += texture2D(image, uv - (off1 / resolution)) * 0.3162162162;
-                  color += texture2D(image, uv + (off2 / resolution)) * 0.0702702703;
-                  color += texture2D(image, uv - (off2 / resolution)) * 0.0702702703;
-                  return color;
+	      vec4 blurKernel(sampler2D textureUnit, vec2 texCoord, float sampleDistance) {
+	
+                  float kernel[9];
+		  // Top row
+                  kernel[0] = 1.0f;
+                  kernel[1] = 2.0f;
+                  kernel[2] = 1.0f;
+                   
+                  // Middle row
+                  kernel[3] = 2.0f;
+                  kernel[4] = 4.0f;
+                  kernel[5] = 2.0f;
+                   
+                  // Bottom row
+                  kernel[6] = 1.0f;
+                  kernel[7] = 2.0f;
+                  kernel[8] = 1.0f;
+
+		  float s = 1.0f / sampleDistance;
+	          vec2 offsets[9];
+                  // Top row
+                  offsets[0] = vec2(-s, -s);
+                  offsets[1] = vec2(0, -s);
+                  offsets[2] = vec2(s, -s);
+                   
+                  // Middle row
+                  offsets[3] = vec2(-s, 0);
+                  offsets[4] = vec2(0, 0);
+                  offsets[5] = vec2(s, 0);
+                   
+                  // Bottom row
+                  offsets[6] = vec2(-s, s);
+                  offsets[7] = vec2(0, s);
+                  offsets[8] = vec2(s, s);
+
+                  for(int i=0; i<9; ++i) {
+                      kernel[i] /= 16.0f;
+                  }
+
+                  vec3 result = vec3(0.0f);
+                  for(int i=0; i<9; ++i)
+                  {
+                      result += texture(textureUnit, texCoord + offsets[i]).rgb * kernel[i];
+                  }
+	          return vec4(result.rgb, texture(textureUnit, texCoord).a);
               }
 
               void main() {
-	        vec4 mask = texture(maskTexture, vUv);
-		vec4 glint = blur9(glintTexture, (vUv) / vec2(zoom, zoom) + glintOffset, vec2(blur, blur), vec2(1, 1));
 
+	        vec4 mask = texture(maskTexture, vUv);
                 if (hide == true || mask.w < 0.5)
                     discard;
 
-               // Find Brightest Pixel
-               float brightest = glint.r;
-               if (brightest < glint.g)
-                   brightest = glint.g;
-               if (brightest < glint.b)
-                   brightest = glint.b;
+		vec4 glint = blurKernel(glintTexture, (vUv / vec2(zoom, zoom)) + glintOffset, 300.0f);
+                gl_FragColor = vec4(glint.rgba);
 
-                gl_FragColor = vec4(glint.rgb, brightest);
               }
             `,
             vertexShader: `
@@ -421,11 +449,11 @@ export class PlayerModel {
             texturePath = item.href;
             if (item.itemType == ItemType.WEAPON) {
                 this.leftHandItemBone.position.x = 0;
-                this.leftHandItemBone.position.y = 0.34;
+                this.leftHandItemBone.position.y = 0.42;
                 this.leftHandItemBone.position.z = -0.2;
-                this.leftHandItemBone.scale.x = 1.5;
-                this.leftHandItemBone.scale.y = 1.5;
-                this.leftHandItemBone.scale.z = 1.5;
+                this.leftHandItemBone.scale.x = 1.3;
+                this.leftHandItemBone.scale.y = 1.3;
+                this.leftHandItemBone.scale.z = 1.3;
                 this.leftHandItemBone.rotation.y = 3.141592 / 2;
                 this.leftHandItemBone.rotation.x = 3.141592 / -5;
             } else {
@@ -473,11 +501,11 @@ export class PlayerModel {
             texturePath = item.href;
             if (item.itemType == ItemType.WEAPON) {
                 this.rightHandItemBone.position.x = 0;
-                this.rightHandItemBone.position.y = 0.34;
+                this.rightHandItemBone.position.y = 0.42;
                 this.rightHandItemBone.position.z = -0.2;
-                this.rightHandItemBone.scale.x = 1.5;
-                this.rightHandItemBone.scale.y = 1.5;
-                this.rightHandItemBone.scale.z = 1.5;
+                this.rightHandItemBone.scale.x = 1.3;
+                this.rightHandItemBone.scale.y = 1.3;
+                this.rightHandItemBone.scale.z = 1.3;
                 this.rightHandItemBone.rotation.y = 3.141592 / 2;
                 this.rightHandItemBone.rotation.x = 3.141592 / -5;
             } else {
