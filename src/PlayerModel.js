@@ -65,6 +65,10 @@ export class PlayerModel {
                 this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
                 this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
                 this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.leftHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
+                this.rightHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  4000;
             };
             renderer.render(this.scene, camera);
         };
@@ -185,6 +189,7 @@ export class PlayerModel {
         });
         
         // Load Item Models for player hands
+        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), false, 4, 120);
         const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( rightHandItemGLTF.scene );
         rightHandItemGLTF.scene.traverse((child) => {
@@ -194,6 +199,7 @@ export class PlayerModel {
                 this.rightHandItemModel = child;
             }
             if (child.name == "ItemGlint") {
+                child.material = this.rightHandGlintMaterial;
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
                 this.rightHandItemGlintModel = child;
@@ -204,6 +210,7 @@ export class PlayerModel {
         });
         this.right_arm.add(this.rightHandItemBone);
 
+        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), false, 4, 120);
         const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( leftHandItemGLTF.scene );
         leftHandItemGLTF.scene.traverse((child) => {
@@ -213,6 +220,7 @@ export class PlayerModel {
                 this.leftHandItemModel = child;
             }
             if (child.name == "ItemGlint") {
+                child.material = this.leftHandGlintMaterial;
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
 		child.material.transparent = true;
@@ -436,7 +444,7 @@ export class PlayerModel {
         if (texturePath == null) {
             this.left_arm.rotation.x = 3.141592;
             this.leftHandItemModel.material.opacity = 0.0;
-            // this.leftHandItemModelGlintMaterial.uniforms.hide.value = 1;
+            this.leftHandGlintMaterial.uniforms.hide.value = 1;
         } else {
             this.left_arm.rotation.x = 2.8;
             newTexture.flipY = false;  // important for GLTF models
@@ -447,11 +455,11 @@ export class PlayerModel {
             this.leftHandItemModel.material.map = newTexture;
             this.leftHandItemModel.material.alphaTest = 0.1;
             this.leftHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-            // if (enchanted) {
-		//               this.leftHandItemModelGlintMaterial.uniforms.hide.value = 0;
-		// this.leftHandItemModelGlintMaterial.uniforms.maskTexture.value = newTexture;
-	    // } else
-                // this.leftHandItemModelGlintMaterial.uniforms.hide.value = 1;
+            if (item.enchantments != null && typeof item.enchantments != "undefined") {
+                this.leftHandGlintMaterial.uniforms.hide.value = 0;
+		this.leftHandGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    } else
+                this.leftHandGlintMaterial.uniforms.hide.value = 1;
         }
     }
     updateRightHand(item) {
@@ -488,7 +496,7 @@ export class PlayerModel {
         if (texturePath == null) {
             this.right_arm.rotation.x = 3.141592;
             this.rightHandItemModel.material.opacity = 0.0;
-            // this.rightHandItemModelGlintMaterial.uniforms.hide.value = 1;
+            this.rightHandGlintMaterial.uniforms.hide.value = 1;
         } else {
             this.right_arm.rotation.x = 2.8;
             newTexture.flipY = false;  // important for GLTF models
@@ -499,11 +507,11 @@ export class PlayerModel {
             this.rightHandItemModel.material.map = newTexture;
             this.rightHandItemModel.material.alphaTest = 0.1;
             this.rightHandItemModel.material.needsUpdate = true;  // tells Three.js to re-render with new texture
-            // if (enchanted) {
-		//               this.rightHandItemModelGlintMaterial.uniforms.hide.value = 0;
-		// this.rightHandItemModelGlintMaterial.uniforms.maskTexture.value = newTexture;
-	    // } else
-                // this.rightHandItemModelGlintMaterial.uniforms.hide.value = 1;
+            if (item.enchantments != null && typeof item.enchantments != "undefined") {
+                this.rightHandGlintMaterial.uniforms.hide.value = 0;
+		this.rightHandGlintMaterial.uniforms.maskTexture.value = newTexture;
+	    } else
+                this.rightHandGlintMaterial.uniforms.hide.value = 1;
         }
     }
 }
