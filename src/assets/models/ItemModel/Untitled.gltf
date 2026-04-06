@@ -11,18 +11,41 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0
+				1,
+				2,
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
+			"name":"ItemBone"
+		},
+		{
 			"mesh":0,
 			"name":"ItemModel",
-			"scale":[
+			"skin":0
+		},
+		{
+			"mesh":1,
+			"name":"ItemGlint",
+			"skin":0
+		},
+		{
+			"children":[
+				0
+			],
+			"name":"ItemArma",
+			"rotation":[
+				-0.7071068286895752,
+				0,
+				0,
+				0.7071068286895752
+			],
+			"translation":[
 				0.5,
-				0.5,
-				0.5
+				0.03125,
+				0
 			]
 		}
 	],
@@ -59,9 +82,27 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"JOINTS_0":3,
+						"WEIGHTS_0":4
 					},
-					"indices":3,
+					"indices":5,
+					"material":0
+				}
+			]
+		},
+		{
+			"name":"Cube.002",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":7,
+						"NORMAL":8,
+						"TEXCOORD_0":9,
+						"JOINTS_0":10,
+						"WEIGHTS_0":11
+					},
+					"indices":5,
 					"material":0
 				}
 			]
@@ -80,20 +121,29 @@
 			"uri":"acacia_hanging_sign.png"
 		}
 	],
+	"skins":[
+		{
+			"inverseBindMatrices":6,
+			"joints":[
+				0
+			],
+			"name":"ItemArma"
+		}
+	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
 			"count":264,
 			"max":[
-				2,
-				0.125,
+				1,
+				0.0625,
 				0
 			],
 			"min":[
 				0,
 				0,
-				-2
+				-1
 			],
 			"type":"VEC3"
 		},
@@ -111,9 +161,67 @@
 		},
 		{
 			"bufferView":3,
+			"componentType":5121,
+			"count":264,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":4,
+			"componentType":5126,
+			"count":264,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":5,
 			"componentType":5123,
 			"count":396,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":6,
+			"componentType":5126,
+			"count":1,
+			"type":"MAT4"
+		},
+		{
+			"bufferView":7,
+			"componentType":5126,
+			"count":264,
+			"max":[
+				1.000499963760376,
+				0.0625312477350235,
+				0.000500023365020752
+			],
+			"min":[
+				-0.000500023365020752,
+				-3.1251460313797e-05,
+				-1.000499963760376
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":8,
+			"componentType":5126,
+			"count":264,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":9,
+			"componentType":5126,
+			"count":264,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":10,
+			"componentType":5121,
+			"count":264,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":11,
+			"componentType":5126,
+			"count":264,
+			"type":"VEC4"
 		}
 	],
 	"bufferViews":[
@@ -137,9 +245,56 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":792,
+			"byteLength":1056,
 			"byteOffset":8448,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":4224,
+			"byteOffset":9504,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":792,
+			"byteOffset":13728,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":64,
+			"byteOffset":14520
+		},
+		{
+			"buffer":0,
+			"byteLength":3168,
+			"byteOffset":14584,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":3168,
+			"byteOffset":17752,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":2112,
+			"byteOffset":20920,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":1056,
+			"byteOffset":23032,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":4224,
+			"byteOffset":24088,
+			"target":34962
 		}
 	],
 	"samplers":[
@@ -150,7 +305,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":9240,
+			"byteLength":28312,
 			"uri":"Untitled.bin"
 		}
 	]

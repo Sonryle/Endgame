@@ -49,11 +49,11 @@ export class PlayerModel {
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -13;
                 if (this.rightHandItemModel != null && typeof this.rightHandItemModel != "undefined")
                     if (this.rightHandItemModel.material.opacity == 1.0) {
-                        this.right_arm.rotation.x = 3.141592 - 0.5- (Math.sin(time / -350) - 1) / -80;
+                        this.right_arm.rotation.x = 3.141592 - 0.3- (Math.sin(time / -350) - 1) / -50;
                     }
                 if (this.leftHandItemModel != null && typeof this.rightHandItemModel != "undefined")
                     if (this.leftHandItemModel.material.opacity == 1.0) {
-                        this.left_arm.rotation.x = 3.141592 - 0.5 - (Math.sin(time / 400) - 1) / 80;
+                        this.left_arm.rotation.x = 3.141592 - 0.3 - (Math.sin(time / 375) - 1) / 50;
                     }
 
                 // Enchantment Glints
@@ -193,8 +193,16 @@ export class PlayerModel {
                 child.material.opacity = 0.0;
                 this.rightHandItemModel = child;
             }
+            if (child.name == "ItemGlint") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                this.rightHandItemGlintModel = child;
+            }
+            if (child.name == "ItemBone") {
+                this.rightHandItemBone = child;
+            }
         });
-        this.right_arm.add(this.rightHandItemModel);
+        this.right_arm.add(this.rightHandItemBone);
 
         const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( leftHandItemGLTF.scene );
@@ -204,8 +212,17 @@ export class PlayerModel {
                 child.material.opacity = 0.0;
                 this.leftHandItemModel = child;
             }
+            if (child.name == "ItemGlint") {
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+		child.material.transparent = true;
+                this.leftHandItemGlintModel = child;
+            }
+            if (child.name == "ItemBone") {
+                this.leftHandItemBone = child;
+            }
         });
-        this.left_arm.add(this.leftHandItemModel);
+        this.left_arm.add(this.leftHandItemBone);
     }
 
     async createEnchantGlintMaterial(glintTexturePath, depthWrite, zoom, blur) {
@@ -391,23 +408,24 @@ export class PlayerModel {
         if (item != null && typeof item != "undefined") {
             texturePath = item.href;
             if (item.itemType == ItemType.WEAPON) {
-                this.leftHandItemModel.position.x = 0;
-                this.leftHandItemModel.position.y = 0.58;
-                this.leftHandItemModel.position.z = 0.35;
-                this.leftHandItemModel.scale.x = 0.7; // Negative so texture is mirrored
-                this.leftHandItemModel.scale.y = 0.7;
-                this.leftHandItemModel.scale.z = 0.7;
-                this.leftHandItemModel.rotation.z = 3.141592 / 2;
-                this.leftHandItemModel.rotation.x = 3.141592 / -8;
+                this.leftHandItemBone.position.x = 0;
+                this.leftHandItemBone.position.y = 0.34;
+                this.leftHandItemBone.position.z = -0.2;
+                this.leftHandItemBone.scale.x = 1.5;
+                this.leftHandItemBone.scale.y = 1.5;
+                this.leftHandItemBone.scale.z = 1.5;
+                this.leftHandItemBone.rotation.y = 3.141592 / 2;
+                this.leftHandItemBone.rotation.x = 3.141592 / -5;
             } else {
-                this.leftHandItemModel.position.x = 0.35;
-                this.leftHandItemModel.position.y = 0.85;
-                this.leftHandItemModel.scale.x = -0.4; // Negative so texture is mirrored
-                this.leftHandItemModel.scale.y = 0.4;
-                this.leftHandItemModel.scale.z = 0.4;
-                this.leftHandItemModel.position.z = 0;
-                this.leftHandItemModel.rotation.z = 0;
-                this.leftHandItemModel.rotation.x = 0;
+                this.leftHandItemBone.position.x = -0.06;
+                this.leftHandItemBone.position.y = 0.9;
+                this.leftHandItemBone.position.z = -0.0;
+                this.leftHandItemBone.scale.x = -0.9; // Negative so texture is mirrored
+                this.leftHandItemBone.scale.y = 0.9;
+                this.leftHandItemBone.scale.z = 0.9;
+                this.leftHandItemBone.rotation.x = 3.141592 / -2;
+                this.leftHandItemBone.rotation.y = 0;
+                this.leftHandItemBone.rotation.z = 0;
             }
         }
 		
@@ -442,25 +460,25 @@ export class PlayerModel {
         if (item != null && typeof item != "undefined") {
             texturePath = item.href;
             if (item.itemType == ItemType.WEAPON) {
-                this.rightHandItemModel.position.x = 0.1;
-                this.rightHandItemModel.position.y = 0.58;
-                this.rightHandItemModel.position.z = 0.35;
-                this.rightHandItemModel.scale.x = 0.7; // Negative so texture is mirrored
-                this.rightHandItemModel.scale.y = 0.7;
-                this.rightHandItemModel.scale.z = 0.7;
-                this.rightHandItemModel.rotation.z = 3.141592 / 2;
-                this.rightHandItemModel.rotation.x = 3.141592 / -8;
-		console.log("Holding Weapon");
+                this.rightHandItemBone.position.x = 0;
+                this.rightHandItemBone.position.y = 0.34;
+                this.rightHandItemBone.position.z = -0.2;
+                this.rightHandItemBone.scale.x = 1.5;
+                this.rightHandItemBone.scale.y = 1.5;
+                this.rightHandItemBone.scale.z = 1.5;
+                this.rightHandItemBone.rotation.y = 3.141592 / 2;
+                this.rightHandItemBone.rotation.x = 3.141592 / -5;
             } else {
                 console.log("Holding Non-Weapon");
-                this.rightHandItemModel.position.x = 0.45;
-                this.rightHandItemModel.position.y = 0.85;
-                this.rightHandItemModel.scale.x = -0.4; // Negative so texture is mirrored
-                this.rightHandItemModel.scale.y = 0.4;
-                this.rightHandItemModel.scale.z = 0.4;
-                this.rightHandItemModel.position.z = 0;
-                this.rightHandItemModel.rotation.z = 0;
-                this.rightHandItemModel.rotation.x = 0;
+                this.rightHandItemBone.position.x = 0.06;
+                this.rightHandItemBone.position.y = 0.9;
+                this.rightHandItemBone.position.z = -0.0;
+                this.rightHandItemBone.scale.x = -1.0; // Negative so texture is mirrored
+                this.rightHandItemBone.scale.y = 1.0;
+                this.rightHandItemBone.scale.z = 1.0;
+                this.rightHandItemBone.rotation.x = 3.141592 / -2;
+                this.rightHandItemBone.rotation.y = 0;
+                this.rightHandItemBone.rotation.z = 0;
             }
         }
 
