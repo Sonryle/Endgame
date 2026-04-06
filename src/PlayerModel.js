@@ -189,11 +189,12 @@ export class PlayerModel {
         });
         
         // Load Item Models for player hands
-        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), false, 4, 120);
+        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 1, 1);
         const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( rightHandItemGLTF.scene );
         rightHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
+                child.material.side = THREE.DoubleSide,
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
                 this.rightHandItemModel = child;
@@ -210,11 +211,12 @@ export class PlayerModel {
         });
         this.right_arm.add(this.rightHandItemBone);
 
-        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), false, 4, 120);
+        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 1, 1);
         const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
         this.scene.add( leftHandItemGLTF.scene );
         leftHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
+                child.material.side = THREE.DoubleSide,
                 child.material.depthWrite = true;
                 child.material.opacity = 0.0;
                 this.leftHandItemModel = child;
@@ -238,6 +240,7 @@ export class PlayerModel {
         const glintTexture = new THREE.TextureLoader().load(glintTexturePath);
         glintTexture.flipY = false;  // important for GLTF models
         glintTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        glintTexture.minFilter = THREE.NearestFilter;
         glintTexture.wrapS = THREE.RepeatWrapping;
         glintTexture.wrapT = THREE.RepeatWrapping;
 
@@ -254,6 +257,7 @@ export class PlayerModel {
             depthWrite: depthWrite,
             blending: THREE.AdditiveBlending,
             premultipliedAlpha: true,
+            side: THREE.DoubleSide,
             fragmentShader: `
               uniform sampler2D glintTexture;
               uniform sampler2D maskTexture;
