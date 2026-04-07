@@ -12,75 +12,41 @@ export const PlayerType = Object.freeze({
 });
 
 export class PlayerModel {
-    constructor(svg, canvasXPos, canvasYPos, canvasX, canvasY, scale) {
-
-        this.svg = svg;
+    constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale) {
 
         // Create foreign html element to store rendered element
-        const foreignObject = this.svg.append('foreignObject')
+        const foreignObject = parentSvg.append('foreignObject')
             .attr('class', 'playerModelContainer')
             .attr('pointer-events', 'none')
-            .attr('width', canvasX)
-            .attr('height', canvasY)
-            .attr('x', canvasXPos)
-            .attr('y', canvasYPos)
+            .attr('width', canvasScaleX)
+            .attr('height', canvasScaleY)
+            .attr('x', canvasPosX)
+            .attr('y', canvasPosY)
 
         // Create renderer
         const renderer = new THREE.WebGLRenderer( {antialias: false});
         foreignObject.node().appendChild(renderer.domElement);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor( 0xFF0000, 0);
-        renderer.setSize(canvasX, canvasY);
+        renderer.setSize(canvasScaleX, canvasScaleY);
         renderer.sortObjects = false;
         
         // Create camera
-        const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, -3, 3);
+        const camera = new THREE.OrthographicCamera(canvasScaleX / -scale, canvasScaleX / scale, canvasScaleY / scale, canvasScaleY / -scale, -3, 3);
         camera.position.z = 2.0;
         
         // Create scene
         this.scene = new THREE.Scene();
 
         // Create & Load player model
-        this.ready = this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.WIDE);
+        this.ready = this.loadModels();
 
         // Start the render loop
         const animate = () => {
             requestAnimationFrame(animate);
             if (this.right_arm != null && this.left_arm != null) {
-        	const d = new Date();
+                const d = new Date();
                 let time = d.getSeconds() * 1000 + d.getMilliseconds();
-
-                // Arm Animation
-                this.left_arm.rotation.z = (Math.sin(time / 750) - 1) / 13;
-                this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -13;
-                if (this.rightHandItemModel != null && typeof this.rightHandItemModel != "undefined")
-                    if (this.rightHandItemModel.material.opacity == 1.0) {
-                        this.right_arm.rotation.x = 3.141592 - 0.3 - Math.sin(time / 650) / 25;
-                    } else { 
-                        this.right_arm.rotation.x = 3.141592 - Math.sin(time / 650) / 25;
-                    }
-                if (this.leftHandItemModel != null && typeof this.rightHandItemModel != "undefined")
-                    if (this.leftHandItemModel.material.opacity == 1.0) {
-                        this.left_arm.rotation.x = 3.141592 - 0.3 + Math.sin(time / 650) / 25;
-                    } else { 
-                        this.left_arm.rotation.x = 3.141592 + Math.sin(time / 650) / 25;
-                    }
-
-                // Enchantment Glints
-                if (this.leftHandGlintMaterial != null && typeof this.leftHandGlintMaterial != "undefined") {
-                    this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                    this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                    this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                    this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                    this.leftHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                    this.rightHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                    this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                }
             };
             renderer.render(this.scene, camera);
         };
@@ -90,26 +56,65 @@ export class PlayerModel {
         const topLight = new THREE.DirectionalLight(0xffffff, 7);
         topLight.position.set(-500, 500, 0) // Top Right
         this.scene.add(topLight);
-        const ambientLight = new THREE.AmbientLight(0x333333, 40);
-        this.scene.add(ambientLight);
+    }
 
-        // Add callback for model rotation
-        state.svg.node().addEventListener('mousemove', (event) => {
-            if (this.playerModel != null) {
-                const ax = 1.0; // Bell function height at x = 0
-                const ay = 1.0;
-                const x = Math.max(Math.min((state.mouseX - canvasXPos - this.svg.attr('x') - canvasX / 2) / 500, ax), -ax);
-                const y = Math.max(Math.min((state.mouseY - canvasYPos - this.svg.attr('y') - canvasY / 4) / 500, ay), -ay);
-                const bellX = 1 / (1 + ((x / ax)*(x / ax)));
-                const bellY = 1 / (1 + ((y / ay)*(y / ay)));
-                this.playerModel.rotation.y = x * bellX;
-                this.playerModel.rotation.x = y * bellY;
-                this.head.rotation.y = x * bellX;
-                this.head.rotation.x = y * bellY;
+    async loadModels() {
+        await this.loadItemModels();
+        await this.loadArmourModels();
+        await this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.WIDE);
+    }
+
+    async loadItemModels() {
+        // Load Item Models for player hands
+        const loader = new GLTFLoader();
+        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
+        this.rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( this.rightHandItemGLTF.scene );
+        this.rightHandItemGLTF.scene.traverse((child) => {
+            if (child.name == "ItemModel") {
+                child.material.side = THREE.DoubleSide,
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                this.rightHandItemModel = child;
             }
-        })
+            if (child.name == "ItemGlint") {
+                child.material = this.rightHandGlintMaterial;
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                this.rightHandItemGlintModel = child;
+            }
+            if (child.name == "ItemBone") {
+                this.rightHandItemBone = child;
+            }
+        });
+        this.right_arm.add(this.rightHandItemBone);
 
-        renderer.render(this.scene, camera);
+        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
+        this.leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( this.leftHandItemGLTF.scene );
+        this.leftHandItemGLTF.scene.traverse((child) => {
+            if (child.name == "ItemModel") {
+                child.material.side = THREE.DoubleSide,
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+                this.leftHandItemModel = child;
+            }
+            if (child.name == "ItemGlint") {
+                child.material = this.leftHandGlintMaterial;
+                child.material.depthWrite = true;
+                child.material.opacity = 0.0;
+		child.material.transparent = true;
+                this.leftHandItemGlintModel = child;
+            }
+            if (child.name == "ItemBone") {
+                this.leftHandItemBone = child;
+            }
+        });
+        this.left_arm.add(this.leftHandItemBone);
+    }
+
+    async loadArmourModels() {
+        console.log("loading armour models");
     }
 
     async loadPlayerModel(skinTexturePath, playerType) {
@@ -221,52 +226,8 @@ export class PlayerModel {
                 this.right_arm = child;
         });
         
-        // Load Item Models for player hands
-        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        this.rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( this.rightHandItemGLTF.scene );
-        this.rightHandItemGLTF.scene.traverse((child) => {
-            if (child.name == "ItemModel") {
-                child.material.side = THREE.DoubleSide,
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.rightHandItemModel = child;
-            }
-            if (child.name == "ItemGlint") {
-                child.material = this.rightHandGlintMaterial;
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.rightHandItemGlintModel = child;
-            }
-            if (child.name == "ItemBone") {
-                this.rightHandItemBone = child;
-            }
-        });
-        this.right_arm.add(this.rightHandItemBone);
-
-        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        this.leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( this.leftHandItemGLTF.scene );
-        this.leftHandItemGLTF.scene.traverse((child) => {
-            if (child.name == "ItemModel") {
-                child.material.side = THREE.DoubleSide,
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.leftHandItemModel = child;
-            }
-            if (child.name == "ItemGlint") {
-                child.material = this.leftHandGlintMaterial;
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-		child.material.transparent = true;
-                this.leftHandItemGlintModel = child;
-            }
-            if (child.name == "ItemBone") {
-                this.leftHandItemBone = child;
-            }
-        });
-        this.left_arm.add(this.leftHandItemBone);
     }
+
 
     async createEnchantGlintMaterial(glintTexturePath, depthWrite, zoom) {
 

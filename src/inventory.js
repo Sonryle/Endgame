@@ -160,7 +160,6 @@ export class Inventory {
             this.playerModel.updateHelmet(null, false);
         }
 
-        this.playerModel.changeSkin("./src/assets/models/PlayerSlim/al.png", PlayerType.SLIM);
 
     }
 
@@ -201,7 +200,6 @@ export class Inventory {
         } else {
             this.playerModel.updateChestplate(null, false);
         }
-        this.playerModel.changeSkin("./src/assets/models/PlayerSlim/Technoblade.png", PlayerType.WIDE);
     }
 
     async swapLeggings(item) {
