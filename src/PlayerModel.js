@@ -6,11 +6,15 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SceneUtils from 'three/addons/utils/SceneUtils.js';
 
+export const PlayerType = Object.freeze({
+    SLIM: "Slim",
+    WIDE: "Wide"
+});
+
 export class PlayerModel {
-    constructor(svg, canvasXPos, canvasYPos, canvasX, canvasY, animationCallback, scale) {
+    constructor(svg, canvasXPos, canvasYPos, canvasX, canvasY, scale) {
 
         this.svg = svg;
-        this.animationCallback = animationCallback;
 
         // Create foreign html element to store rendered element
         const foreignObject = this.svg.append('foreignObject')
@@ -29,6 +33,7 @@ export class PlayerModel {
         renderer.setSize(canvasX, canvasY);
         renderer.sortObjects = false;
         
+        // Create camera
         const camera = new THREE.OrthographicCamera(canvasX / -scale, canvasX / scale, canvasY / scale, canvasY / -scale, -3, 3);
         camera.position.z = 2.0;
         
@@ -36,7 +41,7 @@ export class PlayerModel {
         this.scene = new THREE.Scene();
 
         // Create & Load player model
-        this.ready = this.loadPlayerModel();
+        this.ready = this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.WIDE);
 
         // Start the render loop
         const animate = () => {
@@ -107,7 +112,8 @@ export class PlayerModel {
         renderer.render(this.scene, camera);
     }
 
-    async loadPlayerModel() {
+    async loadPlayerModel(skinTexturePath, playerType) {
+        console.log(playerType);
 
         // Create shader for armor enchantment glint
         let armourGlintTexturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
@@ -120,18 +126,38 @@ export class PlayerModel {
         this.head = null;
         this.left_arm = null;
         this.right_arm = null;
+        this.playerTexture = null;
+        const textureLoader = new THREE.TextureLoader();
+        this.playerTexture = textureLoader.load(skinTexturePath);
+        this.playerTexture.flipY = false;  // important for GLTF models
+        this.playerTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerTexture.minFilter = THREE.NearestFilter;
+        this.playerTexture.colorSpace = THREE.SRGBColorSpace;
         const loader = new GLTFLoader();
-        const playerGLTF = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+        let playerGLTF = null;
+        switch (playerType) {
+            case PlayerType.SLIM:
+                playerGLTF = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+                break;
+            case PlayerType.WIDE:
+                playerGLTF = await loader.loadAsync( './src/assets/models/PlayerWide/Untitled.gltf' );
+                break;
+            default:
+                console.log("PlayerType not given to loadPlayerModel()");
+                break;
+        }
         this.playerModel = playerGLTF.scene;
         this.scene.add( playerGLTF.scene );
         playerGLTF.scene.traverse((child) => {
 	    console.log(child.name);
             if (child.name == "PlayerLayer1") {
+                child.material.map = this.playerTexture;
                 child.material.depthWrite = true;
                 this.innerLayer = child;
             }
             if (child.name == "PlayerLayer2") {
-                // child.material.depthWrite = false;
+                child.material.map = this.playerTexture;
+                child.material.depthWrite = false;
                 this.outerLayer = child;
             }
             if (child.name == "Helmet") {
@@ -197,9 +223,9 @@ export class PlayerModel {
         
         // Load Item Models for player hands
         this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        const rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( rightHandItemGLTF.scene );
-        rightHandItemGLTF.scene.traverse((child) => {
+        this.rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( this.rightHandItemGLTF.scene );
+        this.rightHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
                 child.material.side = THREE.DoubleSide,
                 child.material.depthWrite = true;
@@ -219,9 +245,9 @@ export class PlayerModel {
         this.right_arm.add(this.rightHandItemBone);
 
         this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        const leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( leftHandItemGLTF.scene );
-        leftHandItemGLTF.scene.traverse((child) => {
+        this.leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
+        this.scene.add( this.leftHandItemGLTF.scene );
+        this.leftHandItemGLTF.scene.traverse((child) => {
             if (child.name == "ItemModel") {
                 child.material.side = THREE.DoubleSide,
                 child.material.depthWrite = true;
@@ -530,7 +556,7 @@ export class PlayerModel {
 
         const textureLoader = new THREE.TextureLoader();
         let newTexture = textureLoader.load(texturePath);
-        
+
         if (texturePath == null) {
             this.right_arm.rotation.x = 3.141592;
             this.rightHandItemModel.material.opacity = 0.0;
@@ -551,6 +577,13 @@ export class PlayerModel {
 	    } else
                 this.rightHandGlintMaterial.uniforms.hide.value = 1;
         }
+    }
+
+    changeSkin(texturePath, playerType) {
+        this.scene.remove(this.playerModel);
+        this.scene.remove(this.rightHandItemGLTF.scene);
+        this.scene.remove(this.leftHandItemGLTF.scene);
+        this.loadPlayerModel(texturePath, playerType);
     }
 }
 

@@ -3,7 +3,7 @@ import { grid } from "./grid.js"
 import { texturePack } from "./TexturePack.js"
 import { ItemType, MinecraftItem } from "./Item.js"
 import { ItemSlot, ArmourItemSlot, CallbackItemSlot } from "./ItemSlot.js"
-import { PlayerModel } from "./PlayerModel"
+import { PlayerModel, PlayerType } from "./PlayerModel"
 
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
@@ -29,7 +29,7 @@ export class Inventory {
         this.texture.attr('y', 0);
 
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), null, (54 * state.scale));
+        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), (54 * state.scale));
         await this.playerModel.ready;
 
         // Create item slots holding items
@@ -160,6 +160,8 @@ export class Inventory {
             this.playerModel.updateHelmet(null, false);
         }
 
+        this.playerModel.changeSkin("./src/assets/models/PlayerSlim/al.png", PlayerType.SLIM);
+
     }
 
     async swapChestplate(item) {
@@ -199,6 +201,7 @@ export class Inventory {
         } else {
             this.playerModel.updateChestplate(null, false);
         }
+        this.playerModel.changeSkin("./src/assets/models/PlayerSlim/Technoblade.png", PlayerType.WIDE);
     }
 
     async swapLeggings(item) {
