@@ -120,12 +120,12 @@ export class PlayerModel {
         this.scene.add( playerGLTF.scene );
         playerGLTF.scene.traverse((child) => {
 	    console.log(child.name);
-            if (child.name == "SlimPlayerInnerLayer") {
+            if (child.name == "PlayerLayer1") {
                 child.material.depthWrite = true;
                 this.innerLayer = child;
             }
-            if (child.name == "SlimPlayerOuterLayer") {
-                child.material.depthWrite = false;
+            if (child.name == "PlayerLayer2") {
+                // child.material.depthWrite = false;
                 this.outerLayer = child;
             }
             if (child.name == "Helmet") {
