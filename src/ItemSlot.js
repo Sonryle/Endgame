@@ -2,6 +2,7 @@ import { ItemType } from "./Item.js"
 import { ToolTip } from "./ToolTip.js"
 import { state } from "./state.js"
 import { texturePack } from "./TexturePack.js"
+import { grid } from "./grid.js"
 
 export class ItemSlot {
     constructor(svg, x, y, optionalSlotTexture, optionalItemType) {
@@ -84,8 +85,13 @@ export class ItemSlot {
         if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
             state.svg.node().appendChild(state.selectedItem.svgContainer.node());
             state.selectedItem.svgContainer.raise();
-            state.selectedItem.svgContainer.attr('x', Math.floor(state.mouseX) - state.selectedItem.svgContainer.attr('width') / 2);
-            state.selectedItem.svgContainer.attr('y', Math.floor(state.mouseY) - state.selectedItem.svgContainer.attr('height') / 2);
+
+            let x = Math.floor(state.mouseX) - state.selectedItem.svgContainer.attr('width') / 2
+            let y = Math.floor(state.mouseY) - state.selectedItem.svgContainer.attr('height') / 2
+
+            let [gridLockedX, gridLockedY] = grid.nearestPixel(x, y);
+            state.selectedItem.svgContainer.attr('x', gridLockedX);
+            state.selectedItem.svgContainer.attr('y', gridLockedY);
         }
     }
 

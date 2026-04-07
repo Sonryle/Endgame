@@ -20,8 +20,12 @@ state.svg.on('mousemove', (event) => {
     state.mouseX = event.x;
     state.mouseY = event.y;
     if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
-    	state.selectedItem.svgContainer.attr('x', event.x - state.selectedItem.svgContainer.attr('width') / 2)
-    	state.selectedItem.svgContainer.attr('y', event.y - state.selectedItem.svgContainer.attr('height') / 2)
+        let x = Math.floor(state.mouseX) - state.selectedItem.svgContainer.attr('width') / 2
+        let y = Math.floor(state.mouseY) - state.selectedItem.svgContainer.attr('height') / 2
+
+        let [gridLockedX, gridLockedY] = grid.nearestPixel(x, y);
+        state.selectedItem.svgContainer.attr('x', gridLockedX);
+        state.selectedItem.svgContainer.attr('y', gridLockedY);
     }
 });
 
