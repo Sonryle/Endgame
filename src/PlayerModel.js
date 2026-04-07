@@ -50,11 +50,15 @@ export class PlayerModel {
                 this.right_arm.rotation.z = (Math.sin(time / 750) - 1) / -13;
                 if (this.rightHandItemModel != null && typeof this.rightHandItemModel != "undefined")
                     if (this.rightHandItemModel.material.opacity == 1.0) {
-                        this.right_arm.rotation.x = 3.141592 - 0.3- (Math.sin(time / -350) - 1) / -50;
+                        this.right_arm.rotation.x = 3.141592 - 0.3 - Math.sin(time / 650) / 25;
+                    } else { 
+                        this.right_arm.rotation.x = 3.141592 - Math.sin(time / 650) / 25;
                     }
                 if (this.leftHandItemModel != null && typeof this.rightHandItemModel != "undefined")
                     if (this.leftHandItemModel.material.opacity == 1.0) {
-                        this.left_arm.rotation.x = 3.141592 - 0.3 - (Math.sin(time / 375) - 1) / 50;
+                        this.left_arm.rotation.x = 3.141592 - 0.3 + Math.sin(time / 650) / 25;
+                    } else { 
+                        this.left_arm.rotation.x = 3.141592 + Math.sin(time / 650) / 25;
                     }
 
                 // Enchantment Glints
