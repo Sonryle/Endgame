@@ -80,41 +80,58 @@ export class ItemInstance {
             else
                 enchantedItemGlintPath = await texturePack.getPath("misc/enchanted_glint_item.png");
 
-            const patternId = 'itemGlintPattern-' + this.href.replaceAll(" ", "");
-            const maskId = 'maskId-' + this.href.replaceAll(" ", "");
+            const filterId = 'itemFilter-' + this.href.replaceAll(" ", "");
             
-            // Append a <defs> block with an animated pattern
+            // Append a <defs> block
             const defs = this.svgContainer.append('defs');
-            const pattern = defs.append('pattern')
-                .attr('id', patternId)
-                .attr('width', 1)
-                .attr('height', 1)
-            pattern.append('image')
-                .attr('href', enchantedItemGlintPath);
-            pattern.append('animateTransform')
-                .attr('attributeName', 'patternTransform')
-                .attr('to', `${16 * state.scale} ${-64 * state.scale}`)  // move up by one tile height
-                .attr('dur', '4s')
-                .attr('repeatCount', 'indefinite');
 
-            const mask = defs.append('mask')
-                .attr('id', maskId)
-                .attr('mask-mode', 'alpha')
-            
-            mask.append('image')
-                .attr('href', this.href)
-                .attr('width', 16 * state.scale)
-                .attr('height', 16 * state.scale)
-                .style('filter', 'brightness(0) invert(1)')
-            
-            this.itemGlint = this.svgContainer.append('rect');
-            this.itemGlint.attr('mask', `url(#${maskId})`);
-            this.itemGlint.attr('fill', `url(#${patternId})`);
-            this.itemGlint.attr('width', 16 * state.scale);
-            this.itemGlint.attr('height', 16 * state.scale);
-            this.itemGlint.attr('pointer-events', 'none');
-            this.itemGlint.style('mix-blend-mode', 'screen');
-            this.itemGlint.style('filter', 'blur(2px)');
+            // Append a <filter> element to blend item with glint
+            const filter = defs.append('filter')
+                .attr('color-interpolation-filters', 'RGB')
+                .attr('id', filterId)
+                .attr('x', `${-16  * state.scale}`)
+                .attr('width',  `${32  * state.scale}`)
+                .attr('height', `${128 * state.scale}`)
+            // Add feImage element
+            const feImage = filter.append('feImage')
+                .attr('href', enchantedItemGlintPath)
+                .attr('width',  `${16  * state.scale}`)
+                .attr('height', `${16  * state.scale}`)
+                .attr('result', 'glintTex')
+            const feTile = filter.append('feTile')
+                .attr('in', 'glintTex')
+                .attr('x', `${-16  * state.scale}`)
+                .attr('width',  `${32  * state.scale}`)
+                .attr('height', `${128 * state.scale}`)
+                .attr('result', 'tiledGlintTex')
+            const feOffset = filter.append('feOffset')
+                .attr('in', 'tiledGlintTex')
+                .attr('result', 'offsetGlintTex')
+            feOffset.append('animate')
+              .attr('attributeName', 'dx')
+              .attr('to', `${16  * state.scale}`)
+              .attr('dur', '4s')
+              .attr('repeatCount', 'indefinite')
+            feOffset.append('animate')
+              .attr('attributeName', 'dy')
+              .attr('to', `${-64 * state.scale}`)
+              .attr('dur', '4s')
+              .attr('repeatCount', 'indefinite')
+            const feBlur = filter.append('feGaussianBlur')
+                .attr('in', 'offsetGlintTex')
+                .attr('stdDeviation', 2)
+                .attr('result', 'blurredGlintTex')
+            const feComposite = filter.append('feComposite')
+                .attr('in', 'blurredGlintTex')
+                .attr('in2', 'SourceGraphic')
+                .attr('operator', 'in')
+                .attr('result', 'maskedGlint')
+            const feBlend = filter.append('feBlend')
+                .attr('in', 'SourceGraphic')
+                .attr('in2', 'maskedGlint')
+                .attr('mode', 'screen')
+
+            this.itemTexture.style('filter', `url(#${filterId})`);
         }
     }
 

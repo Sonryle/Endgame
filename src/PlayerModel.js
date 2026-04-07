@@ -62,18 +62,20 @@ export class PlayerModel {
                     }
 
                 // Enchantment Glints
-                this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                this.leftHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
-                this.rightHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
-                this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                if (this.leftHandGlintMaterial != null && typeof this.leftHandGlintMaterial != "undefined") {
+                    this.helmetGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.helmetGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                    this.chestplateGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.chestplateGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                    this.leggingsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.leggingsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                    this.bootsGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.bootsGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                    this.leftHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.leftHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                    this.rightHandGlintMaterial.uniforms.glintOffset.value.x = time / -20000;
+                    this.rightHandGlintMaterial.uniforms.glintOffset.value.y = time /  5000;
+                }
             };
             renderer.render(this.scene, camera);
         };
