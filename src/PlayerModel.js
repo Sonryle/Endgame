@@ -1,6 +1,7 @@
 import { state } from "./state.js"
 import { texturePack } from "./TexturePack.js"
-import { ItemType } from "./Item.js"
+import { MinecraftItem, ItemInstance, ItemType } from "./Item.js"
+import { ItemModel } from "./ItemModel.js"
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -24,92 +25,69 @@ export class PlayerModel {
             .attr('y', canvasPosY)
 
         // Create renderer
-        const renderer = new THREE.WebGLRenderer( {antialias: false});
-        foreignObject.node().appendChild(renderer.domElement);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor( 0xFF0000, 0);
-        renderer.setSize(canvasScaleX, canvasScaleY);
-        renderer.sortObjects = false;
-        
+        this.renderer = new THREE.WebGLRenderer( {antialias: false});
+        foreignObject.node().appendChild(this.renderer.domElement);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setClearColor( 0xFF0000, 0);
+        this.renderer.setSize(canvasScaleX, canvasScaleY);
+        this.renderer.sortObjects = false;
+
         // Create camera
-        const camera = new THREE.OrthographicCamera(canvasScaleX / -scale, canvasScaleX / scale, canvasScaleY / scale, canvasScaleY / -scale, -3, 3);
-        camera.position.z = 2.0;
+        this.camera = new THREE.OrthographicCamera(canvasScaleX / -scale, canvasScaleX / scale, canvasScaleY / scale, canvasScaleY / -scale, -3, 3);
+        this.camera.position.z = 2.0;
+
+        this.ready = this.initScene();
         
+    }
+
+    async initScene() {
         // Create scene
         this.scene = new THREE.Scene();
 
         // Create & Load player model
-        this.ready = this.loadModels();
+        await this.loadModels();
 
-        // Start the render loop
-        const animate = () => {
-            requestAnimationFrame(animate);
-            if (this.right_arm != null && this.left_arm != null) {
-                const d = new Date();
-                let time = d.getSeconds() * 1000 + d.getMilliseconds();
-            };
-            renderer.render(this.scene, camera);
-        };
-        animate();
+        // Animation Mixer
+        let mixer = new THREE.AnimationMixer(this.playerModel.GLTF.scene)
+        const clips = this.playerModel.GLTF.animations;
+        const clip = THREE.AnimationClip.findByName(clips, "Idle");
+        const action = mixer.clipAction(clip);
+        action.play();
 
         // Add lights to the scene
         const topLight = new THREE.DirectionalLight(0xffffff, 7);
         topLight.position.set(-500, 500, 0) // Top Right
         this.scene.add(topLight);
+        const ambientLight = new THREE.AmbientLight(0x333333, 40);
+        this.scene.add(ambientLight);
+
+        // Start the render loop
+        const timer = new THREE.Timer();
+        const animate = () => {
+            mixer.update(timer.update().getDelta());
+            this.renderer.render(this.scene, this.camera);
+        };
+        this.renderer.setAnimationLoop(animate);
     }
 
     async loadModels() {
-        await this.loadItemModels();
-        await this.loadArmourModels();
-        await this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.WIDE);
+        
+        await this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.SLIM);
+        this.rightItemModel = new ItemModel(this.scene);
+        this.leftItemModel = new ItemModel(this.scene);
+        await this.rightItemModel.ready;
+        await this.leftItemModel.ready;
+
+        const apple = new ItemInstance( MinecraftItem.apple, null, null);
+        await apple.ready;
+        this.rightItemModel.updateModel(apple);
+        this.leftItemModel.updateModel(apple);
+
+        // Set Armour & Items to be on Player Model
+        this.playerModel.boneArmRight.add(this.rightItemModel.itemModel.boneItem);
+        this.playerModel.boneArmLeft.add(this.leftItemModel.itemModel.boneItem);
     }
 
-    async loadItemModels() {
-        // Load Item Models for player hands
-        const loader = new GLTFLoader();
-        this.rightHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        this.rightHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( this.rightHandItemGLTF.scene );
-        this.rightHandItemGLTF.scene.traverse((child) => {
-            if (child.name == "ItemModel") {
-                child.material.side = THREE.DoubleSide,
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.rightHandItemModel = child;
-            }
-            if (child.name == "ItemGlint") {
-                child.material = this.rightHandGlintMaterial;
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.rightHandItemGlintModel = child;
-            }
-            if (child.name == "ItemBone") {
-                this.rightHandItemBone = child;
-            }
-        });
-
-        this.leftHandGlintMaterial = await this.createEnchantGlintMaterial(await texturePack.getPath("misc/enchanted_glint_item.png"), true, 10, 2);
-        this.leftHandItemGLTF = await loader.loadAsync( './src/assets/models/ItemModel/Untitled.gltf' );
-        this.scene.add( this.leftHandItemGLTF.scene );
-        this.leftHandItemGLTF.scene.traverse((child) => {
-            if (child.name == "ItemModel") {
-                child.material.side = THREE.DoubleSide,
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-                this.leftHandItemModel = child;
-            }
-            if (child.name == "ItemGlint") {
-                child.material = this.leftHandGlintMaterial;
-                child.material.depthWrite = true;
-                child.material.opacity = 0.0;
-		child.material.transparent = true;
-                this.leftHandItemGlintModel = child;
-            }
-            if (child.name == "ItemBone") {
-                this.leftHandItemBone = child;
-            }
-        });
-    }
 
     async loadArmourModels() {
         console.log("loading armour models");
@@ -117,8 +95,9 @@ export class PlayerModel {
 
     async loadPlayerModel(skinTexturePath, playerType) {
 
+        // Create Variable Structure for playerModel
         const playerModel = {
-            gLTF: null,
+            GLTF: null,
             boneHead: null,
             boneArmLeft: null,
             boneArmRight: null,
@@ -128,45 +107,57 @@ export class PlayerModel {
         }
         this.playerModel = playerModel;
 
+        // Load PlayerModel
         const loader = new GLTFLoader();
         if (playerType == PlayerType.SLIM) {
-            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/PlayerSlim/Untitled.gltf' );
+            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerSlim.gltf' );
         } else if (playerType == PlayerType.WIDE) {
-            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/PlayerWide/PlayerWide.gltf' );
+            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
         } else {
             console.log("PlayerType not passed to loadPlayerModel(). Using WIDE player model");
             this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/PlayerWide/PlayerWide.gltf' );
         }
         this.scene.add( this.playerModel.GLTF.scene );
+
+        // Add PlayerModel Mesh & Bones to class variables
         this.playerModel.GLTF.scene.traverse((child) => {
             switch (child.name) {
                 case "MeshInnerLayer":
-                    child.material.depthWrite = true;
                     this.playerModel.meshInnerLayer = child;
-                    console.log("mesh inner layer");
                     break;
                 case "MeshOuterLayer":
-                    child.material.depthWrite = false;
                     this.playerModel.meshOuterLayer = child;
-                    console.log("mesh outer layer");
                     break;
                 case "BoneHead":
                     this.playerModel.boneHead = child;
-                    console.log("bone head");
                     break;
                 case "BoneArmLeft":
                     this.playerModel.boneArmLeft = child;
-                    console.log("bone arm left");
                     break;
                 case "BoneArmRight":
                     this.playerModel.boneArmRight = child;
-                    console.log("bone arm right");
                     break;
             }
         });
-        
-        this.playerModel.boneArmRight.add(this.rightHandItemBone);
-        this.playerModel.boneArmLeft.add(this.leftHandItemBone);
+
+        // Edit Mesh Attributes
+        this.playerModel.meshInnerLayer.material.depthWrite = true;
+        this.playerModel.meshOuterLayer.material.depthWrite = false;
+    }
+
+    // Changes Position of Item Model based on itemtype
+    setItemModelPos(itemModel, itemType) {
+        switch (itemType) {
+            case ItemType.WEAPON:
+                this.leftHandItemModel.position.x = 0;
+                this.leftHandItemModel.position.y = 0.58;
+                this.leftHandItemModel.position.z = 0.35;
+                this.leftHandItemModel.scale.x = 1.5; // Negative so texture is mirrored
+                this.leftHandItemModel.scale.y = 1.5;
+                this.leftHandItemModel.scale.z = 1.5;
+                this.leftHandItemModel.rotation.z = 3.141592 / 2;
+                this.leftHandItemModel.rotation.x = 3.141592 / -8;
+        }
     }
 
 

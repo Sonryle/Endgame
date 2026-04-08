@@ -13,7 +13,7 @@ export const ItemType = Object.freeze({
     BLOCK:          "block",
 });
 
-export const MinecraftItem = {
+export const MinecraftItem = Object.freeze({
     apple:                { texture: "apple.png",                type: ItemType.DEFAULT,     name: "Apple"                 },
     axolotl_bucket:       { texture: "axolotl_bucket.png",       type: ItemType.DEFAULT,     name: "Axolotl Bucket"        },
     bread:                { texture: "bread.png",                type: ItemType.DEFAULT,     name: "Bread"                 },
@@ -42,11 +42,11 @@ export const MinecraftItem = {
     netherite_ingot:      { texture: "netherite_ingot.png",      type: ItemType.DEFAULT,     name: "Netherite Ingot"       },
     netherite_leggings:   { texture: "netherite_leggings.png",   type: ItemType.LEGGINGS,    name: "Netherite Leggings"    },
     totem_of_undying:     { texture: "totem_of_undying.png",     type: ItemType.DEFAULT,     name: "Totem of Undying"      },
-}
+});
 
 export class ItemInstance {
     constructor(minecraftItem, enchantments, customName) {
-        this.init(minecraftItem, enchantments, customName);
+        this.ready = this.init(minecraftItem, enchantments, customName);
     }
 
     async init(minecraftItem, enchantments, customName) {
