@@ -28,8 +28,26 @@ export class Inventory {
         this.texture.attr('x', 0);
         this.texture.attr('y', 0);
 
+        function animationCallback(playerModelInstance) {
+                const canvasPosX = playerModelInstance.canvasPosX;
+                const canvasPosY = playerModelInstance.canvasPosY;
+                const canvasScaleX = playerModelInstance.canvasScaleX;
+                const canvasScaleY = playerModelInstance.canvasScaleY;
+                const playerModel = playerModelInstance.playerModel;
+                const svg = playerModelInstance.parentSvg;
+                const ax = 1.0; // Bell function height at x = 0
+                const ay = 1.0;
+                const x = Math.max(Math.min((state.mouseX - canvasPosX - svg.attr('x') - canvasScaleX / 2) / 500, ax), -ax);
+                const y = Math.max(Math.min((state.mouseY - canvasPosY - svg.attr('y') - canvasScaleY / 4) / 500, ay), -ay);
+                const bellX = 1 / (1 + ((x / ax)*(x / ax)));
+                const bellY = 1 / (1 + ((y / ay)*(y / ay)));
+                playerModel.GLTF.scene.rotation.y = x * bellX;
+                playerModel.GLTF.scene.rotation.x = y * bellY;
+                playerModel.boneHead.rotation.y = x * bellX;
+                playerModel.boneHead.rotation.x = y * bellY;
+        }
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), (54 * state.scale));
+        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), (54 * state.scale), animationCallback);
         await this.playerModel.ready;
 
         // Create item slots holding items

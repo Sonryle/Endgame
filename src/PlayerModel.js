@@ -1,7 +1,6 @@
 import { state } from "./state.js"
 import { texturePack } from "./TexturePack.js"
 import { MinecraftItem, ItemInstance, ItemType } from "./Item.js"
-import { ItemModel } from "./ItemModel.js"
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13,7 +12,7 @@ export const PlayerType = Object.freeze({
 });
 
 export class PlayerModel {
-    constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale) {
+    constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale, animationCallback) {
 
         // Create foreign html element to store rendered element
         const foreignObject = parentSvg.append('foreignObject')
@@ -23,6 +22,11 @@ export class PlayerModel {
             .attr('height', canvasScaleY)
             .attr('x', canvasPosX)
             .attr('y', canvasPosY)
+        this.canvasPosX = canvasPosX;
+        this.canvasPosY = canvasPosY;
+        this.canvasScaleX = canvasScaleX;
+        this.canvasScaleY = canvasScaleY;
+        this.parentSvg = parentSvg;
 
         // Create renderer
         this.renderer = new THREE.WebGLRenderer( {antialias: false});
@@ -35,6 +39,9 @@ export class PlayerModel {
         // Create camera
         this.camera = new THREE.OrthographicCamera(canvasScaleX / -scale, canvasScaleX / scale, canvasScaleY / scale, canvasScaleY / -scale, -3, 3);
         this.camera.position.z = 2.0;
+
+        // Setup Callback
+        this.animationCallback = animationCallback;
 
         this.ready = this.initScene();
         
@@ -65,6 +72,7 @@ export class PlayerModel {
         const timer = new THREE.Timer();
         const animate = () => {
             mixer.update(timer.update().getDelta());
+            this.animationCallback(this);
             this.renderer.render(this.scene, this.camera);
         };
         this.renderer.setAnimationLoop(animate);
@@ -73,19 +81,10 @@ export class PlayerModel {
     async loadModels() {
         
         await this.loadPlayerModel("src/assets/models/PlayerWide/Technoblade.png", PlayerType.SLIM);
-        this.rightItemModel = new ItemModel(this.scene);
-        this.leftItemModel = new ItemModel(this.scene);
-        await this.rightItemModel.ready;
-        await this.leftItemModel.ready;
-
-        const apple = new ItemInstance( MinecraftItem.apple, null, null);
-        await apple.ready;
-        this.rightItemModel.updateModel(apple);
-        this.leftItemModel.updateModel(apple);
 
         // Set Armour & Items to be on Player Model
-        this.playerModel.boneArmRight.add(this.rightItemModel.itemModel.boneItem);
-        this.playerModel.boneArmLeft.add(this.leftItemModel.itemModel.boneItem);
+        this.playerModel.boneArmRight.add(this.playerModel.rightItem.boneItem);
+        this.playerModel.boneArmLeft.add(this.playerModel.leftItem.boneItem);
     }
 
 
@@ -104,7 +103,17 @@ export class PlayerModel {
             meshInnerLayer: null,
             meshOuterLayer: null,
             skinTexturePath: null,
-        }
+            leftItem: {
+                boneItem: null,
+                meshItem: null,
+                meshItemGlint: null,
+            },
+            rightItem: {
+                boneItem: null,
+                meshItem: null,
+                meshItemGlint: null,
+            },
+        };
         this.playerModel = playerModel;
 
         // Load PlayerModel
@@ -137,12 +146,41 @@ export class PlayerModel {
                 case "BoneArmRight":
                     this.playerModel.boneArmRight = child;
                     break;
+                case "MeshItemLeft":
+                    this.playerModel.leftItem.meshItem = child;
+                    break;
+                case "MeshItemGlintLeft":
+                    this.playerModel.leftItem.meshItemGlint = child;
+                    break;
+                case "BoneItemLeft":
+                    this.playerModel.leftItem.boneItem = child;
+                    break;
+                case "MeshItemRight":
+                    this.playerModel.rightItem.meshItem = child;
+                    break;
+                case "MeshItemGlintRight":
+                    this.playerModel.rightItem.meshItemGlint = child;
+                    break;
+                case "BoneItemRight":
+                    this.playerModel.rightItem.boneItem = child;
+                    break;
             }
         });
 
         // Edit Mesh Attributes
         this.playerModel.meshInnerLayer.material.depthWrite = true;
+        this.playerModel.meshInnerLayer.material.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerModel.meshInnerLayer.material.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
         this.playerModel.meshOuterLayer.material.depthWrite = false;
+        this.playerModel.meshOuterLayer.material.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerModel.meshOuterLayer.material.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+
+        this.playerModel.leftItem.meshItem.material.depthWrite = true;
+        this.playerModel.leftItem.meshItem.material.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerModel.leftItem.meshItem.material.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerModel.rightItem.meshItem.material.depthWrite = true;
+        this.playerModel.rightItem.meshItem.material.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        this.playerModel.rightItem.meshItem.material.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
     }
 
     // Changes Position of Item Model based on itemtype
