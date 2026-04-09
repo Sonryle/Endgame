@@ -60,7 +60,7 @@ export class Inventory {
                 }
         }
         // Create Mini Player Model
-        let [skinPath, playerType] = await getSkinPath("Grian");
+        let [skinPath, playerType] = await getSkinPath("Sonryle");
         this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale),
                             (60 * state.scale), (80 * state.scale), (54 * state.scale),
                             skinPath, playerType, animationCallback);

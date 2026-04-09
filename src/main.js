@@ -3,6 +3,7 @@ import { select } from 'd3';
 import { state } from "./state.js"
 import { grid } from "./grid.js";
 import { texturePack } from "./TexturePack.js"
+import { getSkinPath } from "./SkinStealer.js"
 
 import { ItemInstance, MinecraftItem } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
@@ -13,8 +14,10 @@ state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
 
-document.querySelector(':root').style.setProperty('--tooltip-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/background.png")}")`);
-document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path', `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
+document.querySelector(':root').style.setProperty('--tooltip-texture-path',
+                    `url("${await texturePack.getPath("gui/sprites/tooltip/background.png")}")`);
+document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path',
+                    `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
 
 state.svg.on('mousemove', (event) => {
     state.mouseX = event.x;
@@ -96,3 +99,24 @@ const inventorySvg = state.svg.append('svg')
                       .attr('width', invWidth)
                       .attr('height', invHeight)
 const inventory = new Inventory(inventorySvg, items);
+
+
+// Playground START
+
+const form = document.querySelector("#userInfo");
+async function sendData() {
+    const formData = new FormData(form);
+
+    var object = {};
+    formData.forEach((value, key) => object[key] = value);
+
+    let [skinPath, playerType] = await getSkinPath(object.username);
+    console.log(object.username);
+    await inventory.playerModel.changeSkin(skinPath, playerType);
+}
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    sendData();
+});
+
+// Playground END

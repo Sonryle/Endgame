@@ -71,7 +71,7 @@ export class PlayerModel {
         this.scene = new THREE.Scene();
 
         // Create & Load player model and Item Models
-        await this.loadPlayerModel(this.skinPath, this.playerType);
+        this.playerModel = await this.loadPlayerModel(this.scene, this.skinPath, this.playerType);
         this.leftItemModel = await this.loadItemModel();
         this.rightItemModel = await this.loadItemModel();
         this.playerModel.boneItemLeft.add(this.leftItemModel.boneItem);
@@ -102,7 +102,7 @@ export class PlayerModel {
         this.renderer.setAnimationLoop(animate);
     }
 
-    async loadPlayerModel(skinPath, playerType) {
+    async loadPlayerModel(scene, skinPath, playerType) {
 
         // Create Variable Structure for playerModel
         const playerModel = {
@@ -130,77 +130,76 @@ export class PlayerModel {
                 shaderBootsGlint: null,
             },
         };
-        this.playerModel = playerModel;
 
         // Load PlayerModel
         const loader = new GLTFLoader();
         if (playerType == PlayerType.SLIM) {
-            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerSlim.gltf' );
+            playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerSlim.gltf' );
         } else if (playerType == PlayerType.WIDE) {
-            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
+            playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
         } else {
             console.log("PlayerType not passed to loadPlayerModel(). Using WIDE player model");
-            this.playerModel.GLTF = await loader.loadAsync( './src/assets/models/PlayerWide/PlayerWide.gltf' );
+            playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
         }
-        this.scene.add( this.playerModel.GLTF.scene );
+        scene.add( playerModel.GLTF.scene );
 
         // Add PlayerModel Mesh & Bones to class variables
-        this.playerModel.GLTF.scene.traverse((child) => {
+        playerModel.GLTF.scene.traverse((child) => {
             switch (child.name) {
                 case "MeshInnerLayer":
-                    this.playerModel.meshInnerLayer = child;
+                    playerModel.meshInnerLayer = child;
                     break;
                 case "MeshOuterLayer":
-                    this.playerModel.meshOuterLayer = child;
+                    playerModel.meshOuterLayer = child;
                     break;
                 case "BoneHead":
-                    this.playerModel.boneHead = child;
+                    playerModel.boneHead = child;
                     break;
                 case "BoneArmLeft":
-                    this.playerModel.boneArmLeft = child;
+                    playerModel.boneArmLeft = child;
                     break;
                 case "BoneArmRight":
-                    this.playerModel.boneArmRight = child;
+                    playerModel.boneArmRight = child;
                     break;
                 case "BoneItemLeft":
-                    this.playerModel.boneItemLeft = child;
+                    playerModel.boneItemLeft = child;
                     break;
                 case "BoneItemRight":
-                    this.playerModel.boneItemRight = child;
+                    playerModel.boneItemRight = child;
                     break;
                 case "MeshHelmet":
-                    this.playerModel.armor.meshHelmet = child;
+                    playerModel.armor.meshHelmet = child;
                     break;
                 case "MeshHelmetGlint":
-                    this.playerModel.armor.meshHelmetGlint = child;
+                    playerModel.armor.meshHelmetGlint = child;
                     break;
                 case "MeshChestplate":
-                    this.playerModel.armor.meshChestplate = child;
+                    playerModel.armor.meshChestplate = child;
                     break;
                 case "MeshChestplateGlint":
-                    this.playerModel.armor.meshChestplateGlint = child;
+                    playerModel.armor.meshChestplateGlint = child;
                     break;
                 case "MeshLeggings":
-                    this.playerModel.armor.meshLeggings = child;
+                    playerModel.armor.meshLeggings = child;
                     break;
                 case "MeshLeggingsGlint":
-                    this.playerModel.armor.meshLeggingsGlint = child;
+                    playerModel.armor.meshLeggingsGlint = child;
                     break;
                 case "MeshBoots":
-                    this.playerModel.armor.meshBoots = child;
+                    playerModel.armor.meshBoots = child;
                     break;
                 case "MeshBootsGlint":
-                    this.playerModel.armor.meshBootsGlint = child;
+                    playerModel.armor.meshBootsGlint = child;
                     break;
             }
         });
 
         // Create enchantment Shaders for Player Model Meshes
         let armourGlintTexturePath = await texturePack.getPath("misc/enchanted_glint_armor.png");
-        this.playerModel.armor.shaderHelmetGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
-        this.playerModel.armor.shaderChestplateGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
-        this.playerModel.armor.shaderLeggingsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
-        this.playerModel.armor.shaderBootsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
+        playerModel.armor.shaderHelmetGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
+        playerModel.armor.shaderChestplateGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
+        playerModel.armor.shaderLeggingsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
+        playerModel.armor.shaderBootsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
 
         // Player Model Texture
         const textureLoader = new THREE.TextureLoader();
@@ -211,36 +210,37 @@ export class PlayerModel {
         playerModelTexture.colorSpace = THREE.SRGBColorSpace;
 
         // Edit Mesh Attributes
-        this.playerModel.meshOuterLayer.material.map                  = playerModelTexture;
-        this.playerModel.meshOuterLayer.material.depthWrite           = false;
-        this.playerModel.meshOuterLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
-        this.playerModel.meshOuterLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModel.meshOuterLayer.material.map                  = playerModelTexture;
+        playerModel.meshOuterLayer.material.depthWrite           = false;
+        playerModel.meshOuterLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModel.meshOuterLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp
 
-        this.playerModel.meshInnerLayer.material.map                  = playerModelTexture;
-        this.playerModel.meshInnerLayer.material.depthWrite           = true;
-        this.playerModel.meshInnerLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
-        this.playerModel.meshInnerLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModel.meshInnerLayer.material.map                  = playerModelTexture;
+        playerModel.meshInnerLayer.material.depthWrite           = true;
+        playerModel.meshInnerLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModel.meshInnerLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp
 
-        this.playerModel.armor.meshHelmet.material.depthWrite         = true;
-        this.playerModel.armor.meshHelmet.material.opacity            = 0.0;
-        this.playerModel.armor.meshHelmet.material.alphaTest          = 0.5;
-        this.playerModel.armor.meshHelmetGlint.material               = this.playerModel.armor.shaderHelmetGlint;
+        playerModel.armor.meshHelmet.material.depthWrite         = true;
+        playerModel.armor.meshHelmet.material.opacity            = 0.0;
+        playerModel.armor.meshHelmet.material.alphaTest          = 0.5;
+        playerModel.armor.meshHelmetGlint.material               = playerModel.armor.shaderHelmetGlint;
 
-        this.playerModel.armor.meshChestplate.material.depthWrite     = true;
-        this.playerModel.armor.meshChestplate.material.opacity        = 0.0;
-        this.playerModel.armor.meshChestplate.material.alphaTest      = 0.5;
-        this.playerModel.armor.meshChestplateGlint.material           = this.playerModel.armor.shaderChestplateGlint;
+        playerModel.armor.meshChestplate.material.depthWrite     = true;
+        playerModel.armor.meshChestplate.material.opacity        = 0.0;
+        playerModel.armor.meshChestplate.material.alphaTest      = 0.5;
+        playerModel.armor.meshChestplateGlint.material           = playerModel.armor.shaderChestplateGlint;
 
-        this.playerModel.armor.meshLeggings.material.depthWrite       = true;
-        this.playerModel.armor.meshLeggings.material.opacity          = 0.0;
-        this.playerModel.armor.meshLeggings.material.alphaTest        = 0.5;
-        this.playerModel.armor.meshLeggingsGlint.material             = this.playerModel.armor.shaderLeggingsGlint;
+        playerModel.armor.meshLeggings.material.depthWrite       = true;
+        playerModel.armor.meshLeggings.material.opacity          = 0.0;
+        playerModel.armor.meshLeggings.material.alphaTest        = 0.5;
+        playerModel.armor.meshLeggingsGlint.material             = playerModel.armor.shaderLeggingsGlint;
 
-        this.playerModel.armor.meshBoots.material.depthWrite          = true;
-        this.playerModel.armor.meshBoots.material.opacity             = 0.0;
-        this.playerModel.armor.meshBoots.material.alphaTest           = 0.5;
-        this.playerModel.armor.meshBootsGlint.material                = this.playerModel.armor.shaderBootsGlint;
+        playerModel.armor.meshBoots.material.depthWrite          = true;
+        playerModel.armor.meshBoots.material.opacity             = 0.0;
+        playerModel.armor.meshBoots.material.alphaTest           = 0.5;
+        playerModel.armor.meshBootsGlint.material                = playerModel.armor.shaderBootsGlint;
 
+        return playerModel;
     }
 
     async loadItemModel() {
@@ -422,113 +422,92 @@ export class PlayerModel {
 
     updateHelmet(texturePath, enchanted) {
         
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.playerModel.armor.meshHelmet.material.map = newTexture;
-            this.playerModel.armor.meshHelmet.material.opacity = 1.0;
-            this.playerModel.armor.meshHelmetGlint.material.uniforms.maskTexture.value = newTexture;
-            if (enchanted == true)
-                this.playerModel.armor.meshHelmetGlint.material.uniforms.hide.value = false;
-            else
-                this.playerModel.armor.meshHelmetGlint.material.uniforms.hide.value = true;
-        }
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.playerModel.armor.meshHelmet.material.map = newTexture;
+        this.playerModel.armor.meshHelmet.material.opacity = 1.0;
+        this.playerModel.armor.meshHelmetGlint.material.uniforms.maskTexture.value = newTexture;
+        if (enchanted == true)
+            this.playerModel.armor.meshHelmetGlint.material.uniforms.hide.value = false;
+        else
+            this.playerModel.armor.meshHelmetGlint.material.uniforms.hide.value = true;
     }
     updateChestplate(texturePath, enchanted) {
-        
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.playerModel.armor.meshChestplate.material.map = newTexture;
-            this.playerModel.armor.meshChestplate.material.opacity = 1.0;
-            this.playerModel.armor.meshChestplateGlint.material.uniforms.maskTexture.value = newTexture;
-            if (enchanted == true)
-                this.playerModel.armor.meshChestplateGlint.material.uniforms.hide.value = false;
-            else
-                this.playerModel.armor.meshChestplateGlint.material.uniforms.hide.value = true;
-        }
+    
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.playerModel.armor.meshChestplate.material.map = newTexture;
+        this.playerModel.armor.meshChestplate.material.opacity = 1.0;
+        this.playerModel.armor.meshChestplateGlint.material.uniforms.maskTexture.value = newTexture;
+        if (enchanted == true)
+            this.playerModel.armor.meshChestplateGlint.material.uniforms.hide.value = false;
+        else
+            this.playerModel.armor.meshChestplateGlint.material.uniforms.hide.value = true;
     }
     updateLeggings(texturePath, enchanted) {
-        
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.playerModel.armor.meshLeggings.material.map = newTexture;
-            this.playerModel.armor.meshLeggings.material.opacity = 1.0;
-            this.playerModel.armor.meshLeggingsGlint.material.uniforms.maskTexture.value = newTexture;
-            if (enchanted == true)
-                this.playerModel.armor.meshLeggingsGlint.material.uniforms.hide.value = false;
-            else
-                this.playerModel.armor.meshLeggingsGlint.material.uniforms.hide.value = true;
-        }
+    
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.playerModel.armor.meshLeggings.material.map = newTexture;
+        this.playerModel.armor.meshLeggings.material.opacity = 1.0;
+        this.playerModel.armor.meshLeggingsGlint.material.uniforms.maskTexture.value = newTexture;
+        if (enchanted == true)
+            this.playerModel.armor.meshLeggingsGlint.material.uniforms.hide.value = false;
+        else
+            this.playerModel.armor.meshLeggingsGlint.material.uniforms.hide.value = true;
     }
     updateBoots(texturePath, enchanted) {
-        
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.playerModel.armor.meshBoots.material.map = newTexture;
-            this.playerModel.armor.meshBoots.material.opacity = 1.0;
-            this.playerModel.armor.meshBootsGlint.material.uniforms.maskTexture.value = newTexture;
-            if (enchanted == true)
-                this.playerModel.armor.meshBootsGlint.material.uniforms.hide.value = false;
-            else
-                this.playerModel.armor.meshBootsGlint.material.uniforms.hide.value = true;
-        }
-    }
-    updateLeftHand(item) {
 
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.playerModel.armor.meshBoots.material.map = newTexture;
+        this.playerModel.armor.meshBoots.material.opacity = 1.0;
+        this.playerModel.armor.meshBootsGlint.material.uniforms.maskTexture.value = newTexture;
+        if (enchanted == true)
+            this.playerModel.armor.meshBootsGlint.material.uniforms.hide.value = false;
+        else
+            this.playerModel.armor.meshBootsGlint.material.uniforms.hide.value = true;
+    }
+
+    updateLeftHand(item) {
         let texturePath = null;
         this.leftItemModel.minecraftItem = null;
         if (item != null && typeof item != "undefined") {
             texturePath = item.href;
             this.leftItemModel.minecraftItem = item.minecraftItem;
-            console.log(item.minecraftItem);
         }
 
         // Update Texture & Enchantment Shader
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.leftItemModel.meshItem.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.leftItemModel.meshItem.material.map = newTexture;
-            this.leftItemModel.meshItem.material.opacity = 1.0;
-            this.leftItemModel.meshItemGlint.material.uniforms.maskTexture.value = newTexture;
-            if (item != null) {
-                if (item.enchantments != null && typeof item.enchantments != "undefined")
-                    this.leftItemModel.meshItemGlint.material.uniforms.hide.value = false;
-                else
-                    this.leftItemModel.meshItemGlint.material.uniforms.hide.value = true;
-            }
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.leftItemModel.meshItem.material.map = newTexture;
+        this.leftItemModel.meshItem.material.opacity = 1.0;
+        this.leftItemModel.meshItemGlint.material.uniforms.maskTexture.value = newTexture;
+        if (item != null) {
+            if (item.enchantments != null && typeof item.enchantments != "undefined")
+                this.leftItemModel.meshItemGlint.material.uniforms.hide.value = false;
+            else
+                this.leftItemModel.meshItemGlint.material.uniforms.hide.value = true;
         }
 
         // Change Item Position based on item type
@@ -547,6 +526,7 @@ export class PlayerModel {
             this.leftItemModel.boneItem.position.copy(modelPosition.position);
         }
     }
+
     updateRightHand(item) {
         
         let texturePath = null;
@@ -554,28 +534,23 @@ export class PlayerModel {
         if (item != null && typeof item != "undefined") {
             texturePath = item.href;
             this.rightItemModel.minecraftItem = item.minecraftItem;
-            console.log(item.minecraftItem);
         }
 
         // Update Texture & Enchantment Shader
-        if (texturePath == null && typeof texturePath == "undefined") {
-            this.rightItemModel.meshItem.material.opacity = 0.0;
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            let newTexture = textureLoader.load(texturePath);
-            newTexture.flipY = false;  // important for GLTF models
-            newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
-            newTexture.colorSpace = THREE.SRGBColorSpace;
-            this.rightItemModel.meshItem.material.map = newTexture;
-            this.rightItemModel.meshItem.material.opacity = 1.0;
-            this.rightItemModel.meshItemGlint.material.uniforms.maskTexture.value = newTexture;
-            if (item != null) {
-                if (item.enchantments != null && typeof item.enchantments != "undefined")
-                    this.rightItemModel.meshItemGlint.material.uniforms.hide.value = false;
-                else
-                    this.rightItemModel.meshItemGlint.material.uniforms.hide.value = true;
-            }
+        const textureLoader = new THREE.TextureLoader();
+        let newTexture = textureLoader.load(texturePath);
+        newTexture.flipY = false;  // important for GLTF models
+        newTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        newTexture.colorSpace = THREE.SRGBColorSpace;
+        this.rightItemModel.meshItem.material.map = newTexture;
+        this.rightItemModel.meshItem.material.opacity = 1.0;
+        this.rightItemModel.meshItemGlint.material.uniforms.maskTexture.value = newTexture;
+        if (item != null) {
+            if (item.enchantments != null && typeof item.enchantments != "undefined")
+                this.rightItemModel.meshItemGlint.material.uniforms.hide.value = false;
+            else
+                this.rightItemModel.meshItemGlint.material.uniforms.hide.value = true;
         }
 
         // Change Item Position based on item type
@@ -595,8 +570,66 @@ export class PlayerModel {
         }
     }
 
-    changeSkin(texturePath, playerType) {
-        this.loadPlayerModel(texturePath, playerType);
+    async changeSkin(skinPath, playerType) {
+
+        // Update playerModel state
+        this.skinPath = skinPath;
+        this.playerType = playerType;
+
+        // Create new PlayerModel
+        let playerModel = await this.loadPlayerModel(this.scene, this.skinPath, this.playerType);
+
+        // Switch item models parent to be new model
+        playerModel.boneItemLeft.add(this.leftItemModel.boneItem);
+        playerModel.boneItemRight.add(this.rightItemModel.boneItem);
+
+        // Point to Armor States of Old Model
+        playerModel.armor.meshHelmet.material = this.playerModel.armor.meshHelmet.material;
+        playerModel.armor.meshHelmetGlint.material = this.playerModel.armor.meshHelmetGlint.material;
+        playerModel.armor.shaderHelmetGlint = playerModel.armor.shaderHelmetGlint;
+
+        playerModel.armor.meshChestplate.material = this.playerModel.armor.meshChestplate.material;
+        playerModel.armor.meshChestplateGlint.material = this.playerModel.armor.meshChestplateGlint.material;
+        playerModel.armor.shaderChestplateGlint = playerModel.armor.shaderChestplateGlint;
+
+        playerModel.armor.meshLeggings.material = this.playerModel.armor.meshLeggings.material;
+        playerModel.armor.meshLeggingsGlint.material = this.playerModel.armor.meshLeggingsGlint.material;
+        playerModel.armor.shaderLeggingsGlint = playerModel.armor.shaderLeggingsGlint;
+
+        playerModel.armor.meshBoots.material = this.playerModel.armor.meshBoots.material;
+        playerModel.armor.meshBootsGlint.material = this.playerModel.armor.meshBootsGlint.material;
+        playerModel.armor.shaderBootsGlint = playerModel.armor.shaderBootsGlint;
+
+        // Delete Old Player
+        let old_playerModel = this.playerModel;
+        this.playerModel = playerModel;
+        this.scene.remove(old_playerModel.GLTF.scene);
     }
 }
 
+        //
+        // const playerModel = {
+        //     GLTF: null,
+        //     boneHead: null,
+        //     boneArmLeft: null,
+        //     boneArmRight: null,
+        //     boneItemLeft: null,
+        //     boneItemRight: null,
+        //     meshInnerLayer: null,
+        //     meshOuterLayer: null,
+        //     skinTexturePath: null,
+        //     armor: {
+        //         meshHelmet: null,
+        //         meshHelmetGlint: null,
+        //         shaderHelmetGlint: null,
+        //         meshChestplate: null,
+        //         meshChestplateGlint: null,
+        //         shaderChestplateGlint: null,
+        //         meshLeggings: null,
+        //         meshLeggingsGlint: null,
+        //         shaderLeggingsGlint: null,
+        //         meshBoots: null,
+        //         meshBootsGlint: null,
+        //         shaderBootsGlint: null,
+        //     },
+        // };
