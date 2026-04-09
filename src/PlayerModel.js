@@ -18,9 +18,9 @@ const itemModelPositions = Object.freeze({
         rotation: new THREE.Euler(0.0, 0.0, 0.0),
     },
     WEAPON: {
-        scale: new THREE.Vector3(1.5, 1.5, 1.5),
-        position: new THREE.Vector3(0.0, 0.0, 0.0),
-        rotation: new THREE.Euler(-Math.PI / 5, -Math.PI/2, 0.0),
+        scale: new THREE.Vector3(1.35, 1.35, 1.35),
+        position: new THREE.Vector3(0.0, 0.25, 0.5),
+        rotation: new THREE.Euler(-Math.PI / 3, -Math.PI/2, 0.0),
     },
 });
 
@@ -264,7 +264,7 @@ export class PlayerModel {
 
         // Create enchantment Shaders for Item Model Glint Mesh
         let itemGlintTexturePath = await texturePack.getPath("misc/enchanted_glint_item.png");
-        itemModel.shaderItemGlint = await this.createEnchantGlintMaterial(itemGlintTexturePath, false, 1);
+        itemModel.shaderItemGlint = await this.createEnchantGlintMaterial(itemGlintTexturePath, false, 5);
 
         // Edit Mesh Attributes
         itemModel.meshItem.material.depthWrite   = true;
@@ -401,6 +401,10 @@ export class PlayerModel {
         this.playerModel.armor.shaderLeggingsGlint.uniforms.glintOffset.value.y = time / 4;
         this.playerModel.armor.shaderBootsGlint.uniforms.glintOffset.value.x = time / -20;
         this.playerModel.armor.shaderBootsGlint.uniforms.glintOffset.value.y = time / 4;
+        this.rightItemModel.shaderItemGlint.uniforms.glintOffset.value.x = time / -8;
+        this.rightItemModel.shaderItemGlint.uniforms.glintOffset.value.y = time / 4;
+        this.leftItemModel.shaderItemGlint.uniforms.glintOffset.value.x = time / -8;
+        this.leftItemModel.shaderItemGlint.uniforms.glintOffset.value.y = time / 4;
     }
 
     updateHelmet(texturePath, enchanted) {
