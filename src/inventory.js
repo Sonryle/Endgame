@@ -4,6 +4,7 @@ import { texturePack } from "./TexturePack.js"
 import { ItemType, MinecraftItem } from "./Item.js"
 import { ItemSlot, ArmourItemSlot, CallbackItemSlot } from "./ItemSlot.js"
 import { PlayerModel, PlayerType } from "./PlayerModel"
+import { getSkinPath, defaultSkin } from "./SkinStealer.js"
 
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
@@ -59,7 +60,10 @@ export class Inventory {
                 }
         }
         // Create Mini Player Model
-        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), (54 * state.scale), animationCallback);
+        let [skinPath, playerType] = await getSkinPath("Grian");
+        this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale),
+                            (60 * state.scale), (80 * state.scale), (54 * state.scale),
+                            skinPath, playerType, animationCallback);
         await this.playerModel.ready;
 
         // Create item slots holding items

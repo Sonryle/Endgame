@@ -1,5 +1,5 @@
-const express = require('express')
-const fs = require('fs');
+const fsp = require('fs/promises');
+const express = require('express');
 const http = require('http');
 const app = express()
 const port = 5137;
@@ -61,22 +61,21 @@ app.get('/api/skin/:username', async (req, res) => {
 
     // Create skin dir if not created
     const skinDir = "./assets/playerskins";
-    if (!fs.existsSync(skinDir)){
-        fs.mkdirSync(skinDir, { recursive: true });
-    }
+    await fsp.mkdir(skinDir, { recursive: true });
 
     // Write Skin file to skin directory
-    let fd = fs.openSync(`${skinDir}/${req.params.username}.png`, 'a');
-    await fs.write(fd, fileBuffer, 0, fileBuffer.length, null, (err,writtenbytes) => {
-        if(err) {
-            console.log('Cant write to file');
-        } else {
-            console.log(`Handled Skin Request for User "${req.params.username}"`);
-        }
-    })
+    const filePath = `${skinDir}/${req.params.username}.png`;
+    try {
+        await fsp.writeFile(filePath, fileBuffer);
+        console.log(`Handled Skin Request for User "${req.params.username}"`);
+    } catch (err) {
+        console.error(`Cant write to file "${skinDir}/${req.params.username}.png : `, err);
+        res.status(500).send("Failed to save skin!");
+        return;
+    }
 
     let obj = { playerType: playerType, skinPath: `${skinDir}/${req.params.username}.png` };
-    res.status(200).json(obj).end();
+    res.status(201).json(obj);
 });
 
 app.use(express.static('./'))

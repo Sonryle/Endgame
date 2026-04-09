@@ -25,7 +25,7 @@ const itemModelPositions = Object.freeze({
 });
 
 export class PlayerModel {
-    constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale, animationCallback) {
+    constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale, skinPath, playerType, animationCallback) {
 
         // Create foreign html element to store rendered element
         const foreignObject = parentSvg.append('foreignObject')
@@ -42,6 +42,9 @@ export class PlayerModel {
         this.canvasScaleX = canvasScaleX;
         this.canvasScaleY = canvasScaleY;
         this.parentSvg = parentSvg;
+        this.skinPath = skinPath;
+        this.playerType = playerType;
+        console.log("PlayerType = " + playerType);
 
         // Create renderer
         this.renderer = new THREE.WebGLRenderer( {antialias: false});
@@ -68,7 +71,7 @@ export class PlayerModel {
         this.scene = new THREE.Scene();
 
         // Create & Load player model and Item Models
-        await this.loadPlayerModel("src/assets/models/Player/Technoblade.png", PlayerType.WIDE);
+        await this.loadPlayerModel(this.skinPath, this.playerType);
         this.leftItemModel = await this.loadItemModel();
         this.rightItemModel = await this.loadItemModel();
         this.playerModel.boneItemLeft.add(this.leftItemModel.boneItem);
@@ -99,7 +102,7 @@ export class PlayerModel {
         this.renderer.setAnimationLoop(animate);
     }
 
-    async loadPlayerModel(skinTexturePath, playerType) {
+    async loadPlayerModel(skinPath, playerType) {
 
         // Create Variable Structure for playerModel
         const playerModel = {
@@ -199,11 +202,21 @@ export class PlayerModel {
         this.playerModel.armor.shaderLeggingsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
         this.playerModel.armor.shaderBootsGlint = await this.createEnchantGlintMaterial(armourGlintTexturePath, false, 4);
 
+        // Player Model Texture
+        const textureLoader = new THREE.TextureLoader();
+        let playerModelTexture = textureLoader.load(skinPath);
+        playerModelTexture.flipY = false;  // important for GLTF models
+        playerModelTexture.magFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModelTexture.minFilter = THREE.NearestFilter;  // keeps pixel art crisp
+        playerModelTexture.colorSpace = THREE.SRGBColorSpace;
+
         // Edit Mesh Attributes
+        this.playerModel.meshOuterLayer.material.map                  = playerModelTexture;
         this.playerModel.meshOuterLayer.material.depthWrite           = false;
         this.playerModel.meshOuterLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
         this.playerModel.meshOuterLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp
 
+        this.playerModel.meshInnerLayer.material.map                  = playerModelTexture;
         this.playerModel.meshInnerLayer.material.depthWrite           = true;
         this.playerModel.meshInnerLayer.material.magFilter            = THREE.NearestFilter;  // keeps pixel art crisp
         this.playerModel.meshInnerLayer.material.minFilter            = THREE.NearestFilter;  // keeps pixel art crisp

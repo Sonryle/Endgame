@@ -3,19 +3,11 @@ import { select } from 'd3';
 import { state } from "./state.js"
 import { grid } from "./grid.js";
 import { texturePack } from "./TexturePack.js"
-import { stealSkinURL } from "./SkinStealer.js"
 
 import { ItemInstance, MinecraftItem } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
 import { Inventory } from "./inventory.js"
 import "./style.css";
-
-let [skinPath, playerType] = await stealSkinURL("Cantoo");
-console.log("skinPath = " + skinPath + " playerType = " + playerType);
-let [skinPath1, playerType1] = await stealSkinURL("SoNrYlE");
-console.log("skinPath = " + skinPath1 + " playerType = " + playerType1);
-let [skinPath2, playerType2] = await stealSkinURL("JKSEDHFOUYISEGTSEKHFSKLEJHFNkjhn");
-console.log("skinPath = " + skinPath2 + " playerType = " + playerType2);
 
 state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
