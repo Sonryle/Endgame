@@ -3,19 +3,28 @@ import { PlayerType } from "./PlayerModel.js"
 
 // Returns URL of skin belonging to player of "username"
 export async function stealSkinURL(username) {
-    let response = await fetch(`/api/skin/${username}`)
-    if (response.status != 200) {
-        console.log(`Server Skin API Response for username "${username}" was not 200: ${response.statusText}.`)
-        console.log("Returning Default Wide Player Skin")
-        return [await texturePack.getPath("entity/player/wide/steve.png"), PlayerType.WIDE]
-    } else {
-        let text = await response.text();
-        let data = JSON.parse(text);
-        let playerType = data.playerType;
-        let skinPath = data.skinPath;
-        console.log("skinPath = " + skinPath);
-        console.log("playerType = " + playerType);
-        
-        return [skinPath, playerType];
+    let response;
+    try {
+        response = await fetch(`/api/skin/${username}`);
+    } catch (err) {
+        response.ok = false;
+        // // Server is offline / no network
+        // console.warn(`Network error fetching skin for "${username}": ${err.message}`);
+        // console.log("Returning Default Wide Player Skin");
+        // return [await texturePack.getPath("entity/player/wide/steve.png"), PlayerType.WIDE];
     }
+    if (!response.ok) {
+        // Server is offline / no network
+        console.warn(`Network error fetching skin for "${username}`);
+        console.log("Returning Default Wide Player Skin");
+        return [await texturePack.getPath("entity/player/wide/steve.png"), PlayerType.WIDE];
+    }
+
+    console.log("No Errors to report Sir")
+    let text = await response.text();
+    let data = JSON.parse(text);
+    let playerType = data.playerType;
+    let skinPath = data.skinPath;
+    
+    return [skinPath, playerType];
 }

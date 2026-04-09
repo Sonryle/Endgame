@@ -76,8 +76,7 @@ app.get('/api/skin/:username', async (req, res) => {
     })
 
     let obj = { playerType: playerType, skinPath: `${skinDir}/${req.params.username}.png` };
-    console.log(obj);
-    res.json(obj);
+    res.status(200).json(obj).end();
 });
 
 app.use(express.static('./'))
