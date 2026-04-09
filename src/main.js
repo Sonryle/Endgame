@@ -3,11 +3,14 @@ import { select } from 'd3';
 import { state } from "./state.js"
 import { grid } from "./grid.js";
 import { texturePack } from "./TexturePack.js"
+import { stealSkinURL } from "./SkinStealer.js"
 
 import { ItemInstance, MinecraftItem } from "./Item.js";
 import { ItemSlot } from "./ItemSlot.js"
 import { Inventory } from "./inventory.js"
 import "./style.css";
+
+stealSkinURL("Cantoo");
 
 state.svg = select('#app').append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
