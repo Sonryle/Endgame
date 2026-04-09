@@ -1,10 +1,30 @@
 const express = require('express')
+const fs = require('fs');
+const http = require('http');
 const app = express()
 const port = 5137;
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
+
+function getFileFromURL(pathFile) {
+
+    return new Promise(function(resolve, reject) {//create a promise
+        http.get(pathFile.replace('https', 'http'), function(res) {
+            let bufferImage = Buffer.from(''); // create an empty buffer
+            res.on('data', function(chunk) { // listen to 'data' event and concatenate each chunk when it is received
+                bufferImage = Buffer.concat([bufferImage, chunk]);
+            });
+            res.on('end', function() {
+                resolve(bufferImage); // fulfil promise 
+            });
+            res.on('error', function(err) {
+                reject(err); // reject promise
+            })
+        })
+    })
+}
 
 app.get('/api/skin/:username', async (req, res) => {
 
@@ -32,11 +52,28 @@ app.get('/api/skin/:username', async (req, res) => {
     console.log(playerType);
     console.log(skin.url);
 
-    // response = await fetch(obj.skinURL);
-    //
-    // const blobImage = await response.blob();
-    //
-    // const href = URL.createObjectURL(blobImage);
+    // We have all the decoded data we need. Now its time to send back a copy of texture (hosted from this server)
+    const fileBuffer = await getFileFromURL(skin.url);
+    console.log(fileBuffer);
+    await fs.open(`${req.params.username}.png`, 'a', function(err, fd) {
+
+    // If the output file does not exists
+    // an error is thrown else data in the
+    // buffer is written to the output file
+    if(err) {
+        console.log('Cant open file');
+    }else {
+        fs.write(fd, fileBuffer, 0, fileBuffer.length, 
+                null, function(err,writtenbytes) {
+            if(err) {
+                console.log('Cant write to file');
+            }else {
+                console.log(writtenbytes +
+                    ' characters added to file');
+            }
+        })
+    }
+})
 });
 
 app.use(express.static('./'))
