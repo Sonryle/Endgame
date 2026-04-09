@@ -7,8 +7,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SceneUtils from 'three/addons/utils/SceneUtils.js';
 
 export const PlayerType = Object.freeze({
-    SLIM: "Slim",
-    WIDE: "Wide"
+    SLIM:    "Slim",
+    WIDE:    "Wide",
+    LEGACY:  "Legacy"
 });
 
 const itemModelPositions = Object.freeze({
@@ -137,8 +138,10 @@ export class PlayerModel {
             playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerSlim.gltf' );
         } else if (playerType == PlayerType.WIDE) {
             playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
+        } else if (playerType == PlayerType.LEGACY) {
+            playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerLegacy.gltf' );
         } else {
-            console.log("PlayerType not passed to loadPlayerModel(). Using WIDE player model");
+            console.warn("PlayerType not passed to loadPlayerModel(). Using WIDE player model");
             playerModel.GLTF = await loader.loadAsync( './src/assets/models/Player/PlayerWide.gltf' );
         }
         scene.add( playerModel.GLTF.scene );

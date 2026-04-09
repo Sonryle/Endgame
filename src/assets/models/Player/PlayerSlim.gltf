@@ -888,7 +888,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char.006",
+			"name":"char.014",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -1110,24 +1110,19 @@
 		},
 		{
 			"sampler":0,
-			"source":2
+			"source":0
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"diamond",
-			"uri":"diamond.png"
+			"name":"Image",
+			"uri":"Image.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"al",
-			"uri":"al.png"
-		},
-		{
-			"mimeType":"image/png",
-			"name":"diamond_leggings",
-			"uri":"diamond_leggings.png"
+			"name":"alex",
+			"uri":"alex.png"
 		}
 	],
 	"skins":[

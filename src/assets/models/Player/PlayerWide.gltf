@@ -888,7 +888,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char.001",
+			"name":"char.007",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -934,7 +934,7 @@
 					"specularFactor":0
 				}
 			},
-			"name":"char.002",
+			"name":"char.008",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.5,
@@ -1133,7 +1133,7 @@
 		},
 		{
 			"sampler":0,
-			"source":2
+			"source":0
 		},
 		{
 			"sampler":0,
@@ -1143,18 +1143,13 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"diamond",
-			"uri":"diamond.png"
+			"name":"Image",
+			"uri":"Image.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"Technoblade",
-			"uri":"Technoblade.png"
-		},
-		{
-			"mimeType":"image/png",
-			"name":"diamond_leggings",
-			"uri":"diamond_leggings.png"
+			"name":"steve",
+			"uri":"steve.png"
 		}
 	],
 	"skins":[
