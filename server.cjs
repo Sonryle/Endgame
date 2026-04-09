@@ -30,14 +30,20 @@ app.get('/api/skin/:username', async (req, res) => {
 
     // Fetch UUID from Username
     let response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${req.params.username}`);
-    if (!response.ok)
-        console.log(`Response to requesting UUID from Username was not OK: ${response.statusText}`);
+    if (!response.ok) {
+        console.log(`Response to requesting UUID from Username "${req.params.username}" was not OK: ${response.statusText}`);
+        res.status(404).send(`Could Not Find Skin Named "${req.params.username}"`);
+        return;
+    }
     let data = await response.json();
 
     // Fetch User Data with UUID
     response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${data.id}`);
-    if (!response.ok)
+    if (!response.ok) {
         console.log(`Response to requesting User Data using UUID was not OK: ${response.statusText}`);
+        res.status(404).send(`Could Not Find UUID for Skin Named "${req.params.username}"`);
+        return;
+    }
     data = await response.json();
 
     // Decoded skin information
@@ -49,12 +55,9 @@ app.get('/api/skin/:username', async (req, res) => {
     let playerType = "WIDE";
     if (typeof skin.metadata != "undefined")
         playerType = "SLIM";
-    console.log(playerType);
-    console.log(skin.url);
 
     // Get buffer of image data
     const fileBuffer = await getFileFromURL(skin.url);
-    console.log(fileBuffer);
 
     // Create skin dir if not created
     const skinDir = "./assets/playerskins";
@@ -68,14 +71,13 @@ app.get('/api/skin/:username', async (req, res) => {
         if(err) {
             console.log('Cant write to file');
         } else {
-            console.log(writtenbytes +
-                ' characters added to file');
+            console.log(`Handled Skin Request for User "${req.params.username}"`);
         }
     })
-    
-    
 
-    res.sendFile(__dirname + `/${skinDir}/${req.params.username}.png`);
+    let obj = { playerType: playerType, skinPath: `${skinDir}/${req.params.username}.png` };
+    console.log(obj);
+    res.json(obj);
 });
 
 app.use(express.static('./'))
