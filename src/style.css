@@ -3,6 +3,10 @@
   src: url(/src/assets/fonts/Mojang-Regular.ttf); /* url of the font */
 }
 
+#app {
+  position: relative;
+}
+
 :root {
     --tooltip-texture-path:        url("/src/assets/texturePacks/TextureNotFound.png");
     --tooltip-frame-texture-path:  url("/src/assets/texturePacks/TextureNotFound.png");

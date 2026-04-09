@@ -61,7 +61,7 @@ export class ItemInstance {
         this.statValue1 = 5;
         this.statValue2 = 5;
 
-        this.svgContainer = state.svg.append('svg');
+        this.svgContainer = state.app.append('svg');
         this.svgContainer.attr('width', 16 * state.scale);
         this.svgContainer.attr('height', 16 * state.scale);
 

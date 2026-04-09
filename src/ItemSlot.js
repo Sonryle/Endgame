@@ -18,6 +18,7 @@ export class ItemSlot {
         this.svgContainer.attr('height', 18 * state.scale);
         this.svgContainer.attr('x', x);
         this.svgContainer.attr('y', y);
+        this.svgContainer.attr('pointer-events', 'all');
 
         this.layerSlotTexture = this.svgContainer.append('g').attr('class', 'layerSlotTexture');
         this.layerHighlightBack = this.svgContainer.append('g').attr('class', 'layerHighlightBack');

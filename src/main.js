@@ -10,23 +10,31 @@ import { ItemSlot } from "./ItemSlot.js"
 import { Inventory } from "./inventory.js"
 import "./style.css";
 
-state.svg = select('#app').append('svg').attr('class', 'master');
+state.app = select('#app');
+state.svg = state.app.append('svg').attr('class', 'master');
 state.svg.attr('width', window.innerWidth);
 state.svg.attr('height', window.innerHeight);
+state.svg.attr('overflow', 'visible');
+state.svg.attr('pointer-events', 'none');
+state.svg.style('position', 'fixed');
+state.svg.style('top', 0);
+state.svg.style('left', 0);
 
 document.querySelector(':root').style.setProperty('--tooltip-texture-path',
                     `url("${await texturePack.getPath("gui/sprites/tooltip/background.png")}")`);
 document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path',
                     `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
 
-state.svg.on('mousemove', (event) => {
-    state.mouseX = event.x;
-    state.mouseY = event.y;
+document.addEventListener('mousemove', (event) => {
+    state.mouseX = event.pageX;
+    state.mouseY = event.pageY;
     if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
-        let x = Math.floor(state.mouseX) - state.selectedItem.svgContainer.attr('width') / 2
-        let y = Math.floor(state.mouseY) - state.selectedItem.svgContainer.attr('height') / 2
-
+        let x = state.mouseX - state.selectedItem.svgContainer.attr('width') / 2
+        let y = state.mouseY - state.selectedItem.svgContainer.attr('height') / 2
         let [gridLockedX, gridLockedY] = grid.nearestPixel(x, y);
+
+        // state.selectedItem.svgContainer.attr('x', 0);
+        // state.selectedItem.svgContainer.attr('y', 0);
         state.selectedItem.svgContainer.attr('x', gridLockedX);
         state.selectedItem.svgContainer.attr('y', gridLockedY);
     }
