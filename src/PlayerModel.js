@@ -78,10 +78,10 @@ export class PlayerModel {
         this.playerModel.boneItemRight.add(this.rightItemModel.boneItem);
 
         // Animation Mixer
-        let mixer = new THREE.AnimationMixer(this.playerModel.GLTF.scene)
+        this.mixer = new THREE.AnimationMixer(this.playerModel.GLTF.scene)
         const clips = this.playerModel.GLTF.animations;
         const clip = THREE.AnimationClip.findByName(clips, "Idle");
-        const action = mixer.clipAction(clip);
+        const action = this.mixer.clipAction(clip);
         action.play();
 
         // Add lights to the scene
@@ -94,7 +94,7 @@ export class PlayerModel {
         // Start the render loop
         const timer = new THREE.Timer();
         const animate = () => {
-            mixer.update(timer.update().getDelta());
+            this.mixer.update(timer.update().getDelta());
             this.animationCallback(this);
             this.updateEnchantmentGlintOffsets(timer.getElapsed());
             this.renderer.render(this.scene, this.camera);
@@ -604,6 +604,13 @@ export class PlayerModel {
         let old_playerModel = this.playerModel;
         this.playerModel = playerModel;
         this.scene.remove(old_playerModel.GLTF.scene);
+
+        // Create new animation mixer
+        this.mixer = new THREE.AnimationMixer(this.playerModel.GLTF.scene)
+        const clips = this.playerModel.GLTF.animations;
+        const clip = THREE.AnimationClip.findByName(clips, "Idle");
+        const action = this.mixer.clipAction(clip);
+        action.play();
     }
 }
 
