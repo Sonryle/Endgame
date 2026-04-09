@@ -68,7 +68,7 @@ export class PlayerModel {
         this.scene = new THREE.Scene();
 
         // Create & Load player model and Item Models
-        await this.loadPlayerModel("src/assets/models/Player/Technoblade.png", PlayerType.SLIM);
+        await this.loadPlayerModel("src/assets/models/Player/Technoblade.png", PlayerType.WIDE);
         this.leftItemModel = await this.loadItemModel();
         this.rightItemModel = await this.loadItemModel();
         this.playerModel.boneItemLeft.add(this.leftItemModel.boneItem);
