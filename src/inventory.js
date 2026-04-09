@@ -34,6 +34,8 @@ export class Inventory {
                 const canvasScaleX = playerModelInstance.canvasScaleX;
                 const canvasScaleY = playerModelInstance.canvasScaleY;
                 const playerModel = playerModelInstance.playerModel;
+                const leftItem = playerModelInstance.leftItemModel;
+                const rightItem = playerModelInstance.rightItemModel;
                 const svg = playerModelInstance.parentSvg;
                 const ax = 1.0; // Bell function height at x = 0
                 const ay = 1.0;
@@ -45,6 +47,16 @@ export class Inventory {
                 playerModel.GLTF.scene.rotation.x = y * bellY;
                 playerModel.boneHead.rotation.y = x * bellX;
                 playerModel.boneHead.rotation.x = y * bellY;
+
+                // If item isnt null and bone has been moved by animation, add rotation to bone
+                if (leftItem.minecraftItem != null && this.lastBoneArmLeftRotation != playerModel.boneArmLeft.rotation.x) {
+                    playerModel.boneArmLeft.rotation.x -= 0.4;
+                    this.lastBoneArmLeftRotation = playerModel.boneArmLeft.rotation.x;
+                }
+                if (rightItem.minecraftItem != null && this.lastBoneArmRightRotation != playerModel.boneArmLeft.rotation.x) {
+                    playerModel.boneArmRight.rotation.x -= 0.4;
+                    this.lastBoneArmRightRotation = playerModel.boneArmLeft.rotation.x;
+                }
         }
         // Create Mini Player Model
         this.playerModel = new PlayerModel(this.svg, (21 * state.scale), (7 * state.scale), (60 * state.scale), (80 * state.scale), (54 * state.scale), animationCallback);

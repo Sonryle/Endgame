@@ -11,6 +11,19 @@ export const PlayerType = Object.freeze({
     WIDE: "Wide"
 });
 
+const itemModelPositions = Object.freeze({
+    DEFAULT: {
+        scale: new THREE.Vector3(0.8, 0.8, 0.8),
+        position: new THREE.Vector3(0.0, 0.1, 0.0),
+        rotation: new THREE.Euler(0.0, 0.0, 0.0),
+    },
+    WEAPON: {
+        scale: new THREE.Vector3(1.5, 1.5, 1.5),
+        position: new THREE.Vector3(0.0, 0.0, 0.0),
+        rotation: new THREE.Euler(-Math.PI / 5, -Math.PI/2, 0.0),
+    },
+});
+
 export class PlayerModel {
     constructor(parentSvg, canvasPosX, canvasPosY, canvasScaleX, canvasScaleY, scale, animationCallback) {
 
@@ -64,7 +77,7 @@ export class PlayerModel {
         // Animation Mixer
         let mixer = new THREE.AnimationMixer(this.playerModel.GLTF.scene)
         const clips = this.playerModel.GLTF.animations;
-        const clip = THREE.AnimationClip.findByName(clips, "None");
+        const clip = THREE.AnimationClip.findByName(clips, "Idle");
         const action = mixer.clipAction(clip);
         action.play();
 
@@ -226,6 +239,7 @@ export class PlayerModel {
             meshItem: null,
             meshItemGlint: null,
             shaderItemGlint: null,
+            minecraftItem: null,
         };
 
         // Load ItemModel
@@ -472,12 +486,16 @@ export class PlayerModel {
     updateLeftHand(item) {
 
         let texturePath = null;
-        if (item != null && typeof item != "undefined")
+        this.leftItemModel.minecraftItem = null;
+        if (item != null && typeof item != "undefined") {
             texturePath = item.href;
+            this.leftItemModel.minecraftItem = item.minecraftItem;
+            console.log(item.minecraftItem);
+        }
 
         // Update Texture & Enchantment Shader
         if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
+            this.leftItemModel.meshItem.material.opacity = 0.0;
         } else {
             const textureLoader = new THREE.TextureLoader();
             let newTexture = textureLoader.load(texturePath);
@@ -497,16 +515,34 @@ export class PlayerModel {
         }
 
         // Change Item Position based on item type
+        if (item != null && typeof item != "undefined") {
+            let modelPosition;
+            switch (item.itemType) {
+                case ItemType.WEAPON:
+                    modelPosition = itemModelPositions.WEAPON;
+                    break;
+                default:
+                    modelPosition = itemModelPositions.DEFAULT;
+                    break;
+            }
+            this.leftItemModel.boneItem.scale.copy(modelPosition.scale);
+            this.leftItemModel.boneItem.rotation.copy(modelPosition.rotation);
+            this.leftItemModel.boneItem.position.copy(modelPosition.position);
+        }
     }
     updateRightHand(item) {
         
         let texturePath = null;
-        if (item != null && typeof item != "undefined")
+        this.rightItemModel.minecraftItem = null;
+        if (item != null && typeof item != "undefined") {
             texturePath = item.href;
+            this.rightItemModel.minecraftItem = item.minecraftItem;
+            console.log(item.minecraftItem);
+        }
 
         // Update Texture & Enchantment Shader
         if (texturePath == null && typeof texturePath == "undefined") {
-            this.helmet.material.opacity = 0.0;
+            this.rightItemModel.meshItem.material.opacity = 0.0;
         } else {
             const textureLoader = new THREE.TextureLoader();
             let newTexture = textureLoader.load(texturePath);
@@ -526,6 +562,20 @@ export class PlayerModel {
         }
 
         // Change Item Position based on item type
+        if (item != null && typeof item != "undefined") {
+            let modelPosition;
+            switch (item.itemType) {
+                case ItemType.WEAPON:
+                    modelPosition = itemModelPositions.WEAPON;
+                    break;
+                default:
+                    modelPosition = itemModelPositions.DEFAULT;
+                    break;
+            }
+            this.rightItemModel.boneItem.scale.copy(modelPosition.scale);
+            this.rightItemModel.boneItem.rotation.copy(modelPosition.rotation);
+            this.rightItemModel.boneItem.position.copy(modelPosition.position);
+        }
     }
 
     changeSkin(texturePath, playerType) {
