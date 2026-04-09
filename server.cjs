@@ -52,28 +52,30 @@ app.get('/api/skin/:username', async (req, res) => {
     console.log(playerType);
     console.log(skin.url);
 
-    // We have all the decoded data we need. Now its time to send back a copy of texture (hosted from this server)
+    // Get buffer of image data
     const fileBuffer = await getFileFromURL(skin.url);
     console.log(fileBuffer);
-    await fs.open(`${req.params.username}.png`, 'a', function(err, fd) {
 
-    // If the output file does not exists
-    // an error is thrown else data in the
-    // buffer is written to the output file
-    if(err) {
-        console.log('Cant open file');
-    }else {
-        fs.write(fd, fileBuffer, 0, fileBuffer.length, 
-                null, function(err,writtenbytes) {
-            if(err) {
-                console.log('Cant write to file');
-            }else {
-                console.log(writtenbytes +
-                    ' characters added to file');
-            }
-        })
+    // Create skin dir if not created
+    const skinDir = "./assets/playerskins";
+    if (!fs.existsSync(skinDir)){
+        fs.mkdirSync(skinDir, { recursive: true });
     }
-})
+
+    // Write Skin file to skin directory
+    let fd = fs.openSync(`${skinDir}/${req.params.username}.png`, 'a');
+    await fs.write(fd, fileBuffer, 0, fileBuffer.length, null, (err,writtenbytes) => {
+        if(err) {
+            console.log('Cant write to file');
+        } else {
+            console.log(writtenbytes +
+                ' characters added to file');
+        }
+    })
+    
+    
+
+    res.sendFile(__dirname + `/${skinDir}/${req.params.username}.png`);
 });
 
 app.use(express.static('./'))
