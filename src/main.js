@@ -25,7 +25,7 @@ document.querySelector(':root').style.setProperty('--tooltip-texture-path',
 document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path',
                     `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
 
-document.addEventListener('mousemove', (event) => {
+document.addEventListener('touchmove', (event) => {
     state.mouseX = event.pageX;
     state.mouseY = event.pageY;
     if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
