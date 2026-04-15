@@ -25,18 +25,35 @@ document.querySelector(':root').style.setProperty('--tooltip-texture-path',
 document.querySelector(':root').style.setProperty('--tooltip-frame-texture-path',
                     `url("${await texturePack.getPath("gui/sprites/tooltip/frame.png")}")`);
 
-document.addEventListener('touchmove', (event) => {
+// MOUSE
+document.addEventListener('mousemove', (event) => {
     state.mouseX = event.pageX;
     state.mouseY = event.pageY;
+    console.log("mouse");
     if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
         let x = state.mouseX - state.selectedItem.svgContainer.attr('width') / 2
         let y = state.mouseY - state.selectedItem.svgContainer.attr('height') / 2
         let [gridLockedX, gridLockedY] = grid.nearestPixel(x, y);
 
-        // state.selectedItem.svgContainer.attr('x', 0);
-        // state.selectedItem.svgContainer.attr('y', 0);
         state.selectedItem.svgContainer.attr('x', gridLockedX);
         state.selectedItem.svgContainer.attr('y', gridLockedY);
+    }
+});
+// TOUCH
+document.addEventListener('touchmove', (event) => {
+    if (event.touches) {
+        console.log("touch");
+        state.mouseX = event.touches[0].pageX;
+        state.mouseY = event.touches[0].pageY;
+        event.preventDefault();
+        if (state.selectedItem != null && typeof state.selectedItem != "undefined") {
+            let x = state.mouseX - state.selectedItem.svgContainer.attr('width') / 2
+            let y = state.mouseY - state.selectedItem.svgContainer.attr('height') / 2
+            let [gridLockedX, gridLockedY] = grid.nearestPixel(x, y);
+
+            state.selectedItem.svgContainer.attr('x', gridLockedX);
+            state.selectedItem.svgContainer.attr('y', gridLockedY);
+        }
     }
 });
 
