@@ -1,3 +1,4 @@
 :w
+src/.env
 dist
 node_modules
