@@ -7,7 +7,6 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const session = require('express-session')
-const flash = require('express-flash')
 
 const app = express()
 const port = 5137;
@@ -21,7 +20,6 @@ initializePassport(
 )
 
 app.use(express.urlencoded({ extended: false }))
-app.use(flash())
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
