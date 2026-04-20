@@ -3,3 +3,22 @@ services:
     build: .
     ports:
       - "5137:5137"
+
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: endgame
+    ports:
+      - 1433:1433
+    volumes:
+      - ./pgdata:/var/lib/postgresql:Z
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:

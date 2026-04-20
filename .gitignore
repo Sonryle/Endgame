@@ -2,3 +2,4 @@
 src/.env
 dist
 node_modules
+pgdata

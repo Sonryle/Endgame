@@ -4,21 +4,28 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require('express')
+
+// User sessions & login
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const session = require('express-session')
 
-const app = express()
-const port = 5137;
-const users = [];
+// Postgres communication
+const { Pool } = require('pg')
+const pgRouter = express.Router()
 
+// Other
+const app = express()
+const port = 5137
+const users = []
+
+// User sessions & login
 const initializePassport = require('./passport-config')
 initializePassport(
   passport,
   email => users.find(user => user.email === email),
   id => users.find(user => user.id === id),
 )
-
 app.use(express.urlencoded({ extended: false }))
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -28,9 +35,25 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.get('/login', checkNotAuthenticated, (req, res) => {
+// Postgres communication
+app.use('/pg', pgRouter)
+const pool = new Pool({
+  connectionString: process.env.PG_CONNECTION_STRING,
+  ssl: false,
+})
+
+// Get/Post stuffs
+app.get('/login', checkNotAuthenticated, async (req, res) => {
+  try {
+    const query = "SELECT * FROM endgame_users"
+    const { rows } = await pool.query(query)
+    console.log(rows)
+  } catch (err) {
+    console.error(err)
+  }
+
   res.sendFile(__dirname + '/login/login.html')
-});
+})
 
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/',
@@ -39,7 +62,7 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 }))
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
-  res.sendFile(__dirname + '/register/register.html');
+  res.sendFile(__dirname + '/register/register.html')
 })
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
