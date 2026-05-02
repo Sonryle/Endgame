@@ -26,8 +26,8 @@ initializePassport( passport, async (email) => {
     await db.one('SELECT * FROM endgame_users WHERE email = $1', [ email ]).then((data) => {
             result = data
         }).catch((err) => {
-            console.error(err)
-            result = err
+            console.log('POSTGRES ERROR: ', err)
+            result = null
         })
     return result;
 }, async (id) => {
@@ -35,7 +35,7 @@ initializePassport( passport, async (email) => {
     await db.one('SELECT * FROM endgame_users WHERE id = $1', [ id ] ).then((data) => {
             result = data
         }).catch((err) => {
-            console.error(err)
+            console.log('POSTGRES ERROR: ', err)
             result = err
         })
 })
@@ -48,7 +48,7 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 
 app.post('/login', checkNotAuthenticated, (req, res) => {
     passport.authenticate('local', {
-      successRedirect: '/',
+      successRedirect: '/homepage',
       failureRedirect: '/login',
     })(req, res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private'))
 })
@@ -67,8 +67,13 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   res.redirect('/login')
 })
 
+app.get('/homepage', checkAuthenticated, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+    .sendFile(__dirname + '/homepage/homepage.html')
+})
+
 app.get('/', checkAuthenticated, (req, res) => {
-  res.sendFile(__dirname + '/homepage/homepage.html')
+  res.redirect('/homepage')
 })
 
 function checkAuthenticated(req, res, next) {
@@ -80,10 +85,8 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
   if (!req.isAuthenticated()) {
-    console.log('user is not authenticated and so can access login screen');
     return next()
   }
-  console.log('moving user back to /')
   res.redirect('/')
 }
 

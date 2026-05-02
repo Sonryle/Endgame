@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>endgame homepage</title>
+    <title>Endgame</title>
   </head>
   <body>
     <div id="app">
-      <h1>Please input your data and stuff<h1/>
-      <form id="exerciseInfo">
+      <h1>Welcome to the HomePage</h1>
+      <form id="exerciseInfo" action"/homepage" method="POST">
         <label>
           Exercise id:
           <input type="text" name="username" id="username" value="alex"/>
@@ -21,3 +21,24 @@
     <!-- <script type="module" src="/src/main.js"></script> -->
   </body>
 </html>
+
+<!DOCTYPE html>
+
+<h1>REGISTER</h1>
+<form action"/register" method="POST">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+  </div>
+  <div>
+    <label for="email">E-Mail</label>
+    <input type="text" id="email" name="email" required>
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input type="text" id="password" name="password" required>
+  </div>
+  <button type="submit">Register</button>
+</form>
+
+<a href="/login">Login</a>

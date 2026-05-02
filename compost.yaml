@@ -8,18 +8,17 @@ services:
     image: postgres:18
     restart: always
     environment:
-      POSTGRES_USER: endgame_admin
-      POSTGRES_DB: endgame
-      POSTGRES_PASSWORD: pswd
+      POSTGRES_PASSWORD: endgame
+    ports:
+      - 1433:1433
     volumes:
       - ./pgdata:/var/lib/postgresql:Z
-    ports:
-      - 5432:5432
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 8080:8080
+
+volumes:
+  pgdata:
